@@ -1,0 +1,114 @@
+// Utilities
+@import "variables.scss";
+
+/*--------scrollbar--------*/
+* {
+    scrollbar-width: thin;
+    scrollbar-color: $back-gray-lightlight $back-gray-light;
+}
+
+/* Chrome/Safari */
+::-webkit-scrollbar {
+    width: 5px;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+    background: $back-gray-light;
+    border-radius: 10px;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+    background: $back-gray-lightlight;
+}
+
+
+input {
+    @include transition($base-transition);
+    background: $back-gray-bright;
+    border-radius: $base-border-radius;
+    color: $text-col-bright;
+
+    border: none;
+    outline: none;
+}
+
+input:focus {
+    background: $back-gray-light;
+    color: $text-col-dark;
+}
+
+.btn {
+    border-radius: $base-border-radius;
+}
+
+.btn-primary {
+    background-color: $back-gray-light;
+    border: $back-gray-light;
+    color: $text-col-dark;
+    @include transition($base-transition);
+}
+
+.btn-primary:hover {
+    background-color: $back-gray-lightlight;
+    border: $back-gray-lightlight;
+    color: $text-col-bright;
+}
+
+/*Elem color Style*/
+.elemColorStyle-1s {
+    background: $back-gray-bright;
+    border-radius: $base-border-radius;
+    color: $back-gray-lightlight;
+}
+
+.elemColorStyle-1 {
+    background: $back-gray-bright;
+    border-radius: $base-border-radius;
+    color: $back-gray-lightlight;
+}
+
+.elemColorStyle-1:focus {
+    background-color: $back-gray-light;
+}
+
+.elemColorStyle-2s {
+    background: $back-gray-normal;
+    border-radius: $base-border-radius;
+    color: $back-gray-lightlight;
+}
+
+.elemColorStyle-2 {
+    background: $back-gray-normal;
+    border-radius: $base-border-radius;
+    color: $back-gray-lightlight;
+}
+
+.elemColorStyle-2:focus {
+    background-color: $back-gray-light;
+}
+
+
+/*Elem action Style*/
+
+.elemActionStyle {
+    @include transition($base-transition);
+}
+
+.elemActionStyle:hover {
+    background: $back-gray-light;
+    color: $text-col-bright;
+}
+
+
+
+.click-text {
+    cursor: pointer;
+    color: $col-pur-bright;
+    text-decoration: none;
+}
+
+.click-text:hover {
+    color: $col-pur-light;
+}

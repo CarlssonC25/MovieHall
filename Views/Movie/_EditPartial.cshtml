@@ -1,0 +1,163 @@
+﻿@model MovieHall.Models.Movie
+
+<form asp-action="Edit" enctype="multipart/form-data" method="post">
+    <input type="hidden" asp-for="Id" />
+
+    <div class="form-group">
+        <label asp-for="Name">Name</label>
+        <input asp-for="Name" class="form-control" />
+    </div>
+
+    <div class="form-group">
+        <label asp-for="Buy">Kaufstatus</label>
+        <select asp-for="Buy" class="form-control">
+            @{
+                var buyOptions = new Dictionary<int, string>
+                {
+                    { 0, "Noch nicht" },
+                    { 1, "DVD" },
+                    { 2, "Blu-ray" },
+                    { 3, "3D" }
+                };
+                foreach (var option in buyOptions)
+                {
+                    if (Model.Buy == option.Key)
+                    {
+                        <option value="@option.Key" selected>@option.Value</option>
+                    }
+                    else
+                    {
+                        <option value="@option.Key">@option.Value</option>
+                    }
+                }
+            }
+        </select>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="Description">Beschreibung</label>
+        <textarea asp-for="Description" class="form-control"></textarea>
+    </div>
+
+    <div class="form-group">
+        <label for="Img">Bild</label>
+        <input type="file" name="ImageFile" class="form-control" />
+        @if (!string.IsNullOrEmpty(Model.Img))
+        {
+            <div class="mt-2">
+                <img src="~/img/Movie_imgs/@Model.Img" alt="Aktuelles Bild" style="max-height: 150px;" />
+            </div>
+        }
+    </div>
+
+    <div class="form-group">
+        <label asp-for="FSK">FSK</label>
+        <select asp-for="FSK" class="form-control">
+            @{
+                var fskOptions = new Dictionary<int, string>
+                {
+                    { 0, "0+" },
+                    { 6, "6+" },
+                    { 12, "12+" },
+                    { 16, "16+" },
+                    { 18, "18+" }
+                };
+                foreach (var option in fskOptions)
+                {
+                    if (Model.FSK == option.Key)
+                    {
+                        <option value="@option.Key" selected>@option.Value</option>
+                    }
+                    else
+                    {
+                        <option value="@option.Key">@option.Value</option>
+                    }
+                }
+            }
+        </select>
+    </div>
+
+    <div class="form-check mb-3">
+        <input type="checkbox" asp-for="Favorit" class="form-check-input" />
+        <label class="form-check-label" asp-for="Favorit">Favorit</label>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="ReleaseDate">Veröffentlichungsdatum</label>
+        <input asp-for="ReleaseDate" type="date" class="form-control" />
+    </div>
+
+    <div class="form-group">
+        <label asp-for="Link">Link</label>
+        <input asp-for="Link" class="form-control" />
+    </div>
+
+    <div class="form-group">
+        <label asp-for="Language">Sprache</label>
+        <select asp-for="Language" class="form-control">
+            @{
+                var langOptions = new Dictionary<string, string>
+                {
+                    { "de", "Deutsch" },
+                    { "en", "Englisch" }
+                };
+                foreach (var option in langOptions)
+                {
+                    if (Model.Language == option.Key)
+                    {
+                        <option value="@option.Key" selected>@option.Value</option>
+                    }
+                    else
+                    {
+                        <option value="@option.Key">@option.Value</option>
+                    }
+                }
+            }
+        </select>
+    </div>
+
+    <div class="form-group">
+        <label>Genres</label>
+        <select multiple class="form-control" name="SelectedGenres">
+            @{
+                var selectedGenreIds = Model.MovieGenres?.Select(g => g.GenreId).ToList() ?? new List<int>();
+                foreach (var genre in ViewBag.Genres as List<MovieHall.Models.Genre>)
+                {
+                    if (selectedGenreIds.Contains(genre.Id))
+                    {
+                        <option value="@genre.Id" selected>@genre.Name</option>
+                    }
+                    else
+                    {
+                        <option value="@genre.Id">@genre.Name</option>
+                    }
+                }
+            }
+        </select>
+    </div>
+
+    <div class="form-group">
+        <label>Mit wem gesehen</label>
+        <select multiple class="form-control" name="SelectedWatchedWith">
+            @{
+                var selectedWatchedIds = Model.MovieWatchedWiths?.Select(w => w.WatchedWithId).ToList() ?? new List<int>();
+                foreach (var person in ViewBag.WatchedWiths as List<MovieHall.Models.WatchedWith>)
+                {
+                    if (selectedWatchedIds.Contains(person.Id))
+                    {
+                        <option value="@person.Id" selected>@person.Name</option>
+                    }
+                    else
+                    {
+                        <option value="@person.Id">@person.Name</option>
+                    }
+                }
+            }
+        </select>
+    </div>
+
+    <div class="modal-footer">
+        <button type="submit" class="btn btn-primary">Speichern</button>
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Abbrechen</button>
+    </div>
+</form>

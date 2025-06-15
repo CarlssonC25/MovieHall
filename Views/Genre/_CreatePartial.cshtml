@@ -1,0 +1,19 @@
+﻿@model MovieHall.Models.Genre
+
+<form id="createGenreForm">
+    <div class="modal-body">
+        <div class="mb-3">
+            <label asp-for="Name" class="form-label"></label>
+            <input asp-for="Name" class="form-control" />
+        </div>
+        <div class="mb-3">
+            <label asp-for="Belonging_to" class="form-label"></label>
+            <select asp-for="Belonging_to" class="form-control" asp-items='new SelectList(new[] { " A", "M", "AM" })'>
+                <option value="">-- Bitte wählen --</option>
+            </select>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button type="submit" class="btn btn-primary">Speichern</button>
+    </div>
+</form>

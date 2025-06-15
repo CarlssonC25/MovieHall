@@ -1,0 +1,127 @@
+﻿/* --- Web Colors --- */
+/* Purple */
+/*  (elems to klick -> hover text) */
+/*  (elems klick text) */
+/*  (elems border/ backgrount) */
+/* Background gray */
+/*  (back if you neet the nather tow) */
+/*  (base backrount) */
+/*  () */
+/*Text Colors*/
+/*  *  */
+/*  **  */
+/* --- Base Styles --- */
+/*--------scrollbar--------*/
+* {
+  scrollbar-width: thin;
+  scrollbar-color: #777 #2e2e2e;
+}
+
+/* Chrome/Safari */
+::-webkit-scrollbar {
+  width: 5px;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: #2e2e2e;
+  border-radius: 10px;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: #777;
+}
+
+input {
+  -webkit-transition: all 0.4s ease-out;
+  -moz-transition: all 0.4s ease-out;
+  -o-transition: all 0.4s ease-out;
+  transition: all 0.4s ease-out;
+  background: #1c1c1c;
+  border-radius: 5px;
+  color: #ddd;
+  border: none;
+  outline: none;
+}
+
+input:focus {
+  background: #2e2e2e;
+  color: #ccc;
+}
+
+.btn {
+  border-radius: 5px;
+}
+
+.btn-primary {
+  background-color: #2e2e2e;
+  border: #2e2e2e;
+  color: #ccc;
+  -webkit-transition: all 0.4s ease-out;
+  -moz-transition: all 0.4s ease-out;
+  -o-transition: all 0.4s ease-out;
+  transition: all 0.4s ease-out;
+}
+
+.btn-primary:hover {
+  background-color: #777;
+  border: #777;
+  color: #ddd;
+}
+
+/*Elem color Style*/
+.elemColorStyle-1s {
+  background: #1c1c1c;
+  border-radius: 5px;
+  color: #777;
+}
+
+.elemColorStyle-1 {
+  background: #1c1c1c;
+  border-radius: 5px;
+  color: #777;
+}
+
+.elemColorStyle-1:focus {
+  background-color: #2e2e2e;
+}
+
+.elemColorStyle-2s {
+  background: #0e0e0e;
+  border-radius: 5px;
+  color: #777;
+}
+
+.elemColorStyle-2 {
+  background: #0e0e0e;
+  border-radius: 5px;
+  color: #777;
+}
+
+.elemColorStyle-2:focus {
+  background-color: #2e2e2e;
+}
+
+/*Elem action Style*/
+.elemActionStyle {
+  -webkit-transition: all 0.4s ease-out;
+  -moz-transition: all 0.4s ease-out;
+  -o-transition: all 0.4s ease-out;
+  transition: all 0.4s ease-out;
+}
+
+.elemActionStyle:hover {
+  background: #2e2e2e;
+  color: #ddd;
+}
+
+.click-text {
+  cursor: pointer;
+  color: #a885da;
+  text-decoration: none;
+}
+
+.click-text:hover {
+  color: #c4ace6;
+}

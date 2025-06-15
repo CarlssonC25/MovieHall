@@ -1,0 +1,375 @@
+﻿@model MovieHall.ViewModels.SettingsPageVM
+@{
+    ViewData["Title"] = "Settings";
+    var animeImg = Model.Settings.FirstOrDefault(s => s.SettingName == "AnimeImg").Comment;
+    var movieImg = Model.Settings.FirstOrDefault(s => s.SettingName == "MovieImg").Comment;
+}
+
+<section class="my-5 w-100 d-flex justify-content-center">
+    <h1>Settings</h1>
+</section>
+
+@*------------------------------ Genre ------------------------------*@
+<section class="container">
+    <div class="row justify-content-center">
+        <div class="col-12 text-center">
+            <h2>
+                Genre
+            </h2>
+        </div>
+    </div>
+
+    @*---- Tabel ----*@
+    <div id="genre" class="row justify-content-center">        
+        <div class="col-2"></div>
+        <div class="col-8">
+            <div class="tbl-header">
+                <table cellpadding="0" cellspacing="0" border="0">
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Belonging To</th>
+                            <th>Aktionen</th>
+                        </tr>
+                    </thead>
+                </table>
+            </div>
+            <div class="tbl-content">
+                <table cellpadding="0" cellspacing="0" border="0">
+                    <tbody>
+                        @foreach (var genre in Model.Genres)
+                        {
+                            <tr>
+                                <td>@genre.Name</td>
+                                <td>@genre.Belonging_to</td>
+                                <td>
+                                    <button class="edit-link btn btn-primary" data-id="@genre.Id">
+                                        Edit
+                                    </button>
+                                    <button class="delete-link btn btn-primary" data-id="@genre.Id" data-name="@genre.Name">
+                                        Delete
+                                    </button>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="col-2 float-start">
+            <button class="btn btn-primary mb-3" id="openCreateModal"> Genre +</button>
+        </div>
+    </div>
+
+</section>
+
+
+@*------------------------------ Settings ------------------------------*@
+<section class="container mt-4 mb-2">
+    <div class="row justify-content-center">
+        <div class="col-12 text-center">
+            <h2>
+                Settings
+            </h2>
+        </div>
+    </div>
+
+    @*---- Tabel ----*@
+    <div id="setting" class="row justify-content-center">        
+        <div class="col-2"></div>
+        <div class="col-8">
+            <div class="tbl-header">
+                <table cellpadding="0" cellspacing="0" border="0">
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Kommentar</th>
+                            <th>Aktionen</th>
+                        </tr>
+                    </thead>
+                </table>
+            </div>
+            <div class="tbl-content">
+                <table cellpadding="0" cellspacing="0" border="0">
+                    <tbody>
+                        @foreach (var setting in Model.Settings)
+                        {
+                            <tr>
+                                <td>@setting.SettingName</td>
+                                <td>@setting.Comment</td>
+                                <td>
+                                    <button class="edit-setting-link btn btn-primary" data-id="@setting.Id">
+                                        Edit
+                                    </button>
+                                    <button class="delete-setting-link btn btn-primary" data-id="@setting.Id" data-name="@setting.SettingName">
+                                        Delete
+                                    </button>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="col-2 float-start">
+            <button class="btn btn-primary mb-3" id="openCreateSettingModal">Setting +</button>
+        </div>
+    </div>
+
+</section>
+
+
+@*------------------------------ WatchedWith ------------------------------*@
+<section class="container mt-4 mb-2">
+    <div class="row justify-content-center">
+        <div class="col-12 text-center">
+            <h2>
+                WatchedWith
+            </h2>
+        </div>
+    </div>
+
+    @*---- Tabel ----*@
+    <div id="WatchedWith" class="row justify-content-center">
+        <div class="col-2"></div>
+        <div class="col-8">
+            <div class="tbl-header">
+                <table cellpadding="0" cellspacing="0" border="0">
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Aktionen</th>
+                        </tr>
+                    </thead>
+                </table>
+            </div>
+            <div class="tbl-content">
+                <table cellpadding="0" cellspacing="0" border="0">
+                    <tbody>
+                        @foreach (var WatchedWith in Model.WatchedWiths)
+                        {
+                            <tr>
+                                <td>@WatchedWith.Name</td>
+                                <td>
+                                    <button class="edit-watchedWith-link btn btn-primary" data-id="@WatchedWith.Id">
+                                        Edit
+                                    </button>
+                                    <button class="delete-watchedWith-link btn btn-primary" data-id="@WatchedWith.Id" data-name="@WatchedWith.Name">
+                                        Delete
+                                    </button>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="col-2 float-start">
+            <button class="btn btn-primary mb-3" id="openCreateWatchedWithModal">WatchedWith +</button>
+        </div>
+    </div>
+
+</section>
+
+
+@*------------------------------ Home Imgs ------------------------------*@
+<section class="container">
+    <div class="row justify-content-center">
+
+        @*--- Image Previews ---*@
+        <div class="col-2"></div>
+        <div id="settingHome" class="d-flex col-8 my-3 text-center">
+            <div class="w-50 p-2">
+                <a class="w-100" onclick="document.getElementById('movieInput').click()" title="Uploade Move IMG">
+                    <img id="moviePreview" class="w-100" src="/img/@movieImg" alt="Movie Preview" />
+                </a>
+            </div>
+            <div class="w-50 p-2">
+                <a class="w-100" onclick="document.getElementById('animeInput').click()" title="Uploade Anime IMG">
+                    <img id="animePreview" class="w-100" src="/img/@animeImg" alt="Anime Preview" />
+                </a>
+            </div>
+
+            <input type="file" id="movieInput" accept=".jpg,.png" hidden onchange="previewImage(this, 'moviePreview', 'MovieImg')" />
+            <input type="file" id="animeInput" accept=".jpg,.png" hidden onchange="previewImage(this, 'animePreview', 'AnimeImg')" />
+        </div>
+        <div class="col-2"></div>
+
+        @*--- Save Buttons ---*@
+        <div class="col-2"></div>
+        <div class="col-4 text-center">
+            <button class="btn btn-primary" onclick="uploadImage('movieInput', 'MovieImg')">Movie speichern</button>
+        </div>
+        <div class="col-4 text-center">
+            <button class="btn btn-primary" onclick="uploadImage('animeInput', 'AnimeImg')">Anime speichern</button>
+        </div>
+        <div class="col-2"></div>
+
+    </div>
+</section>
+
+
+<section class="container">
+    <div class="row justify-content-center">
+        <div class="col-12">
+            <h1>TODO</h1>
+            <div>
+                Set Custum Link open
+            </div>
+        </div>       
+
+    </div>
+</section>
+
+
+
+@*------------------------------ Genre (Create | Edit | Delete)------------------------------*@
+@*--- Create ---*@
+<div class="modal fade" id="createModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Neues Genre</h5>
+                <button class="btn btn-primary" type="button" data-bs-dismiss="modal">X</button>
+            </div><div id="createModalContent"></div>
+        </div>
+    </div>
+</div>
+
+@*--- Edit ---*@
+<div class="modal fade" id="editModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Genre bearbeiten</h5>
+                <button class="btn btn-primary" type="button" data-bs-dismiss="modal">X</button>
+            </div><div id="editModalContent"></div>
+        </div>
+    </div>
+</div>
+
+@*--- Delete ---*@
+<div class="modal fade" id="deleteModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form id="deleteGenreForm">
+                <input type="hidden" id="deleteGenreId" />
+                <div class="modal-header">
+                    <h5 class="modal-title">Genre löschen</h5>
+                    <button class="btn btn-primary" type="button" data-bs-dismiss="modal">X</button>
+                </div>
+                <div class="modal-body">
+                    <p>Möchtest du <strong id="deleteGenreName"></strong> wirklich löschen?</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-danger">Löschen</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+
+@*------------------------------ Settings (Create | Edit | Delete)------------------------------*@
+@*--- Create ---*@
+<div class="modal fade" id="createSettingModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Neues Setting</h5>
+                <button class="btn btn-primary" type="button" data-bs-dismiss="modal">X</button>
+            </div>
+            <div id="createSettingModalContent"></div>
+        </div>
+    </div>
+</div>
+
+@*--- Edit ---*@
+<div class="modal fade" id="editSettingModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Setting bearbeiten</h5>
+                <button class="btn btn-primary" type="button" data-bs-dismiss="modal">X</button>
+            </div>
+            <div id="editSettingModalContent"></div>
+        </div>
+    </div>
+</div>
+
+@*--- Delete ---*@
+<div class="modal fade" id="deleteSettingModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form id="deleteSettingForm">
+                <input type="hidden" id="deleteSettingId" />
+                <div class="modal-header">
+                    <h5 class="modal-title">Setting löschen</h5>
+                    <button class="btn btn-primary" type="button" data-bs-dismiss="modal">X</button>
+                </div>
+                <div class="modal-body">
+                    <p>Möchtest du <strong id="deleteSettingName"></strong> wirklich löschen?</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-danger">Löschen</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+
+
+@*------------------------------ WatchedWiths (Create | Edit | Delete)------------------------------*@
+@*--- Create ---*@
+<div class="modal fade" id="createWatchedWithModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Neues WatchedWith</h5>
+                <button class="btn btn-primary" type="button" data-bs-dismiss="modal">X</button>
+            </div>
+            <div id="createWatchedWithModalContent"></div>
+        </div>
+    </div>
+</div>
+
+@*--- Edit ---*@
+<div class="modal fade" id="editWatchedWithModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">WatchedWith bearbeiten</h5>
+                <button class="btn btn-primary" type="button" data-bs-dismiss="modal">X</button>
+            </div>
+            <div id="editWatchedWithModalContent"></div>
+        </div>
+    </div>
+</div>
+
+@*--- Delete ---*@
+<div class="modal fade" id="deleteWatchedWithModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form id="deleteWatchedWithForm">
+                <input type="hidden" id="deleteWatchedWithId" />
+                <div class="modal-header">
+                    <h5 class="modal-title">WatchedWith löschen</h5>
+                    <button class="btn btn-primary" type="button" data-bs-dismiss="modal">X</button>
+                </div>
+                <div class="modal-body">
+                    <p>Möchtest du <strong id="deleteWatchedWithName"></strong> wirklich löschen?</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-danger">Löschen</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+
+
+@section Scripts {
+    <script src="~/js/settings.js"></script>
+}

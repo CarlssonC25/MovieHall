@@ -1,0 +1,160 @@
+// Utilities
+@import "variables.scss";
+
+
+
+
+/*------------------  Body ------------------*/
+body {
+    height: 100vh;
+    background-color: $back-gray-normal;
+    color: $text-col-dark !important;
+}
+
+th, 
+td{
+    color: $text-col-dark;
+}
+
+main {
+    padding-top: $haeder-height;
+}
+
+/*------------------  Navbar ------------------*/
+header {
+    background-color: $back-gray-bright;
+    position: fixed;
+    height: $haeder-height;
+}
+
+#search > div{
+    background-color: $back-gray-normal;
+    border-radius: $base-border-radius;
+}
+
+#search input {
+    border-radius: $base-border-radius 0 0 $base-border-radius;
+    background-color: transparent;
+    height: 34px;
+}
+
+#search input:hover,
+#search input:focus,
+#search img:hover,
+#search img:focus {
+    background-color: $back-gray-light;
+}
+
+#search img {
+    @include transition($base-transition);
+    border-radius: 0 $base-border-radius $base-border-radius 0;
+    padding: 5px;
+}
+
+
+
+/*------------------  Home ------------------*/
+
+#home {
+    height: 90vh;
+
+    > div {
+        align-content: center;
+    }
+
+    img {
+        height: 90%;
+        @include transition($base-transition);
+    }
+
+    img:hover {
+        @include transform(translateY(-6px));
+    }
+}
+
+
+
+
+
+/*------------------ Settings ------------------*/
+#genre,
+#setting,
+#WatchedWith {
+
+    table {
+        width: 100%;
+        table-layout: fixed;
+    }
+
+    .tbl-header {
+        background-color: $back-gray-light;
+        border-radius: $base-border-radius $base-border-radius 0 0;
+    }
+
+    .tbl-content {
+        border: 1px solid $back-gray-light;
+        border-radius: 0 0 $base-border-radius $base-border-radius;
+        max-height: 300px;
+        overflow-x: auto;
+        margin-top: 0px;
+    }
+
+    th {
+        color: $text-col-bright;
+        padding: 10px;
+        font-weight: bold;
+        text-transform: uppercase;
+        text-align: center;
+    }
+
+    td {
+        border-bottom: solid 1px $back-gray-light;
+        color: $text-col-bright;
+        padding: 15px;
+        vertical-align: middle;
+        text-align: center;
+    }
+
+    tr:nth-child(even) {
+        background-color: $back-gray-dark;
+    }
+}
+
+#settingHome {
+
+    > div {
+        align-content: center;
+    }
+
+    a {
+        cursor: pointer;
+    }
+
+    img {
+        height: 100%;
+        @include transition($base-transition);
+    }
+
+    img:hover {
+        opacity: 0.3;
+    }
+}
+
+.modal-content {
+    background-color: $back-gray-bright;
+
+    input:hover,
+    input:focus, 
+    select:hover, 
+    select:focus {
+        background-color: $back-gray-light;
+        color: $text-col-bright;
+    }
+
+    input,
+    select {
+        border-radius: $base-border-radius 0 0 $base-border-radius;
+        background-color: transparent;
+        color: $text-col-bright;
+    }
+}

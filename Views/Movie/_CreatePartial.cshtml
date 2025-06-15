@@ -1,0 +1,97 @@
+﻿@model MovieHall.Models.Movie
+@{
+    var genres = ViewBag.Genres as List<MovieHall.Models.Genre>;
+    var watched = ViewBag.WatchedWith as List<MovieHall.Models.WatchedWith>;
+}
+
+<form id="createMovieForm">
+    <div class="modal-body">
+        <div class="mb-3">
+            <label>Name</label>
+            <input class="form-control" name="Name" required />
+        </div>
+
+        <div class="mb-3">
+            <label>Kaufmedium</label>
+            <select class="form-control" name="Buy">
+                <option value="0">Noch nicht</option>
+                <option value="1">DVD</option>
+                <option value="2">Blu-ray</option>
+                <option value="3">3D</option>
+            </select>
+        </div>
+
+        <div class="mb-3">
+            <label>Beschreibung</label>
+            <textarea class="form-control" name="Description" rows="3"></textarea>
+        </div>
+
+        <div class="mb-3">
+            <label>Bild (wird gespeichert in /img/Movie_imgs)</label>
+            <input type="file" name="ImageFile" class="form-control" accept="image/*" />
+        </div>
+
+        <div class="mb-3">
+            <label>FSK</label>
+            <select class="form-control" name="FSK">
+                <option value="0">0+</option>
+                <option value="6">6+</option>
+                <option value="12">12+</option>
+                <option value="16">16+</option>
+                <option value="18">18+</option>
+            </select>
+        </div>
+
+        <div class="form-check mb-3">
+            <input type="checkbox" name="Favorit" class="form-check-input" value="true" />
+            <label class="form-check-label">Favorit</label>
+        </div>
+
+        <div class="mb-3">
+            <label>Veröffentlichungsdatum</label>
+            <input type="date" name="ReleaseDate" class="form-control" />
+        </div>
+
+        <div class="mb-3">
+            <label>Trailer-Link</label>
+            <input type="url" name="Link" class="form-control" />
+        </div>
+
+        <div class="mb-3">
+            <label>Sprache</label>
+            <select class="form-control" name="Language">
+                <option value="de">Deutsch</option>
+                <option value="en">Englisch</option>
+            </select>
+        </div>
+
+        <div class="mb-3">
+            <label>Genres</label>
+            @foreach (var g in genres)
+            {
+                if (g.Belonging_to.Contains("M") || g.Belonging_to.Contains("m"))
+                {
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" name="selectedGenres" value="@g.Id" />
+                        <label class="form-check-label">@g.Name</label>
+                    </div>                    
+                }
+            }
+        </div>
+
+        <div class="mb-3">
+            <label>Mit wem geschaut</label>
+            @foreach (var w in watched)
+            {
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" name="selectedWatchedWith" value="@w.Id" />
+                    <label class="form-check-label">@w.Name</label>
+                </div>
+            }
+        </div>
+    </div>
+
+    <div class="modal-footer">
+        <button type="submit" class="btn btn-primary">Speichern</button>
+    </div>
+</form>

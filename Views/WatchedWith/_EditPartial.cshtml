@@ -1,0 +1,13 @@
+﻿@model MovieHall.Models.WatchedWith
+<form id="editWatchedWithForm">
+    <input type="hidden" asp-for="Id" />
+    <div class="modal-body">
+        <div class="mb-3">
+            <label asp-for="Name" class="form-label"></label>
+            <input asp-for="Name" class="form-control" />
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button type="submit" class="btn btn-primary">Änderungen speichern</button>
+    </div>
+</form>

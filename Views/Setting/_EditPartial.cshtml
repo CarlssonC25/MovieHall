@@ -1,0 +1,17 @@
+﻿@model MovieHall.Models.Setting
+<form id="editSettingForm">
+    <input type="hidden" asp-for="Id" />
+    <div class="modal-body">
+        <div class="mb-3">
+            <label asp-for="SettingName" class="form-label"></label>
+            <input asp-for="SettingName" class="form-control" />
+        </div>
+        <div class="mb-3">
+            <label asp-for="Comment" class="form-label"></label>
+            <input asp-for="Comment" class="form-control" />
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button type="submit" class="btn btn-primary">Änderungen speichern</button>
+    </div>
+</form>

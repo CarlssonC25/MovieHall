@@ -1,0 +1,47 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - MovieHall</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/custom.css" asp-append-version="true" />
+</head>
+<body>
+    <header class="container-fluid">
+        <nav class="row">
+            <div class="col-3">
+                <a class="nav-link" asp-area="" asp-controller="Home" asp-action="Index">
+                    <img src="~/img/MovieTicketW.png" alt="Logo" />
+                </a>
+            </div>
+
+            <div class="col-6 d-flex justify-content-center">
+                <div id="search" class="d-flex align-items-center">
+                    <div class="d-flex align-items-center">
+                        <input class="ps-1" type="text" name="search" value="" />
+                        <a asp-area="" asp-controller="Home" asp-action="Search">
+                            <img src="~/img/lupe.png" alt="Search" />
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-3 d-flex justify-content-end">
+                <a id="settings" class="nav-link d-flex align-items-center justify-content-end" asp-area="" asp-controller="Home" asp-action="Settings">
+                    <img class="w-75" src="~/img/settings.png" alt="Settings" />
+                </a>
+            </div>
+        </nav>
+    </header>
+    <main role="main" class="pb-3">
+        @RenderBody()
+    </main>
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

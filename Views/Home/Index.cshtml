@@ -1,0 +1,19 @@
+﻿@model MovieHall.Models.Setting
+@{
+    ViewData["Title"] = "Home";    
+}
+
+
+<section id="home" class="d-flex">
+    <div class="w-50 p-2">
+        <a asp-area="" asp-controller="Home" asp-action="Movie" class="w-100">
+            <img class="w-100" src="@ViewData["MovieImg"]" alt="" />
+        </a>
+    </div>
+
+    <div class="w-50 p-2">
+        <a asp-area="" asp-controller="Home" asp-action="Anime" class="w-100">
+            <img class="w-100" src="@ViewData["AnimeImg"]" alt="" />
+        </a>
+    </div>
+</section>
