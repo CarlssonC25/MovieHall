@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using MovieHall.Data;
 using MovieHall.Models;
+using MovieHall.SaveModel;
 using MovieHall.ViewModels;
 using System.Diagnostics;
 
@@ -60,18 +61,71 @@ namespace MovieHall.Controllers
         {
             ViewBag.Genres = await _context.Genre.OrderBy(g => g.Name).ToListAsync();
             ViewBag.WatchedWith = await _context.WatchedWith.OrderBy(w => w.Name).ToListAsync();
-            return PartialView("~/Views/Movie/_CreatePartial.cshtml", new Movie());
+            return PartialView("~/Views/Movie/_CreatePartial.cshtml", new SaveMovie());
         }
 
         [HttpPost]
-        public async Task<IActionResult> CreateMoviePartial(Movie movie, int[] selectedGenres, int[] selectedWatchedWith)
+        public async Task<IActionResult> CreateMoviePartial(SaveMovie svMovie)
         {
-            if (!ModelState.IsValid) return PartialView("~/Views/Movie/_CreatePartial.cshtml", movie);
 
-            foreach (var genreId in selectedGenres)
+            var Genres = await _context.Genre.OrderBy(g => g.Name).ToListAsync();
+            var WatchedWith = await _context.WatchedWith.OrderBy(w => w.Name).ToListAsync();
+
+            if (!ModelState.IsValid)
+            {
+                ViewBag.Genres = Genres;
+                ViewBag.WatchedWith = WatchedWith;
+                return PartialView("~/Views/Movie/_CreatePartial.cshtml", svMovie);
+            }
+
+            var movie = new Movie
+            {
+                Name = svMovie.Name,
+                Buy = svMovie.Buy,
+                Description = svMovie.Description,
+                Favorit = svMovie.Favorit,
+                FSK = svMovie.FSK,
+                Language = svMovie.Language,
+                ReleaseDate = svMovie.ReleaseDate,
+                Link = svMovie.Link,
+
+                Parent = svMovie.Parent,
+            };
+
+            if (svMovie.Img != null && (svMovie.Img.ContentType == "image/jpeg" || svMovie.Img.ContentType == "image/png"))
+            {
+                string uploadsFolder = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/img/Movie_imgs");
+                Directory.CreateDirectory(uploadsFolder);
+
+                string fileName = "";
+                var fileNameUnique = false;
+                while(fileNameUnique == false)
+                {
+                    Random rnd = new Random();
+                    fileName = $"{svMovie.Name}{rnd.Next(1, 100)}{Path.GetExtension(svMovie.Img.FileName)}";
+
+                    var movieImg = await _context.Movies.FirstOrDefaultAsync(s => s.Img == fileName);
+
+                    if (movieImg == null)
+                    {
+                        fileNameUnique = true;
+                    }
+                }
+
+                movie.Img = fileName;
+
+                string filePath = Path.Combine(uploadsFolder, fileName);
+
+                using (var stream = new FileStream(filePath, FileMode.Create))
+                {
+                    await svMovie.Img.CopyToAsync(stream);
+                }
+            }
+
+            foreach (var genreId in svMovie.SelectedGenreIds)
                 movie.MovieGenres.Add(new MovieGenre { GenreId = genreId });
 
-            foreach (var wId in selectedWatchedWith)
+            foreach (var wId in svMovie.SelectedWatchedWithIds)
                 movie.MovieWatchedWiths.Add(new MovieWatchedWith { WatchedWithId = wId });
 
             _context.Movies.Add(movie);
@@ -152,7 +206,7 @@ namespace MovieHall.Controllers
 
         //----------------------------------------- Settings -----------------------------------------
 
-        /* ------------- Genre ------------- */
+        /* ---------------- Genre ---------------- */
         public async Task<IActionResult> Settings()
         {
             var vm = new SettingsPageVM
@@ -220,7 +274,7 @@ namespace MovieHall.Controllers
         }
 
 
-        /* ------------- Setting ------------- */
+        /* ---------------- Setting ---------------- */
         [HttpGet]
         public IActionResult CreateSettingPartial()
             => PartialView("~/Views/Setting/_CreatePartial.cshtml", new Setting());
@@ -230,7 +284,8 @@ namespace MovieHall.Controllers
         public async Task<IActionResult> CreateSettingPartial(Setting s)
         {
             if (!ModelState.IsValid) return PartialView("~/Views/Setting/_CreatePartial.cshtml", s);
-            _context.Add(s); await _context.SaveChangesAsync();
+            _context.Add(s); 
+            await _context.SaveChangesAsync();
             return Json(new { success = true });
         }
 

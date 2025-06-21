@@ -5,7 +5,7 @@
 
 <h2>Movie List</h2>
 
-<button class="btn btn-primary mb-3" id="openCreateModal" onclick="openCreateModal()">Neuer Film</button>
+<button class="btn btn-primary mb-3" id="openCreateMovieModal">Neuer Film</button>
 
 <table class="table table-bordered">
     <thead>
@@ -28,7 +28,7 @@
                 <td>@movie.Language</td>
                 <td>@string.Join(", ", movie.MovieGenres.Select(g => g.Genre.Name))</td>
                 <td>@string.Join(", ", movie.MovieWatchedWiths.Select(w => w.WatchedWith.Name))</td>
-                <td>@movie.Parent?.Name ?? "-"</td>
+                <td>@movie.Parent?.Name</td>
                 <td>
                     <button class="btn btn-sm btn-warning" onclick="openEditModal(@movie.Id)">Bearbeiten</button>
                     <button class="btn btn-sm btn-danger" onclick="deleteMovie(@movie.Id)">Löschen</button>
@@ -46,14 +46,8 @@
 
 <div class="modal fade" id="movieModal" tabindex="-1">
     <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="movieModalLabel">Modal Title</h5>
-                <button class="btn btn-primary" type="button" data-bs-dismiss="modal">X</button>
-            </div>
-            <div id="movieModalBody">
-                @* Inhalt wird dynamisch geladen *@
-            </div>
+        <div class="modal-content" id="movieModalContent">
+            @* Inhalt von PartialView wird hier per JS geladen *@
         </div>
     </div>
 </div>

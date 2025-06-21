@@ -1,70 +1,97 @@
-﻿function openCreateModal() {
-    $.get('/Home/CreateMoviePartial', function (data) {
-        showModal('Neuen Film hinzufügen', data, function () {
-            const form = $('#modalForm');
-            const formData = new FormData(form[0]);
+﻿$(document).ready(function () {
 
-            $.ajax({
-                url: '/Home/CreateMoviePartial',
-                type: 'POST',
-                data: formData,
-                processData: false,
-                contentType: false,
-                success: function (res) {
-                    if (res.success) {
-                        $('#movieModal').modal('hide');
-                        location.reload();
+    // Create Modal öffnen
+    $("#openCreateMovieModal").click(function () {
+        $.get("/Home/CreateMoviePartial", function (data) {
+            $("#movieModalContent").html(data);
+            var modal = new bootstrap.Modal(document.getElementById('movieModal'));
+            modal.show();
+
+            $("#createMovieForm").on("submit", function (e) {
+                e.preventDefault();
+                var formData = new FormData(this);
+
+
+                $.ajax(
+                    {
+                    type: "POST",
+                    url: "/Home/CreateMoviePartial",
+                    data: formData,
+                    processData: false,
+                    contentType: false,
+                    success: function (res, status, xhr) {
+                        const contentType = xhr.getResponseHeader("content-type");
+
+                        if (contentType && contentType.indexOf("application/json") !== -1) {
+                            console.log("success");
+                            if (res.success) {
+                                console.log("success");
+                                modal.hide();
+                                location.reload();
+                            }
+                        } else {
+                            // HTML → Validation Errors
+                            console.log("Validation errors, rendering PartialView");
+                            $("#movieModalContent").html(res);
+                        }
                     }
-                },
-                error: function (err) {
-                    alert("Fehler beim Speichern.");
-                }
+                });
             });
         });
     });
-}
 
-function openEditModal(id) {
-    $.get('/Home/EditMoviePartial?id=' + id, function (data) {
-        showModal('Film bearbeiten', data, function () {
-            const form = $('#modalForm');
-            const formData = new FormData(form[0]);
+    // Edit Modal öffnen
+    $(".edit-movie-link").click(function () {
+        var id = $(this).data("id");
+        $.get("/Home/EditMoviePartial?id=" + id, function (data) {
+            $("#editMovieModalContent").html(data);
+            var modal = new bootstrap.Modal(document.getElementById('editMovieModal'));
+            modal.show();
 
-            $.ajax({
-                url: '/Home/Movie',
-                type: 'POST',
-                data: formData,
-                processData: false,
-                contentType: false,
-                success: function (res) {
-                    if (res.success) {
-                        $('#movieModal').modal('hide');
-                        location.reload();
+            $("#editMovieForm").on("submit", function (e) {
+                e.preventDefault();
+                var formData = new FormData(this);
+
+                $.ajax({
+                    type: "POST",
+                    url: "/Home/EditMoviePartial",
+                    data: formData,
+                    processData: false,
+                    contentType: false,
+                    success: function (res, status, xhr) {
+                        const contentType = xhr.getResponseHeader("content-type");
+
+                        if (contentType && contentType.indexOf("application/json") !== -1) {
+                            if (res.success) {
+                                modal.hide();
+                                location.reload();
+                            }
+                        } else {
+                            console.log("Validation errors, rendering Edit PartialView");
+                            $("#editMovieModalContent").html(res); // Lade Fehler-View neu
+                        }
                     }
-                },
-                error: function () {
-                    alert("Fehler beim Bearbeiten.");
-                }
+                });
             });
         });
     });
-}
 
-function deleteMovie(id) {
-    if (!confirm("Möchten Sie diesen Film wirklich löschen?")) return;
+    // Delete
+    $(".delete-movie-link").click(function () {
+        var id = $(this).data("id");
+        var name = $(this).data("name");
+        $("#deleteMovieId").val(id);
+        $("#deleteMovieName").text(name);
+        var modal = new bootstrap.Modal(document.getElementById('deleteMovieModal'));
+        modal.show();
+    });
 
-    $.post('/Home/DeleteMovieConfirmed', { id: id }, function (res) {
-        if (res.success) {
+    $("#deleteMovieForm").on("submit", function (e) {
+        e.preventDefault();
+        var id = $("#deleteMovieId").val();
+        $.post("/Home/DeleteMovieConfirmed/" + id, function () {
             location.reload();
-        } else {
-            alert("Fehler beim Löschen.");
-        }
+        });
     });
-}
 
-function showModal(title, content, onSaveCallback) {
-    $('#movieModalLabel').text(title);
-    $('#movieModalBody').html(content);
-    $('#movieModalSaveBtn').off('click').on('click', onSaveCallback);
-    $('#movieModal').modal('show');
-}
+});

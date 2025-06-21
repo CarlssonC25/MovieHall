@@ -61,6 +61,20 @@ header {
   padding: 5px;
 }
 
+/*------------------  Forms ------------------*/
+[type=checkbox] {
+  border: 1px solid #ccc;
+}
+
+/*------------------  Popups ------------------*/
+.btn-close {
+  filter: brightness(0) saturate(100%) invert(85%) sepia(3%) saturate(75%) hue-rotate(359deg) brightness(98%) contrast(89%);
+}
+
+.checkbox-popup {
+  padding: 0 1rem;
+}
+
 /*------------------  Home ------------------*/
 #home {
   height: 90vh;
