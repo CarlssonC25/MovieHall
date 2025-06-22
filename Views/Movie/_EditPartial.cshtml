@@ -1,6 +1,175 @@
-﻿@model MovieHall.Models.Movie
+﻿@model MovieHall.SaveModel.SaveMovie
 
-<form asp-action="Edit" enctype="multipart/form-data" method="post">
+
+<form id="editMovieForm" enctype="multipart/form-data" method="post">
+    <div class="modal-header">
+        <h5 class="modal-title" id="createMovieModalLabel">Film Bearbeiten</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Schließen"></button>
+    </div>
+
+    <div class="modal-body">
+        <input type="hidden" asp-for="Id" />
+
+        <div class="mb-3">
+            <label asp-for="Name">Name</label>
+            <input asp-for="Name" class="form-control" />
+        </div>
+
+        <div class="mb-3">
+            <label asp-for="Buy">Kaufstatus</label>
+            <select asp-for="Buy" class="form-control">
+                @{
+                    var buyOptions = new Dictionary<int, string>
+                                {
+                                { 0, "Noch nicht" },
+                                { 1, "DVD" },
+                                { 2, "Blu-ray" },
+                                { 3, "3D" }
+                                };
+                    foreach (var option in buyOptions)
+                    {
+                        if (Model.Buy == option.Key)
+                        {
+                            <option value="@option.Key" selected>@option.Value</option>
+                        }
+                        else
+                        {
+                            <option value="@option.Key">@option.Value</option>
+                        }
+                    }
+                }
+            </select>
+        </div>
+
+
+        <div class="mb-3">
+            <label asp-for="Description">Beschreibung</label>
+            <textarea asp-for="Description" class="form-control"></textarea>
+        </div>
+
+        <div class="mb-3">
+            <label asp-for="Img">Bild</label>
+            <input asp-for="Img" class="form-control" accept="image/*" type="file" />
+
+            <input type="hidden" asp-for="ImgPath" />
+            @if (!string.IsNullOrEmpty(Model.ImgPath))
+            {
+                <div class="mt-2 d-flex justify-content-center">
+                    <img src="~/img/Movie_imgs/@Model.ImgPath" alt="Aktuelles Bild" style="max-height: 150px; max-width: 100%;" />
+                </div>
+            }
+        </div>
+
+        <div class="mb-3">
+            <label asp-for="FSK">FSK</label>
+            <select asp-for="FSK" class="form-control">
+                @{
+                    var fskOptions = new Dictionary<int, string>
+                                {
+                                { 0, "0+" },
+                                { 6, "6+" },
+                                { 12, "12+" },
+                                { 16, "16+" },
+                                { 18, "18+" }
+                                };
+                    foreach (var option in fskOptions)
+                    {
+                        if (Model.FSK == option.Key)
+                        {
+                            <option value="@option.Key" selected>@option.Value</option>
+                        }
+                        else
+                        {
+                            <option value="@option.Key">@option.Value</option>
+                        }
+                    }
+                }
+            </select>
+        </div>
+
+        <div class="mb-3">
+            <input type="checkbox" asp-for="Favorit" class="form-check-input" />
+            <label class="form-check-label" asp-for="Favorit">Favorit</label>
+        </div>
+
+        <div class="mb-3">
+            <label asp-for="ReleaseDate">Veröffentlichungsdatum</label>
+            <input asp-for="ReleaseDate" type="date" class="form-control" />
+        </div>
+
+        <div class="mb-3">
+            <label asp-for="Link">Link</label>
+            <input asp-for="Link" class="form-control" />
+        </div>
+
+        <div class="mb-3">
+            <label asp-for="Language">Sprache</label>
+            <select asp-for="Language" class="form-control">
+                @{
+                    var langOptions = new Dictionary<string, string>
+                                {
+                                { "de", "Deutsch" },
+                                { "en", "Englisch" }
+                                };
+                    foreach (var option in langOptions)
+                    {
+                        if (Model.Language == option.Key)
+                        {
+                            <option value="@option.Key" selected>@option.Value</option>
+                        }
+                        else
+                        {
+                            <option value="@option.Key">@option.Value</option>
+                        }
+                    }
+                }
+            </select>
+        </div>
+
+        <div class="checkbox-popup mb-3 row">
+            <label class="ps-0">Genres</label>
+            @{
+                var selectedGenreIds = Model.MovieGenres?.Select(g => g.GenreId).ToList() ?? new List<int>();
+                var genres = ViewBag.Genres as List<MovieHall.Models.Genre>;
+            }
+
+            @foreach (var g in genres)
+            {
+                if (g.Belonging_to.Contains("M") || g.Belonging_to.Contains("m"))
+                {
+                    var isChecked = selectedGenreIds.Contains(g.Id) ? "checked" : "";
+                    <div class="form-check col-4">
+                        <input class="form-check-input" type="checkbox" name="SelectedGenreIds" value="@g.Id" id="genre_@g.Id" @isChecked />
+                        <label class="form-check-label" for="genre_@g.Id">@g.Name</label>
+                    </div>
+                }
+            }
+        </div>
+
+        <div class="checkbox-popup mb-3 row">
+            <label class="ps-0">Mit wem gesehen</label>
+            @{
+                var selectedWatchedIds = Model.MovieWatchedWiths?.Select(w => w.WatchedWithId).ToList() ?? new List<int>();
+                var watchedWiths = ViewBag.WatchedWiths as List<MovieHall.Models.WatchedWith>;
+            }
+            @foreach (var w in watchedWiths)
+            {
+                var isChecked = selectedWatchedIds.Contains(w.Id) ? "checked" : "";
+                <div class="form-check col-4">
+                    <input class="form-check-input" type="checkbox" name="SelectedWatchedWithIds" value="@w.Id" id="watched_@w.Id" @isChecked />
+                    <label class="form-check-label" for="watched_@w.Id">@w.Name</label>
+                </div>
+            }
+        </div>        
+    </div>
+
+    <div class="modal-footer">
+        <button type="submit" class="btn btn-primary">Speichern</button>
+    </div>
+
+</form>
+
+@*<form id="editMovieForm" asp-action="EditMoviePartial" enctype="multipart/form-data" method="post">
     <input type="hidden" asp-for="Id" />
 
     <div class="form-group">
@@ -42,10 +211,10 @@
     <div class="form-group">
         <label for="Img">Bild</label>
         <input type="file" name="ImageFile" class="form-control" />
-        @if (!string.IsNullOrEmpty(Model.Img))
+        @if (!string.IsNullOrEmpty(Model.ImgPath))
         {
             <div class="mt-2">
-                <img src="~/img/Movie_imgs/@Model.Img" alt="Aktuelles Bild" style="max-height: 150px;" />
+                <img src="~/img/Movie_imgs/@Model.ImgPath" alt="Aktuelles Bild" style="max-height: 150px;" />
             </div>
         }
     </div>
@@ -141,7 +310,7 @@
         <select multiple class="form-control" name="SelectedWatchedWith">
             @{
                 var selectedWatchedIds = Model.MovieWatchedWiths?.Select(w => w.WatchedWithId).ToList() ?? new List<int>();
-                foreach (var person in ViewBag.WatchedWiths as List<MovieHall.Models.WatchedWith>)
+                foreach (var person in ViewBag.WatchedWiths)
                 {
                     if (selectedWatchedIds.Contains(person.Id))
                     {
@@ -160,4 +329,4 @@
         <button type="submit" class="btn btn-primary">Speichern</button>
         <button type="button" class="btn btn-secondary" data-dismiss="modal">Abbrechen</button>
     </div>
-</form>
+</form> *@

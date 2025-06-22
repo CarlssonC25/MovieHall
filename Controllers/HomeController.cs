@@ -5,6 +5,7 @@ using MovieHall.Models;
 using MovieHall.SaveModel;
 using MovieHall.ViewModels;
 using System.Diagnostics;
+using System.IO;
 
 namespace MovieHall.Controllers
 {
@@ -138,7 +139,7 @@ namespace MovieHall.Controllers
         [HttpGet]
         public async Task<IActionResult> EditMoviePartial(int id)
         {
-            var movie = await _context.Movies
+            var movieDb = await _context.Movies
                 .Include(m => m.MovieGenres)
                 .Include(m => m.MovieWatchedWiths)
                 .FirstOrDefaultAsync(m => m.Id == id);
@@ -147,42 +148,106 @@ namespace MovieHall.Controllers
             var watchedWith = await _context.WatchedWith.OrderBy(w => w.Name).ToListAsync();
 
             ViewBag.Genres = genres;
-            ViewBag.WatchedWith = watchedWith;
+            ViewBag.WatchedWiths = watchedWith;
+
+            var path = $"/img/{movieDb.Img}";
+
+            var movie = new SaveMovie
+            {
+                Id = movieDb.Id,
+                Name = movieDb.Name,
+                Buy = movieDb.Buy,
+                Description = movieDb.Description,
+                ImgPath = movieDb.Img,
+                FSK = movieDb.FSK,
+                Favorit = movieDb.Favorit,
+                ReleaseDate = movieDb.ReleaseDate,
+                Link = movieDb.Link,
+                Language = movieDb.Language,
+                ParentId = movieDb.ParentId,
+
+                MovieGenres = movieDb.MovieGenres,
+                MovieWatchedWiths = movieDb.MovieWatchedWiths,
+            };
 
             return PartialView("~/Views/Movie/_EditPartial.cshtml", movie);
         }
 
         [HttpPost]
-        public async Task<IActionResult> Movie(Movie movie, int[] selectedGenres, int[] selectedWatchedWith)
+        public async Task<IActionResult> EditMoviePartial(SaveMovie svMovie)
         {
             var dbMovie = await _context.Movies
                 .Include(m => m.MovieGenres)
                 .Include(m => m.MovieWatchedWiths)
-                .FirstOrDefaultAsync(m => m.Id == movie.Id);
+                .FirstOrDefaultAsync(m => m.Id == svMovie.Id);
 
             if (dbMovie == null)
                 return NotFound();
 
             // Update properties
-            dbMovie.Name = movie.Name;
-            dbMovie.Description = movie.Description;
-            dbMovie.Language = movie.Language;
-            dbMovie.Link = movie.Link;
-            dbMovie.Img = movie.Img;
-            dbMovie.FSK = movie.FSK;
-            dbMovie.Buy = movie.Buy;
-            dbMovie.Favorit = movie.Favorit;
-            dbMovie.ReleaseDate = movie.ReleaseDate;
-            dbMovie.ParentId = movie.ParentId;
+            dbMovie.Name = svMovie.Name;
+            dbMovie.Description = svMovie.Description;
+            dbMovie.Language = svMovie.Language;
+            dbMovie.Link = svMovie.Link;
+            dbMovie.FSK = svMovie.FSK;
+            dbMovie.Buy = svMovie.Buy;
+            dbMovie.Favorit = svMovie.Favorit;
+            dbMovie.ReleaseDate = svMovie.ReleaseDate;
+            dbMovie.ParentId = svMovie.ParentId;
+
+            if (svMovie.Img != null && (svMovie.Img.ContentType == "image/jpeg" || svMovie.Img.ContentType == "image/png"))
+            {
+                string uploadsFolder = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/img/Movie_imgs");
+                Directory.CreateDirectory(uploadsFolder);
+
+                // Altes Bild löschen
+                if (!string.IsNullOrEmpty(svMovie.ImgPath))
+                {
+                    string oldImagePath = Path.Combine(uploadsFolder, svMovie.ImgPath);
+                    if (System.IO.File.Exists(oldImagePath))
+                    {
+                        System.IO.File.Delete(oldImagePath);
+                    }
+                }
+
+                // Neues Bild adden
+                string fileName = "";
+                var fileNameUnique = false;
+                while (!fileNameUnique)
+                {
+                    Random rnd = new Random();
+                    fileName = $"{svMovie.Name}{rnd.Next(1, 100)}{Path.GetExtension(svMovie.Img.FileName)}";
+
+                    var movieImg = await _context.Movies.FirstOrDefaultAsync(s => s.Img == fileName);
+
+                    if (movieImg == null)
+                    {
+                        fileNameUnique = true;
+                    }
+                }
+
+                dbMovie.Img = fileName;
+
+                string filePath = Path.Combine(uploadsFolder, fileName);
+
+                using (var stream = new FileStream(filePath, FileMode.Create))
+                {
+                    await svMovie.Img.CopyToAsync(stream);
+                }
+            }
+            else
+            {
+                dbMovie.Img = svMovie.ImgPath;
+            }
 
             // Update genres
             dbMovie.MovieGenres.Clear();
-            foreach (var genreId in selectedGenres)
+            foreach (var genreId in svMovie.SelectedGenreIds)
                 dbMovie.MovieGenres.Add(new MovieGenre { MovieId = dbMovie.Id, GenreId = genreId });
 
             // Update watched with
             dbMovie.MovieWatchedWiths.Clear();
-            foreach (var wId in selectedWatchedWith)
+            foreach (var wId in svMovie.SelectedWatchedWithIds)
                 dbMovie.MovieWatchedWiths.Add(new MovieWatchedWith { MovieId = dbMovie.Id, WatchedWithId = wId });
 
             await _context.SaveChangesAsync();
@@ -194,8 +259,27 @@ namespace MovieHall.Controllers
         [HttpPost]
         public async Task<IActionResult> DeleteMovieConfirmed(int id)
         {
-            var movie = await _context.Movies.FindAsync(id);
+            var movie = await _context.Movies
+                .Include(m => m.MovieGenres)
+                .Include(m => m.MovieWatchedWiths)
+                .FirstOrDefaultAsync(m => m.Id == id);
+
             if (movie == null) return NotFound();
+
+            // Bild löschen
+            string uploadsFolder = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/img/Movie_imgs");
+            if (!string.IsNullOrEmpty(movie.Img))
+            {
+                string oldImagePath = Path.Combine(uploadsFolder, movie.Img);
+                if (System.IO.File.Exists(oldImagePath))
+                {
+                    System.IO.File.Delete(oldImagePath);
+                }
+            }
+
+            // Zuerst abhängige Datensätze entfernen
+            _context.MovieGenres.RemoveRange(movie.MovieGenres);
+            _context.MovieWatchedWiths.RemoveRange(movie.MovieWatchedWiths);
 
             _context.Movies.Remove(movie);
             await _context.SaveChangesAsync();

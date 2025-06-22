@@ -13,7 +13,8 @@ namespace MovieHall.SaveModel
 
         public int? Buy { get; set; }
         public string? Description { get; set; }
-        public IFormFile Img { get; set; }
+        public IFormFile? Img { get; set; }
+        public string? ImgPath { get; set; }
         public int FSK { get; set; }
         public bool Favorit { get; set; }
         public DateTime ReleaseDate { get; set; }
@@ -30,5 +31,10 @@ namespace MovieHall.SaveModel
         // Viele-zu-viele
         public List<int> SelectedGenreIds { get; set; } = new();
         public List<int> SelectedWatchedWithIds { get; set; } = new();
+
+
+        // Viele-zu-viele
+        public List<MovieGenre> MovieGenres { get; set; } = new();
+        public List<MovieWatchedWith> MovieWatchedWiths { get; set; } = new();
     }
 }

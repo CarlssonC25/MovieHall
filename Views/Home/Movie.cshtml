@@ -25,13 +25,19 @@
             <tr>
                 <td>@movie.Name</td>
                 <td>@movie.FSK</td>
-                <td>@movie.Language</td>
+                <td>
+                    @{
+                        var langOptions = new Dictionary<string, string>
+                                {{ "de", "Deutsch" },{ "en", "Englisch" }};
+                    }
+                    @langOptions[movie.Language]
+                </td>
                 <td>@string.Join(", ", movie.MovieGenres.Select(g => g.Genre.Name))</td>
                 <td>@string.Join(", ", movie.MovieWatchedWiths.Select(w => w.WatchedWith.Name))</td>
                 <td>@movie.Parent?.Name</td>
                 <td>
-                    <button class="btn btn-sm btn-warning" onclick="openEditModal(@movie.Id)">Bearbeiten</button>
-                    <button class="btn btn-sm btn-danger" onclick="deleteMovie(@movie.Id)">Löschen</button>
+                    <button class="btn btn-sm btn-warning edit-movie-link" data-id="@movie.Id">Bearbeiten</button>
+                    <button class="btn btn-sm btn-danger delete-movie-link" data-id="@movie.Id" data-name="@movie.Name">Löschen</button>
                 </td>
             </tr>
         }
@@ -43,11 +49,32 @@
 
 @*Modal für Create/Edit *@
 
-
 <div class="modal fade" id="movieModal" tabindex="-1">
     <div class="modal-dialog">
         <div class="modal-content" id="movieModalContent">
             @* Inhalt von PartialView wird hier per JS geladen *@
+        </div>
+    </div>
+</div>
+
+@*Modal für Delete *@
+<div class="modal fade" id="deleteMovieModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form id="deleteMovieForm">
+                <div class="modal-header">
+                    <h5 class="modal-title">Film löschen</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <input type="hidden" id="deleteMovieId" />
+                    <p>Soll der Film <strong>"<span id="deleteMovieName"></span>"</strong> wirklich gelöscht werden?</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Abbrechen</button>
+                    <button type="submit" class="btn btn-danger">Löschen</button>
+                </div>
+            </form>
         </div>
     </div>
 </div>

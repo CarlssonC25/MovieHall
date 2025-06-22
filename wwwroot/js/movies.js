@@ -1,5 +1,5 @@
 ﻿$(document).ready(function () {
-
+    console.log("movies.js geladen");
     // Create Modal öffnen
     $("#openCreateMovieModal").click(function () {
         $.get("/Home/CreateMoviePartial", function (data) {
@@ -23,14 +23,11 @@
                         const contentType = xhr.getResponseHeader("content-type");
 
                         if (contentType && contentType.indexOf("application/json") !== -1) {
-                            console.log("success");
                             if (res.success) {
-                                console.log("success");
                                 modal.hide();
                                 location.reload();
                             }
-                        } else {
-                            // HTML → Validation Errors
+                        } else { // HTML → Validation Errors
                             console.log("Validation errors, rendering PartialView");
                             $("#movieModalContent").html(res);
                         }
@@ -44,8 +41,8 @@
     $(".edit-movie-link").click(function () {
         var id = $(this).data("id");
         $.get("/Home/EditMoviePartial?id=" + id, function (data) {
-            $("#editMovieModalContent").html(data);
-            var modal = new bootstrap.Modal(document.getElementById('editMovieModal'));
+            $("#movieModalContent").html(data); // gleiche ID wie beim Create
+            var modal = new bootstrap.Modal(document.getElementById('movieModal')); // gleiche Modal-ID
             modal.show();
 
             $("#editMovieForm").on("submit", function (e) {
@@ -68,7 +65,7 @@
                             }
                         } else {
                             console.log("Validation errors, rendering Edit PartialView");
-                            $("#editMovieModalContent").html(res); // Lade Fehler-View neu
+                            $("#movieModalContent").html(res); // auch hier anpassen
                         }
                     }
                 });
