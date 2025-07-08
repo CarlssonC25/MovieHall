@@ -1,9 +1,9 @@
-﻿@model MovieHall.SaveModel.SaveMovie
+﻿@model MovieHall.SaveModel.SaveAnime
 
 
-<form id="editMovieForm" enctype="multipart/form-data" method="post">
+<form id="editAnimeForm" enctype="multipart/form-data" method="post">
     <div class="modal-header">
-        <h5 class="modal-title" id="createMovieModalLabel">Film Bearbeiten</h5>
+        <h5 class="modal-title" id="createAnimeModalLabel">Film Bearbeiten</h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Schließen"></button>
     </div>
 
@@ -13,6 +13,43 @@
         <div class="mb-3">
             <label asp-for="Name">Name</label>
             <input asp-for="Name" class="form-control" />
+        </div>
+
+        <div class="mb-3">
+            <label asp-for="Orginal_Name">Orginal Name</label>
+            <input asp-for="Orginal_Name" class="form-control" />
+        </div>
+
+        <div class="mb-3">
+            <label asp-for="Top">Rank</label>
+            <select asp-for="Top" class="form-control">
+                @{
+                    var topOptions = new Dictionary<int, string>
+                                {
+                                { 0, "Top 1" },
+                                { 1, "Top 2" },
+                                { 2, "Top 3" },
+                                { 3, "Top 4" },
+                                { 4, "Top 5" },
+                                { 5, "Top 6" },
+                                { 6, "Top 7" },
+                                { 7, "Top 8" },
+                                { 8, "Top 9" },
+                                { 9, "Top 10" }
+                                };
+                    foreach (var top in topOptions)
+                    {
+                        if (Model.Top == top.Key)
+                        {
+                            <option value="@top.Key" selected>@top.Value</option>
+                        }
+                        else
+                        {
+                            <option value="@top.Key">@top.Value</option>
+                        }
+                    }
+                }
+            </select>
         </div>
 
         <div class="mb-3">
@@ -55,41 +92,9 @@
             @if (!string.IsNullOrEmpty(Model.ImgPath))
             {
                 <div class="mt-2 d-flex justify-content-center">
-                    <img src="~/img/Movie_imgs/@Model.ImgPath" alt="Aktuelles Bild" style="max-height: 150px; max-width: 100%;" />
+                    <img src="~/img/Anime_imgs/@Model.ImgPath" alt="Aktuelles Bild" style="max-height: 150px; max-width: 100%;" />
                 </div>
             }
-        </div>
-
-        <div class="mb-3">
-            <label asp-for="FSK">FSK</label>
-            <select asp-for="FSK" class="form-control">
-                @{
-                    var fskOptions = new Dictionary<int, string>
-                                {
-                                { 0, "0+" },
-                                { 6, "6+" },
-                                { 12, "12+" },
-                                { 16, "16+" },
-                                { 18, "18+" }
-                                };
-                    foreach (var option in fskOptions)
-                    {
-                        if (Model.FSK == option.Key)
-                        {
-                            <option value="@option.Key" selected>@option.Value</option>
-                        }
-                        else
-                        {
-                            <option value="@option.Key">@option.Value</option>
-                        }
-                    }
-                }
-            </select>
-        </div>
-
-        <div class="mb-3">
-            <input type="checkbox" asp-for="Favorit" class="form-check-input" />
-            <label class="form-check-label" asp-for="Favorit">Favorit</label>
         </div>
 
         <div class="mb-3">
@@ -103,13 +108,20 @@
         </div>
 
         <div class="mb-3">
+            <label asp-for="Episodes">Episodes</label>
+            <input asp-for="Episodes" class="form-control" />
+        </div>
+
+        <div class="mb-3">
             <label asp-for="Language">Sprache</label>
             <select asp-for="Language" class="form-control">
                 @{
                     var langOptions = new Dictionary<string, string>
                                 {
-                                { "de", "Deutsch" },
-                                { "en", "Englisch" }
+                                { "en", "Englisch" },
+                                { "sub", "Sub" },
+                                { "jap", "Japanisch" },
+                                { "de", "Deutsch" }
                                 };
                     foreach (var option in langOptions)
                     {
@@ -129,13 +141,13 @@
         <div class="checkbox-popup mb-3 row">
             <label class="ps-0">Genres</label>
             @{
-                var selectedGenreIds = Model.MovieGenres?.Select(g => g.GenreId).ToList() ?? new List<int>();
+                var selectedGenreIds = Model.AnimeGenres?.Select(g => g.GenreId).ToList() ?? new List<int>();
                 var genres = ViewBag.Genres as List<MovieHall.Models.Genre>;
             }
 
             @foreach (var g in genres)
             {
-                if (g.Belonging_to.Contains("M") || g.Belonging_to.Contains("m"))
+                if (g.Belonging_to.Contains("A") || g.Belonging_to.Contains("a"))
                 {
                     var isChecked = selectedGenreIds.Contains(g.Id) ? "checked" : "";
                     <div class="form-check col-4">
@@ -149,7 +161,7 @@
         <div class="checkbox-popup mb-3 row">
             <label class="ps-0">Mit wem gesehen</label>
             @{
-                var selectedWatchedIds = Model.MovieWatchedWiths?.Select(w => w.WatchedWithId).ToList() ?? new List<int>();
+                var selectedWatchedIds = Model.AnimeWatchedWiths?.Select(w => w.WatchedWithId).ToList() ?? new List<int>();
                 var watchedWiths = ViewBag.WatchedWiths as List<MovieHall.Models.WatchedWith>;
             }
             @foreach (var w in watchedWiths)

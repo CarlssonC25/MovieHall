@@ -38,10 +38,253 @@ namespace MovieHall.Controllers
         //----------------------------------------- Anime -----------------------------------------
 
 
-        public IActionResult Anime()
+        public async Task<IActionResult> Anime()
         {
-            return View();
+            var anime = await _context.Animes
+                .Include(m => m.AnimeGenres).ThenInclude(mg => mg.Genre)
+                .Include(m => m.AnimeWatchedWiths).ThenInclude(mw => mw.WatchedWith)
+                .Where(m => m.ParentId == null)
+                .ToListAsync();
+
+            return View(anime);
         }
+
+
+        // ---------- ADD ----------
+        [HttpGet]
+        public async Task<IActionResult> CreateAnimePartial()
+        {
+            ViewBag.Genres = await _context.Genre.OrderBy(g => g.Name).ToListAsync();
+            ViewBag.WatchedWith = await _context.WatchedWith.OrderBy(w => w.Name).ToListAsync();
+            return PartialView("~/Views/Anime/_CreatePartial.cshtml", new SaveAnime());
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> CreateAnimePartial(SaveAnime svAnime)
+        {
+
+            var Genres = await _context.Genre.OrderBy(g => g.Name).ToListAsync();
+            var WatchedWith = await _context.WatchedWith.OrderBy(w => w.Name).ToListAsync();
+
+            if (!ModelState.IsValid)
+            {
+                ViewBag.Genres = Genres;
+                ViewBag.WatchedWith = WatchedWith;
+                return PartialView("~/Views/Anime/_CreatePartial.cshtml", svAnime);
+            }
+
+            var anime = new Anime
+            {
+                Name = svAnime.Name,
+                Orginal_Name = svAnime.Orginal_Name,
+                Top = svAnime.Top,
+                Buy = svAnime.Buy,
+                Description = svAnime.Description,
+                ReleaseDate = svAnime.ReleaseDate,
+                Link = svAnime.Link,
+                Episodes = svAnime.Episodes,
+                Language = svAnime.Language,
+
+                Parent = svAnime.Parent,
+            };
+
+            if (svAnime.Img != null && (svAnime.Img.ContentType == "image/jpeg" || svAnime.Img.ContentType == "image/png"))
+            {
+                string uploadsFolder = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/img/Anime_imgs");
+                Directory.CreateDirectory(uploadsFolder);
+
+                string fileName = "";
+                var fileNameUnique = false;
+                while (fileNameUnique == false)
+                {
+                    Random rnd = new Random();
+                    fileName = $"{svAnime.Name}{rnd.Next(1, 100)}{Path.GetExtension(svAnime.Img.FileName)}";
+
+                    var animeImg = await _context.Animes.FirstOrDefaultAsync(s => s.Img == fileName);
+
+                    if (animeImg == null)
+                    {
+                        fileNameUnique = true;
+                    }
+                }
+
+                anime.Img = fileName;
+
+                string filePath = Path.Combine(uploadsFolder, fileName);
+
+                using (var stream = new FileStream(filePath, FileMode.Create))
+                {
+                    await svAnime.Img.CopyToAsync(stream);
+                }
+            }
+
+            foreach (var genreId in svAnime.SelectedGenreIds)
+                anime.AnimeGenres.Add(new AnimeGenre { GenreId = genreId });
+
+            foreach (var wId in svAnime.SelectedWatchedWithIds)
+                anime.AnimeWatchedWiths.Add(new AnimeWatchedWith { WatchedWithId = wId });
+
+            _context.Animes.Add(anime);
+            await _context.SaveChangesAsync();
+
+            return Json(new { success = true });
+        }
+
+        // ---------- EDIT ----------
+        [HttpGet]
+        public async Task<IActionResult> EditAnimePartial(int id)
+        {
+            var animeDb = await _context.Animes
+                .Include(m => m.AnimeGenres)
+                .Include(m => m.AnimeWatchedWiths)
+                .FirstOrDefaultAsync(m => m.Id == id);
+
+            var genres = await _context.Genre.OrderBy(g => g.Name).ToListAsync();
+            var watchedWith = await _context.WatchedWith.OrderBy(w => w.Name).ToListAsync();
+
+            ViewBag.Genres = genres;
+            ViewBag.WatchedWiths = watchedWith;
+
+            var path = $"/img/{animeDb.Img}";
+
+            var anime = new SaveAnime
+            {
+                Id = animeDb.Id,
+                Name = animeDb.Name,
+                Orginal_Name = animeDb.Orginal_Name,
+                Top = animeDb.Top,
+                Buy = animeDb.Buy,
+                Description = animeDb.Description,
+                ReleaseDate = animeDb.ReleaseDate,
+                ImgPath = animeDb.Img,
+                Link = animeDb.Link,
+                Episodes = animeDb.Episodes,
+                Language = animeDb.Language,
+                ParentId = animeDb.ParentId,
+
+                AnimeGenres = animeDb.AnimeGenres,
+                AnimeWatchedWiths = animeDb.AnimeWatchedWiths,
+            };
+
+            return PartialView("~/Views/Anime/_EditPartial.cshtml", anime);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> EditAnimePartial(SaveAnime svAnime)
+        {
+            var dbAnime = await _context.Animes
+                .Include(m => m.AnimeGenres)
+                .Include(m => m.AnimeWatchedWiths)
+                .FirstOrDefaultAsync(m => m.Id == svAnime.Id);
+
+            if (dbAnime == null)
+                return NotFound();
+
+            // Update properties
+            dbAnime.Name = svAnime.Name;
+            dbAnime.Orginal_Name = svAnime.Orginal_Name;
+            dbAnime.Description = svAnime.Description;
+            dbAnime.Language = svAnime.Language;
+            dbAnime.Link = svAnime.Link;
+            dbAnime.Top = svAnime.Top;
+            dbAnime.Episodes = svAnime.Episodes;
+            dbAnime.Buy = svAnime.Buy;
+            dbAnime.ReleaseDate = svAnime.ReleaseDate;
+            dbAnime.ParentId = svAnime.ParentId;
+
+            if (svAnime.Img != null && (svAnime.Img.ContentType == "image/jpeg" || svAnime.Img.ContentType == "image/png"))
+            {
+                string uploadsFolder = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/img/Anime_imgs");
+                Directory.CreateDirectory(uploadsFolder);
+
+                // Altes Bild löschen
+                if (!string.IsNullOrEmpty(svAnime.ImgPath))
+                {
+                    string oldImagePath = Path.Combine(uploadsFolder, svAnime.ImgPath);
+                    if (System.IO.File.Exists(oldImagePath))
+                    {
+                        System.IO.File.Delete(oldImagePath);
+                    }
+                }
+
+                // Neues Bild adden
+                string fileName = "";
+                var fileNameUnique = false;
+                while (!fileNameUnique)
+                {
+                    Random rnd = new Random();
+                    fileName = $"{svAnime.Name}{rnd.Next(1, 100)}{Path.GetExtension(svAnime.Img.FileName)}";
+
+                    var animeImg = await _context.Animes.FirstOrDefaultAsync(s => s.Img == fileName);
+
+                    if (animeImg == null)
+                    {
+                        fileNameUnique = true;
+                    }
+                }
+
+                dbAnime.Img = fileName;
+
+                string filePath = Path.Combine(uploadsFolder, fileName);
+
+                using (var stream = new FileStream(filePath, FileMode.Create))
+                {
+                    await svAnime.Img.CopyToAsync(stream);
+                }
+            }
+            else
+            {
+                dbAnime.Img = svAnime.ImgPath;
+            }
+
+            // Update genres
+            dbAnime.AnimeGenres.Clear();
+            foreach (var genreId in svAnime.SelectedGenreIds)
+                dbAnime.AnimeGenres.Add(new AnimeGenre { AnimeId = dbAnime.Id, GenreId = genreId });
+
+            // Update watched with
+            dbAnime.AnimeWatchedWiths.Clear();
+            foreach (var wId in svAnime.SelectedWatchedWithIds)
+                dbAnime.AnimeWatchedWiths.Add(new AnimeWatchedWith { AnimeId = dbAnime.Id, WatchedWithId = wId });
+
+            await _context.SaveChangesAsync();
+
+            return Json(new { success = true });
+        }
+
+
+        // ---------- DELETE ----------
+        [HttpPost]
+        public async Task<IActionResult> DeleteAnimeConfirmed(int id)
+        {
+            var anime = await _context.Animes
+                .Include(m => m.AnimeGenres)
+                .Include(m => m.AnimeWatchedWiths)
+                .FirstOrDefaultAsync(m => m.Id == id);
+
+            if (anime == null) return NotFound();
+
+            // Bild löschen
+            string uploadsFolder = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/img/Anime_imgs");
+            if (!string.IsNullOrEmpty(anime.Img))
+            {
+                string oldImagePath = Path.Combine(uploadsFolder, anime.Img);
+                if (System.IO.File.Exists(oldImagePath))
+                {
+                    System.IO.File.Delete(oldImagePath);
+                }
+            }
+
+            // Zuerst abhängige Datensätze entfernen
+            _context.AnimeGenres.RemoveRange(anime.AnimeGenres);
+            _context.AnimeWatchedWiths.RemoveRange(anime.AnimeWatchedWiths);
+
+            _context.Animes.Remove(anime);
+            await _context.SaveChangesAsync();
+
+            return Json(new { success = true });
+        }
+
 
 
         //----------------------------------------- Movie -----------------------------------------

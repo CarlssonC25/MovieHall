@@ -15,6 +15,10 @@ namespace MovieHall.Data
         public DbSet<MovieGenre> MovieGenres { get; set; }
         public DbSet<MovieWatchedWith> MovieWatchedWiths { get; set; }
 
+        public DbSet<Anime> Animes { get; set; }
+        public DbSet<AnimeGenre> AnimeGenres { get; set; }
+        public DbSet<AnimeWatchedWith> AnimeWatchedWiths { get; set; }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<MovieGenre>()
@@ -42,6 +46,34 @@ namespace MovieHall.Data
                 .HasOne(mw => mw.WatchedWith)
                 .WithMany(w => w.MovieWatchedWiths)
                 .HasForeignKey(mw => mw.WatchedWithId);
+
+
+
+            modelBuilder.Entity<AnimeGenre>()
+                .HasKey(ag => new { ag.AnimeId, ag.GenreId });
+
+            modelBuilder.Entity<AnimeWatchedWith>()
+                .HasKey(aw => new { aw.AnimeId, aw.WatchedWithId });
+
+            modelBuilder.Entity<AnimeGenre>()
+                .HasOne(ag => ag.Anime)
+                .WithMany(m => m.AnimeGenres)
+                .HasForeignKey(ag => ag.AnimeId);
+
+            modelBuilder.Entity<AnimeGenre>()
+                .HasOne(ag => ag.Genre)
+                .WithMany(g => g.AnimeGenres)
+                .HasForeignKey(ag => ag.GenreId);
+
+            modelBuilder.Entity<AnimeWatchedWith>()
+                .HasOne(aw => aw.Anime)
+                .WithMany(m => m.AnimeWatchedWiths)
+                .HasForeignKey(aw => aw.AnimeId);
+
+            modelBuilder.Entity<AnimeWatchedWith>()
+                .HasOne(aw => aw.WatchedWith)
+                .WithMany(w => w.AnimeWatchedWiths)
+                .HasForeignKey(aw => aw.WatchedWithId);
         }
 
     }

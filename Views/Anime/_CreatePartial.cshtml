@@ -1,0 +1,114 @@
+﻿@model MovieHall.SaveModel.SaveAnime
+@{
+    var genres = ViewBag.Genres as List<MovieHall.Models.Genre>;
+    var watched = ViewBag.WatchedWith as List<MovieHall.Models.WatchedWith>;
+}
+
+<form id="createAnimeForm" enctype="multipart/form-data">
+    <div class="modal-header">
+        <h5 class="modal-title" id="createAnimeModalLabel">Neuen Film hinzufügen</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Schließen"></button>
+    </div>
+    <div class="modal-body">
+
+        <div class="mb-3">
+            <label for="animeName">Name</label>
+            <input class="form-control" id="animeName" name="Name" required />
+        </div>
+
+        <div class="mb-3">
+            <label for="animeOrginalName">Orginal Name</label>
+            <input class="form-control" id="animeOrginalName" name="Orginal_Name" required />
+        </div>
+
+        <div class="mb-3">
+            <label for="top">Rank</label>
+            <select class="form-control" id="top" name="Top">
+                <option value="0">1</option>
+                <option value="1">2</option>
+                <option value="2">3</option>
+                <option value="3">4</option>
+                <option value="4">5</option>
+                <option value="5">6</option>
+                <option value="6">7</option>
+                <option value="7">8</option>
+                <option value="8">9</option>
+                <option value="9">10</option>
+            </select>
+        </div>
+
+        <div class="mb-3">
+            <label for="buy">Kaufmedium</label>
+            <select class="form-control" id="buy" name="Buy">
+                <option value="0">Noch nicht</option>
+                <option value="1">DVD</option>
+                <option value="2">Blu-ray</option>
+                <option value="3">3D</option>
+            </select>
+        </div>
+
+        <div class="mb-3">
+            <label for="description">Beschreibung</label>
+            <textarea class="form-control" id="description" name="Description" rows="3"></textarea>
+        </div>
+
+        <div class="mb-3">
+            <label for="imageFile">Bild (wird gespeichert in /img/Anime_imgs)</label>
+            <input type="file" name="Img" id="imageFile" class="form-control" accept="image/*" />
+        </div>
+
+        <div class="mb-3">
+            <label for="releaseDate">Veröffentlichungsdatum</label>
+            <input type="date" name="ReleaseDate" id="releaseDate" class="form-control" />
+        </div>
+
+        <div class="mb-3">
+            <label for="link">Link</label>
+            <input type="url" name="Link" id="link" class="form-control" />
+        </div>
+
+        <div class="mb-3">
+            <label for="episodes">Episoden</label>
+            <input type="number" name="Episodes" id="episodes" class="form-control" />
+        </div>
+
+        <div class="mb-3">
+            <label for="language">Sprache</label>
+            <select class="form-control" name="Language" id="language">
+                <option value="en">Englisch</option>
+                <option value="sub">Sub</option>
+                <option value="jap">Japanisch</option>
+                <option value="de">Deutsch</option>
+            </select>
+        </div>
+
+        <div class="checkbox-popup mb-3 row">
+            <label class="ps-0">Genres</label>
+            @foreach (var g in genres)
+            {
+                if (g.Belonging_to.Contains("A") || g.Belonging_to.Contains("a"))
+                {
+                    <div class="form-check col-4">
+                        <input class="form-check-input" type="checkbox" name="SelectedGenreIds" value="@g.Id" id="genre_@g.Id" />
+                        <label class="form-check-label" for="genre_@g.Id">@g.Name</label>
+                    </div>
+                }
+            }
+        </div>
+
+        <div class="checkbox-popup mb-3 row">
+            <label class="ps-0">Mit wem geschaut</label>
+            @foreach (var w in watched)
+            {
+                <div class="form-check col-4">
+                    <input class="form-check-input" type="checkbox" name="SelectedWatchedWithIds" value="@w.Id" id="watched_@w.Id" />
+                    <label class="form-check-label" for="watched_@w.Id">@w.Name</label>
+                </div>
+            }
+        </div>
+    </div>
+
+    <div class="modal-footer">
+        <button type="submit" class="btn btn-primary">Speichern</button>
+    </div>
+</form>

@@ -7,5 +7,6 @@
         public string Belonging_to { get; set; }
 
         public List<MovieGenre> MovieGenres { get; set; } = new();
+        public List<AnimeGenre> AnimeGenres { get; set; } = new();
     }
 }
