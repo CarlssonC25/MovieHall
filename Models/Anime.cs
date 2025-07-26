@@ -14,7 +14,7 @@ namespace MovieHall.Models
         public string Name { get; set; }
         public string? Orginal_Name { get; set; }
         public string? Description { get; set; }
-        public int? Buy { get; set; }
+        public int Buy { get; set; }
         public string Img { get; set; }
         public string? Link { get; set; }
         public DateTime ReleaseDate { get; set; }

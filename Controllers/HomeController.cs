@@ -4,6 +4,7 @@ using MovieHall.Data;
 using MovieHall.Models;
 using MovieHall.SaveModel;
 using MovieHall.ViewModels;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Diagnostics;
 using System.IO;
 
@@ -35,9 +36,124 @@ namespace MovieHall.Controllers
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
 
+
+        //----------------------------------------- View -----------------------------------------
+
+        public async Task<IActionResult> ItemView(string id,string type)
+        {
+            var ID = Int32.Parse(id);
+
+            // Error check
+            if (ID <= 0 || type == null) {
+                if (type == "Anime")
+                {
+                    return View("Anime.cshtml");
+                }
+                else if (type == "Movie")
+                {
+                    return View("Movie.cshtml");
+                }
+                else 
+                {
+                    return View("Index.cshtml");
+                }
+            }
+
+            ViewVM aniMov = new();
+
+            if (type == "Anime")
+            {
+                var item = await _context.Animes
+                    .Include(m => m.AnimeGenres).ThenInclude(mg => mg.Genre)
+                    .Include(m => m.AnimeWatchedWiths).ThenInclude(mw => mw.WatchedWith)
+                    .Where(m => m.Id == ID).FirstOrDefaultAsync();
+
+                aniMov.Id = ID;
+                aniMov.Name = item.Name;
+                aniMov.Buy = item.Buy;
+                aniMov.Description = item.Description;
+                aniMov.Img = "/img/Anime_imgs/" + item.Img;
+                aniMov.Link = item.Link;
+                aniMov.Language = item.Language;
+                aniMov.ReleaseDate = item.ReleaseDate;
+                aniMov.ParentId = item.ParentId;
+
+
+                aniMov.Orginal_Name = item.Orginal_Name;
+                aniMov.Top = item.Top;
+                aniMov.Episodes = item.Episodes;
+                aniMov.ParentAnime = item.Parent;
+                aniMov.AnimeGenres = item.AnimeGenres;
+                aniMov.AnimeWatchedWiths = item.AnimeWatchedWiths;
+
+                if (aniMov.ParentId != null)
+                {
+                    aniMov.ParentAnime = await _context.Animes
+                        .Include(m => m.AnimeGenres).ThenInclude(mg => mg.Genre)
+                        .Include(m => m.AnimeWatchedWiths).ThenInclude(mw => mw.WatchedWith)
+                        .Where(m => m.Id == aniMov.ParentId).FirstOrDefaultAsync();
+
+                    aniMov.ChildAnimes = await _context.Animes
+                        .Include(m => m.AnimeGenres).ThenInclude(mg => mg.Genre)
+                        .Include(m => m.AnimeWatchedWiths).ThenInclude(mw => mw.WatchedWith)
+                        .Where(m => m.ParentId == aniMov.ParentId).ToListAsync();
+                } else
+                {
+                    aniMov.ChildAnimes = await _context.Animes
+                        .Include(m => m.AnimeGenres).ThenInclude(mg => mg.Genre)
+                        .Include(m => m.AnimeWatchedWiths).ThenInclude(mw => mw.WatchedWith)
+                        .Where(m => m.ParentId == aniMov.Id).ToListAsync();
+                }
+            }
+            else if(type == "Movie")
+            {
+                var item = await _context.Movies
+                    .Include(m => m.MovieGenres).ThenInclude(mg => mg.Genre)
+                    .Include(m => m.MovieWatchedWiths).ThenInclude(mw => mw.WatchedWith)
+                    .Where(m => m.Id == ID).FirstOrDefaultAsync();
+
+                aniMov.Id = ID;
+                aniMov.Name = item.Name;
+                aniMov.Buy = item.Buy;
+                aniMov.Description = item.Description;
+                aniMov.Img = "/img/Movie_imgs/" + item.Img;
+                aniMov.Link = item.Link;
+                aniMov.Language = item.Language;
+                aniMov.ReleaseDate = item.ReleaseDate;
+                aniMov.ParentId = item.ParentId;
+
+                aniMov.FSK = item.FSK;
+                aniMov.Favorit = item.Favorit;
+                aniMov.ParentMovie = item.Parent;
+                aniMov.MovieGenres = item.MovieGenres;
+                aniMov.MovieWatchedWiths = item.MovieWatchedWiths;
+
+                if (aniMov.ParentId != null)
+                {
+                    aniMov.ParentMovie = await _context.Movies
+                        .Include(m => m.MovieGenres).ThenInclude(mg => mg.Genre)
+                        .Include(m => m.MovieWatchedWiths).ThenInclude(mw => mw.WatchedWith)
+                        .Where(m => m.Id == aniMov.ParentId).FirstOrDefaultAsync();
+
+                    aniMov.ChildMovies = await _context.Movies
+                            .Include(m => m.MovieGenres).ThenInclude(mg => mg.Genre)
+                            .Include(m => m.MovieWatchedWiths).ThenInclude(mw => mw.WatchedWith)
+                            .Where(m => m.ParentId == aniMov.ParentId).ToListAsync();
+                } else
+                {
+                    aniMov.ParentMovie = await _context.Movies
+                        .Include(m => m.MovieGenres).ThenInclude(mg => mg.Genre)
+                        .Include(m => m.MovieWatchedWiths).ThenInclude(mw => mw.WatchedWith)
+                        .Where(m => m.Id == aniMov.Id).FirstOrDefaultAsync();
+                }
+
+            } 
+
+            return View(aniMov);
+        }
+
+
         //----------------------------------------- Anime -----------------------------------------
-
-
         public async Task<IActionResult> Anime()
         {
             var anime = await _context.Animes

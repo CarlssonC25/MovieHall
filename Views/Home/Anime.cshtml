@@ -22,7 +22,9 @@
         @foreach (var anime in Model)
         {
             <tr>
-                <td>@anime.Name</td>
+                <a asp-area="" asp-controller="Home" asp-action="ItemView" asp-route-id="@anime.Id" asp-route-type="Anime">
+                    <td>@anime.Name</td>
+                </a>
                 <td>@anime.Orginal_Name</td>
                 <td>
                     @{

@@ -23,7 +23,11 @@
         @foreach (var movie in Model)
         {
             <tr>
-                <td>@movie.Name</td>
+                <td>
+                    <a asp-area="" asp-controller="Home" asp-action="ItemView" asp-route-id="@movie.Id" asp-route-type="Movie">
+                        @movie.Name
+                    </a>
+                 </td>
                 <td>@movie.FSK</td>
                 <td>
                     @{

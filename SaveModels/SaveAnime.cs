@@ -15,7 +15,7 @@ namespace MovieHall.SaveModel
         public string Name { get; set; }
         public string? Orginal_Name { get; set; }
         public string? Description { get; set; }
-        public int? Buy { get; set; }
+        public int Buy { get; set; }
         public IFormFile? Img { get; set; }
         public string? ImgPath { get; set; }
         public string? Link { get; set; }

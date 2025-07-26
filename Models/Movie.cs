@@ -10,7 +10,7 @@ namespace MovieHall.Models
         [Required]
         public string Name { get; set; }
 
-        public int? Buy { get; set; }
+        public int Buy { get; set; }
         public string? Description { get; set; }
         public string Img { get; set; }
         public int FSK { get; set; }
