@@ -39,12 +39,13 @@ namespace MovieHall.Controllers
 
         //----------------------------------------- View -----------------------------------------
 
-        public async Task<IActionResult> ItemView(string id,string type)
+        public async Task<IActionResult> ItemView(string id, string type)
         {
             var ID = Int32.Parse(id);
 
             // Error check
-            if (ID <= 0 || type == null) {
+            if (ID <= 0 || type == null)
+            {
                 if (type == "Anime")
                 {
                     return View("Anime.cshtml");
@@ -53,7 +54,7 @@ namespace MovieHall.Controllers
                 {
                     return View("Movie.cshtml");
                 }
-                else 
+                else
                 {
                     return View("Index.cshtml");
                 }
@@ -97,15 +98,21 @@ namespace MovieHall.Controllers
                         .Include(m => m.AnimeGenres).ThenInclude(mg => mg.Genre)
                         .Include(m => m.AnimeWatchedWiths).ThenInclude(mw => mw.WatchedWith)
                         .Where(m => m.ParentId == aniMov.ParentId).ToListAsync();
-                } else
+                }
+                else
                 {
+                    aniMov.ParentAnime = await _context.Animes
+                        .Include(m => m.AnimeGenres).ThenInclude(mg => mg.Genre)
+                        .Include(m => m.AnimeWatchedWiths).ThenInclude(mw => mw.WatchedWith)
+                        .Where(m => m.Id == aniMov.Id).FirstOrDefaultAsync();
+
                     aniMov.ChildAnimes = await _context.Animes
                         .Include(m => m.AnimeGenres).ThenInclude(mg => mg.Genre)
                         .Include(m => m.AnimeWatchedWiths).ThenInclude(mw => mw.WatchedWith)
                         .Where(m => m.ParentId == aniMov.Id).ToListAsync();
                 }
             }
-            else if(type == "Movie")
+            else if (type == "Movie")
             {
                 var item = await _context.Movies
                     .Include(m => m.MovieGenres).ThenInclude(mg => mg.Genre)
@@ -136,21 +143,202 @@ namespace MovieHall.Controllers
                         .Where(m => m.Id == aniMov.ParentId).FirstOrDefaultAsync();
 
                     aniMov.ChildMovies = await _context.Movies
-                            .Include(m => m.MovieGenres).ThenInclude(mg => mg.Genre)
-                            .Include(m => m.MovieWatchedWiths).ThenInclude(mw => mw.WatchedWith)
-                            .Where(m => m.ParentId == aniMov.ParentId).ToListAsync();
-                } else
+                        .Include(m => m.MovieGenres).ThenInclude(mg => mg.Genre)
+                        .Include(m => m.MovieWatchedWiths).ThenInclude(mw => mw.WatchedWith)
+                        .Where(m => m.ParentId == aniMov.ParentId).ToListAsync();
+                }
+                else
                 {
                     aniMov.ParentMovie = await _context.Movies
                         .Include(m => m.MovieGenres).ThenInclude(mg => mg.Genre)
                         .Include(m => m.MovieWatchedWiths).ThenInclude(mw => mw.WatchedWith)
                         .Where(m => m.Id == aniMov.Id).FirstOrDefaultAsync();
+
+                    aniMov.ChildMovies = await _context.Movies
+                        .Include(m => m.MovieGenres).ThenInclude(mg => mg.Genre)
+                        .Include(m => m.MovieWatchedWiths).ThenInclude(mw => mw.WatchedWith)
+                        .Where(m => m.ParentId == aniMov.Id).ToListAsync();
                 }
 
-            } 
+            }
 
             return View(aniMov);
         }
+
+
+        // ---------- ADD Movie Child ----------
+        [HttpGet]
+        public async Task<IActionResult> CreateMovieChildPartial(int parentId)
+        {
+            var model = new SaveMovie
+            {
+                ParentId = parentId
+            };
+
+            ViewBag.Genres = await _context.Genre.OrderBy(g => g.Name).ToListAsync();
+            ViewBag.WatchedWith = await _context.WatchedWith.OrderBy(w => w.Name).ToListAsync();
+
+            return PartialView("~/Views/Movie/_CreatePartial.cshtml", model);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> CreateMovieChildPartial(SaveMovie svMovie)
+        {
+            var Genres = await _context.Genre.OrderBy(g => g.Name).ToListAsync();
+            var WatchedWith = await _context.WatchedWith.OrderBy(w => w.Name).ToListAsync();
+
+            if (!ModelState.IsValid)
+            {
+                ViewBag.Genres = Genres;
+                ViewBag.WatchedWith = WatchedWith;
+                return PartialView("~/Views/Movie/_CreatePartial.cshtml", svMovie);
+            }
+
+            var movie = new Movie
+            {
+                Name = svMovie.Name,
+                Buy = svMovie.Buy,
+                Description = svMovie.Description,
+                Favorit = svMovie.Favorit,
+                FSK = svMovie.FSK,
+                Language = svMovie.Language,
+                ReleaseDate = svMovie.ReleaseDate,
+                Link = svMovie.Link,
+                ParentId = svMovie.ParentId,
+
+                Parent = svMovie.Parent,
+            };
+
+            if (svMovie.Img != null && (svMovie.Img.ContentType == "image/jpeg" || svMovie.Img.ContentType == "image/png"))
+            {
+                string uploadsFolder = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/img/Movie_imgs");
+                Directory.CreateDirectory(uploadsFolder);
+
+                string fileName = "";
+                var fileNameUnique = false;
+                while (fileNameUnique == false)
+                {
+                    Random rnd = new Random();
+                    fileName = $"{svMovie.Name}{rnd.Next(1, 100)}{Path.GetExtension(svMovie.Img.FileName)}";
+
+                    var movieImg = await _context.Movies.FirstOrDefaultAsync(s => s.Img == fileName);
+
+                    if (movieImg == null)
+                    {
+                        fileNameUnique = true;
+                    }
+                }
+
+                movie.Img = fileName;
+
+                string filePath = Path.Combine(uploadsFolder, fileName);
+
+                using (var stream = new FileStream(filePath, FileMode.Create))
+                {
+                    await svMovie.Img.CopyToAsync(stream);
+                }
+            }
+
+            foreach (var genreId in svMovie.SelectedGenreIds)
+                movie.MovieGenres.Add(new MovieGenre { GenreId = genreId });
+
+            foreach (var wId in svMovie.SelectedWatchedWithIds)
+                movie.MovieWatchedWiths.Add(new MovieWatchedWith { WatchedWithId = wId });
+
+            _context.Movies.Add(movie);
+            await _context.SaveChangesAsync();
+
+            return Json(new { success = true });
+        }
+
+
+        // ---------- ADD Anime Child ----------
+        [HttpGet]
+        public async Task<IActionResult> CreateAnimeChildPartial(int parentId)
+        {
+            var model = new SaveAnime
+            {
+                ParentId = parentId
+            };
+
+            ViewBag.Genres = await _context.Genre.OrderBy(g => g.Name).ToListAsync();
+            ViewBag.WatchedWith = await _context.WatchedWith.OrderBy(w => w.Name).ToListAsync();
+
+            return PartialView("~/Views/Anime/_CreatePartial.cshtml", model);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> CreateAnimeChildPartial(SaveAnime svAnime)
+        {
+
+            var Genres = await _context.Genre.OrderBy(g => g.Name).ToListAsync();
+            var WatchedWith = await _context.WatchedWith.OrderBy(w => w.Name).ToListAsync();
+
+            if (!ModelState.IsValid)
+            {
+                ViewBag.Genres = Genres;
+                ViewBag.WatchedWith = WatchedWith;
+                return PartialView("~/Views/Anime/_CreatePartial.cshtml", svAnime);
+            }
+
+            var anime = new Anime
+            {
+                Name = svAnime.Name,
+                Orginal_Name = svAnime.Orginal_Name,
+                Top = svAnime.Top,
+                Buy = svAnime.Buy,
+                Description = svAnime.Description,
+                ReleaseDate = svAnime.ReleaseDate,
+                Link = svAnime.Link,
+                Episodes = svAnime.Episodes,
+                Language = svAnime.Language,
+                ParentId = svAnime.ParentId,
+
+                Parent = svAnime.Parent,
+            };
+
+            if (svAnime.Img != null && (svAnime.Img.ContentType == "image/jpeg" || svAnime.Img.ContentType == "image/png"))
+            {
+                string uploadsFolder = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/img/Anime_imgs");
+                Directory.CreateDirectory(uploadsFolder);
+
+                string fileName = "";
+                var fileNameUnique = false;
+                while (fileNameUnique == false)
+                {
+                    Random rnd = new Random();
+                    fileName = $"{svAnime.Name}{rnd.Next(1, 100)}{Path.GetExtension(svAnime.Img.FileName)}";
+
+                    var animeImg = await _context.Animes.FirstOrDefaultAsync(s => s.Img == fileName);
+
+                    if (animeImg == null)
+                    {
+                        fileNameUnique = true;
+                    }
+                }
+
+                anime.Img = fileName;
+
+                string filePath = Path.Combine(uploadsFolder, fileName);
+
+                using (var stream = new FileStream(filePath, FileMode.Create))
+                {
+                    await svAnime.Img.CopyToAsync(stream);
+                }
+            }
+
+            foreach (var genreId in svAnime.SelectedGenreIds)
+                anime.AnimeGenres.Add(new AnimeGenre { GenreId = genreId });
+
+            foreach (var wId in svAnime.SelectedWatchedWithIds)
+                anime.AnimeWatchedWiths.Add(new AnimeWatchedWith { WatchedWithId = wId });
+
+            _context.Animes.Add(anime);
+            await _context.SaveChangesAsync();
+
+            return Json(new { success = true });
+        }
+
 
 
         //----------------------------------------- Anime -----------------------------------------
