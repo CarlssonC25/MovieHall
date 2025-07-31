@@ -177,3 +177,38 @@ header {
         color: $text-col-bright;
     }
 }
+
+
+/*------------------ Item View ------------------*/
+
+.forece-padding {
+    padding: 0 calc(var(--bs-gutter-x) * .5);
+}
+
+.itemView-edit-content {
+    position: absolute;
+    display: flex;
+    justify-content: flex-end;
+    width: 44%;
+
+    .item-btn-edit {
+        border: none;
+        background: none;
+        background-color: $back-gray-lightlight;
+        border-radius: $base-border-radius;
+
+        img {
+            padding: 2px;
+        }
+    }
+}
+
+.item-btn-delete {
+    border: none;
+    background: none;
+    border-radius: $base-border-radius;
+
+    img {
+        padding: 2px;
+    }
+}

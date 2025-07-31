@@ -19,14 +19,14 @@
 <section class="d-flex justify-content-center">
     <div style="width:1920px">
         <div class="container-fluid">
-            <div class="row">
+            <div class="row mt-4">
                 @*----------------------- Left ----------------------- *@
                 <div class="col-2">
                     @* ----- Anime ----- *@
                     @if (Model.ParentAnime != null)
                     {
                         var imgSrc = "/img/Anime_imgs/" + Model.ParentAnime.Img;
-                        <a class="row" asp-area="" asp-controller="Home" asp-action="ItemView" asp-route-id="@Model.ParentAnime.Id" asp-route-type="Anime">
+                        <a class="row mb-3" asp-area="" asp-controller="Home" asp-action="ItemView" asp-route-id="@Model.ParentAnime.Id" asp-route-type="Anime">
                             <div class="col-4"><img class="w-100" src="@imgSrc" /></div>
                             <div class="col-8 align-content-center"><p>@Model.ParentAnime.Name</p></div>
                         </a>
@@ -36,7 +36,7 @@
                         @foreach (var child in Model.ChildAnimes)
                         {
                             var imgSrc = "/img/Anime_imgs/" + child.Img;
-                            <a class="row" asp-area="" asp-controller="Home" asp-action="ItemView" asp-route-id="@child.Id" asp-route-type="Anime">
+                            <a class="row mb-3" asp-area="" asp-controller="Home" asp-action="ItemView" asp-route-id="@child.Id" asp-route-type="Anime">
                                 <div class="col-4"><img class="w-100" src="@imgSrc" /></div>
                                 <div class="col-8 align-content-center"><p>@child.Name</p></div>
                             </a>
@@ -55,7 +55,7 @@
                     @if (Model.ParentMovie != null)
                     {
                         var imgSrc = "/img/Movie_imgs/" + Model.ParentMovie.Img;
-                        <a class="row" asp-area="" asp-controller="Home" asp-action="ItemView" asp-route-id="@Model.ParentMovie.Id" asp-route-type="Movie">
+                        <a class="row mb-3" asp-area="" asp-controller="Home" asp-action="ItemView" asp-route-id="@Model.ParentMovie.Id" asp-route-type="Movie">
                             <div class="col-4"><img class="w-100" src="@imgSrc" /></div>
                             <div class="col-8 align-content-center"><p>@Model.ParentMovie.Name</p></div>
                         </a>
@@ -65,7 +65,7 @@
                         @foreach (var child in Model.ChildMovies)
                         {
                             var imgSrc = "/img/Movie_imgs/" + child.Img;
-                            <a class="row" asp-area="" asp-controller="Home" asp-action="ItemView" asp-route-id="@child.Id" asp-route-type="Movie">
+                            <a class="row mb-3" asp-area="" asp-controller="Home" asp-action="ItemView" asp-route-id="@child.Id" asp-route-type="Movie">
                                 <div class="col-4"><img class="w-100" src="@imgSrc" /></div>
                                 <div class="col-8 align-content-center"><p>@child.Name</p></div>
                             </a>
@@ -85,7 +85,7 @@
                 @* ----------------------- Mid ----------------------- *@
                 <div class="col-8">
                     <div class="w-100 text-center">
-                        @if (Model.Favorit != null)
+                        @if (Model.Favorit == true)
                         {
                             <h1>@Model.Name *</h1>
                         } else
@@ -94,13 +94,37 @@
                         }
                     </div>
 
-                    <div class="row">
+                    <div class="w-100 my-4">
+                        <a href="@Model.Link" target="_blank">
+                            <img class="w-100" src="/img/itemVideoBack.png" />
+                        </a>
+                    </div>
+
+                    <div class="row forece-padding">
                         @* TODO ParentId, link und Id  *@
-                        <div class="col-3 text-center">
-                            <img src="@Model.Img"/>
+                        <div class="col-3">
+                            <div class="w-100 text-center">
+                                <img src="@Model.Img" />
+                            </div>
                         </div>
 
                         <div class="col-9">
+                            @if (Model.ParentAnime != null)
+                            {
+                                <div class="itemView-edit-content">
+                                    <button class="p-0 m-0 item-btn-edit edit-anime-link" data-id="@Model.Id">
+                                        <img src="/img/wrench.png" />
+                                    </button>
+                                </div>                                
+                            }
+                            @if (Model.ParentMovie != null)
+                            {
+                                <div class="itemView-edit-content">
+                                    <button class="p-0 m-0 item-btn-edit edit-movie-link" data-id="@Model.Id">
+                                        <img src="/img/wrench.png" />
+                                    </button>
+                                </div>
+                            }
 
                             @if (Model.Orginal_Name != null)
                             {
@@ -148,10 +172,29 @@
                                 <p>@genreText</p>
                             }
 
-                            <p>
-                                <b>Bescheibung:</b> @Model.Description
-                            </p>
+                            @if (Model.Description != null)
+                            {
+                                <p>
+                                    <b>Bescheibung:</b> @Model.Description
+                                </p>
+                            }
 
+                                @if (Model.ParentAnime != null)
+                                {
+                                    <div class="itemView-edit-content">
+                                        <button class="p-0 m-0 item-btn-delete delete-anime-link" data-id="@Model.Id" data-name="@Model.Name" data-parent-id="@Model.ParentId">
+                                            <img src="/img/delete.png" />
+                                        </button>
+                                    </div>
+                                }
+                                @if (Model.ParentMovie != null)
+                                {
+                                    <div class="itemView-edit-content">
+                                        <button class="p-0 m-0 item-btn-delete delete-movie-link" data-id="@Model.Id" data-name="@Model.Name" data-parent-id="@Model.ParentId">
+                                            <img src="/img/delete.png" />
+                                        </button>
+                                    </div>
+                                }
                         </div>
                     </div>
                 </div>
@@ -165,7 +208,7 @@
     </div>
 </section>
 
-
+@* Movie add Child, edit and Delete Movie *@
 <div class="modal fade" id="movieModal" tabindex="-1">
     <div class="modal-dialog">
         <div class="modal-content" id="movieModalContent">
@@ -173,7 +216,29 @@
         </div>
     </div>
 </div>
+<div class="modal fade" id="deleteMovieModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form id="deleteMovieForm">
+                <div class="modal-header">
+                    <h5 class="modal-title">Film löschen</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <input type="hidden" id="deleteMovieId" />
+                    <p>Soll der Film <strong>"<span id="deleteMovieName"></span>"</strong> wirklich gelöscht werden?</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Abbrechen</button>
+                    <button type="submit" class="btn btn-danger">Löschen</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
 
+
+@* Anime add Child, edit and Delete Anime *@
 <div class="modal fade" id="animeModal" tabindex="-1">
     <div class="modal-dialog">
         <div class="modal-content" id="animeModalContent">
@@ -181,6 +246,27 @@
         </div>
     </div>
 </div>
+<div class="modal fade" id="deleteAnimeModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form id="deleteAnimeForm">
+                <div class="modal-header">
+                    <h5 class="modal-title">Film löschen</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <input type="hidden" id="deleteAnimeId" />
+                    <p>Soll der Film <strong>"<span id="deleteAnimeName"></span>"</strong> wirklich gelöscht werden?</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Abbrechen</button>
+                    <button type="submit" class="btn btn-danger">Löschen</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
 
 
 @section Scripts {

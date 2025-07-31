@@ -13,6 +13,7 @@
         <div class="mb-3">
             <label asp-for="Name">Name</label>
             <input asp-for="Name" class="form-control" />
+            <input asp-for="ParentId" type="hidden" />
         </div>
 
         <div class="mb-3">
@@ -164,7 +165,7 @@
     </div>
 
     <div class="modal-footer">
-        <button type="submit" class="btn btn-primary">Speichern</button>
+        <button type="submit" class="btn btn-primary" >Speichern</button>
     </div>
 
 </form>

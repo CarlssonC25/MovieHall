@@ -7,6 +7,7 @@ using MovieHall.ViewModels;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Diagnostics;
 using System.IO;
+using System.Xml.Linq;
 
 namespace MovieHall.Controllers
 {
@@ -166,7 +167,8 @@ namespace MovieHall.Controllers
         }
 
 
-        // ---------- ADD Movie Child ----------
+        // ---------- Movie ----------
+        // -- ADD Movie Child --
         [HttpGet]
         public async Task<IActionResult> CreateMovieChildPartial(int parentId)
         {
@@ -252,7 +254,8 @@ namespace MovieHall.Controllers
         }
 
 
-        // ---------- ADD Anime Child ----------
+        // ---------- Anime ----------
+        // -- ADD Anime Child --
         [HttpGet]
         public async Task<IActionResult> CreateAnimeChildPartial(int parentId)
         {
@@ -583,6 +586,33 @@ namespace MovieHall.Controllers
             _context.AnimeGenres.RemoveRange(anime.AnimeGenres);
             _context.AnimeWatchedWiths.RemoveRange(anime.AnimeWatchedWiths);
 
+            // Wenn anime kein Parent hat => lösche alle Childs
+            if (anime.ParentId == null)
+            {
+                var childAnimes = await _context.Animes
+                    .Where(a => a.ParentId == anime.Id)
+                    .Include(a => a.AnimeGenres)
+                    .Include(a => a.AnimeWatchedWiths)
+                    .ToListAsync();
+
+                foreach (var child in childAnimes)
+                {
+                    // Bild vom Child löschen
+                    if (!string.IsNullOrEmpty(child.Img))
+                    {
+                        string childImagePath = Path.Combine(uploadsFolder, child.Img);
+                        if (System.IO.File.Exists(childImagePath))
+                        {
+                            System.IO.File.Delete(childImagePath);
+                        }
+                    }
+
+                    _context.AnimeGenres.RemoveRange(child.AnimeGenres);
+                    _context.AnimeWatchedWiths.RemoveRange(child.AnimeWatchedWiths);
+                    _context.Animes.Remove(child);
+                }
+            }
+
             _context.Animes.Remove(anime);
             await _context.SaveChangesAsync();
 
@@ -828,6 +858,34 @@ namespace MovieHall.Controllers
             _context.MovieGenres.RemoveRange(movie.MovieGenres);
             _context.MovieWatchedWiths.RemoveRange(movie.MovieWatchedWiths);
 
+
+            // Wenn movies kein Parent hat => lösche alle Childs
+            if (movie.ParentId == null)
+            {
+                var childMovies = await _context.Movies
+                    .Where(a => a.ParentId == movie.Id)
+                    .Include(m => m.MovieGenres)
+                    .Include(m => m.MovieWatchedWiths)
+                    .ToListAsync();
+
+                foreach (var child in childMovies)
+                {
+                    // Bild vom Child löschen
+                    if (!string.IsNullOrEmpty(child.Img))
+                    {
+                        string childImagePath = Path.Combine(uploadsFolder, child.Img);
+                        if (System.IO.File.Exists(childImagePath))
+                        {
+                            System.IO.File.Delete(childImagePath);
+                        }
+                    }
+
+                    _context.MovieGenres.RemoveRange(child.MovieGenres);
+                    _context.MovieWatchedWiths.RemoveRange(child.MovieWatchedWiths);
+                    _context.Movies.Remove(child);
+                }
+            }
+
             _context.Movies.Remove(movie);
             await _context.SaveChangesAsync();
 
@@ -837,7 +895,7 @@ namespace MovieHall.Controllers
 
         //----------------------------------------- Settings -----------------------------------------
 
-        /* ---------------- Genre ---------------- */
+        /* ----- Genre ----- */
         public async Task<IActionResult> Settings()
         {
             var vm = new SettingsPageVM
@@ -850,7 +908,7 @@ namespace MovieHall.Controllers
             return View(vm);
         }
 
-        // ---------- ADD ----------
+        // --- ADD ---
         [HttpGet]
         public IActionResult CreatePartial()
         {
@@ -869,7 +927,7 @@ namespace MovieHall.Controllers
             return Json(new { success = true });
         }
 
-        // ---------- EDIT ----------
+        // --- EDIT ---
         [HttpGet]
         public async Task<IActionResult> EditPartial(int id)
         {
@@ -891,7 +949,7 @@ namespace MovieHall.Controllers
             return Json(new { success = true });
         }
 
-        // ---------- DELETE ----------
+        // --- DELETE ---
         [HttpPost]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
@@ -905,12 +963,12 @@ namespace MovieHall.Controllers
         }
 
 
-        /* ---------------- Setting ---------------- */
+        /* ----- Setting ----- */
         [HttpGet]
         public IActionResult CreateSettingPartial()
             => PartialView("~/Views/Setting/_CreatePartial.cshtml", new Setting());
 
-        // ---------- ADD ----------
+        // --- ADD ---
         [HttpPost]
         public async Task<IActionResult> CreateSettingPartial(Setting s)
         {
@@ -920,7 +978,7 @@ namespace MovieHall.Controllers
             return Json(new { success = true });
         }
 
-        // ---------- EDIT ----------
+        // --- EDIT ---
         [HttpGet]
         public async Task<IActionResult> EditSettingPartial(int id)
         {
@@ -936,7 +994,7 @@ namespace MovieHall.Controllers
             return Json(new { success = true });
         }
 
-        // ---------- DELETE ----------
+        // --- DELETE ---
         [HttpPost]
         public async Task<IActionResult> DeleteSettingConfirmed(int id)
         {
@@ -947,12 +1005,12 @@ namespace MovieHall.Controllers
         }
 
 
-        /* ------------- WatchedWith ------------- */
+        /* ------ WatchedWith ----- */
         [HttpGet]
         public IActionResult CreateWatchedWithPartial()
             => PartialView("~/Views/WatchedWith/_CreatePartial.cshtml", new WatchedWith());
 
-        // ---------- ADD ----------
+        // --- ADD ---
         [HttpPost]
         public async Task<IActionResult> CreateWatchedWithPartial(WatchedWith s)
         {
@@ -961,7 +1019,7 @@ namespace MovieHall.Controllers
             return Json(new { success = true });
         }
 
-        // ---------- EDIT ----------
+        // --- EDIT ---
         [HttpGet]
         public async Task<IActionResult> EditWatchedWithPartial(int id)
         {
@@ -977,7 +1035,7 @@ namespace MovieHall.Controllers
             return Json(new { success = true });
         }
 
-        // ---------- DELETE ----------
+        // --- DELETE ---
         [HttpPost]
         public async Task<IActionResult> DeleteWatchedWithConfirmed(int id)
         {
@@ -988,9 +1046,7 @@ namespace MovieHall.Controllers
         }
 
 
-
-
-        /* ------- Home Imgs (Settings) ------- */
+        /* ----- Home Imgs (Settings) ----- */
 
         [HttpPost]
         public async Task<IActionResult> UploadSettingImage(IFormFile file, string settingName)

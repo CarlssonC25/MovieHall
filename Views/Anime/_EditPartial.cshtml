@@ -3,7 +3,7 @@
 
 <form id="editAnimeForm" enctype="multipart/form-data" method="post">
     <div class="modal-header">
-        <h5 class="modal-title" id="createAnimeModalLabel">Film Bearbeiten</h5>
+        <h5 class="modal-title" id="createAnimeModalLabel">Anime Bearbeiten</h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Schließen"></button>
     </div>
 
@@ -13,6 +13,7 @@
         <div class="mb-3">
             <label asp-for="Name">Name</label>
             <input asp-for="Name" class="form-control" />
+            <input asp-for="ParentId" type="hidden" />
         </div>
 
         <div class="mb-3">
