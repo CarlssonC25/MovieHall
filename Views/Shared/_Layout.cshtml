@@ -11,8 +11,8 @@
 <body>
     <header class="container-fluid">
         <nav class="row">
-            <div class="col-3">
-                <a class="nav-link" asp-area="" asp-controller="Home" asp-action="Index">
+            <div class="col-3 d-flex">
+                <a id="logo" class="nav-link" asp-area="" asp-controller="Home" asp-action="Index">
                     <img src="~/img/MovieTicketW.png" alt="Logo" />
                 </a>
             </div>
@@ -29,9 +29,11 @@
             </div>
 
             <div class="col-3 d-flex justify-content-end">
-                <a id="settings" class="nav-link d-flex align-items-center justify-content-end" asp-area="" asp-controller="Home" asp-action="Settings">
-                    <img class="w-75" src="~/img/settings.png" alt="Settings" />
-                </a>
+                <div class="d-flex align-items-center justify-content-end nav-link">
+                    <a id="settings" class=" p-0 w-75" asp-area="" asp-controller="Home" asp-action="Settings">
+                        <img class="w-100" src="~/img/settings.png" alt="Settings" />
+                    </a>
+                </div>
             </div>
         </nav>
     </header>

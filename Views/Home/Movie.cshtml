@@ -3,9 +3,61 @@
     ViewData["Title"] = "Movie";
 }
 
+<section id="movie" class="container-fluid">
+    <div class="d-flex justify-content-center">
+        <div class="body-HD-size">
+
+            <div class="w-100 extra-space">
+                <div class="extra-fill">
+                </div>
+                <div class="extra">
+                    <button class="btn btn-primary mt-3" id="openCreateMovieModal">Neuer Film</button>
+                </div>
+            </div>
+
+            <div class="w-100 text-center">
+                @for (int i = 0; i <= 11; i++)
+                {
+                    <a class="item" href="">
+                        <img src="~/img/test.jpg" alt="Alternate Text" />
+                        <div>
+                            <p>
+                                Test
+                            </p>
+                        </div>
+                        <span>
+                            <i class="fa fa-good" data-toggle="tooltip" data-placement="top" title="" data-original-title="HD Quality"></i>
+                        </span>
+                    </a>
+                }
+            </div>
+
+            <div class="w-100 extra-space">
+                <div class="extra-fill">
+                </div>
+                <div class="extra">
+                    <select class="form-control" id="spezial-search" name="spezial-search">
+                        <option value="">Select</option>
+                        <option value="0">0+</option>
+                        <option value="6">6+</option>
+                        <option value="12">12+</option>
+                        <option value="16">16+</option>
+                        <option value="18">18+</option>
+                        <option value="Favorit">Favorit</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="w-100 Pagination ">
+
+            </div>
+
+        </div>
+    </div>
+</section>
+
 <h2>Movie List</h2>
 
-<button class="btn btn-primary mb-3" id="openCreateMovieModal">Neuer Film</button>
 
 <table class="table table-bordered">
     <thead>

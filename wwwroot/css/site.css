@@ -70,6 +70,26 @@ input:focus {
   color: #ddd;
 }
 
+.btn-primary:active {
+  color: #ddd;
+  background-color: #777;
+  border: none !important;
+  outline: none !important;
+}
+
+.btn-primary:focus {
+  background-color: #777;
+  outline: none !important;
+  border: none !important;
+  box-shadow: none;
+}
+
+.btn-primary:focus-visible {
+  background-color: #777;
+  outline: none !important;
+  border: none !important;
+}
+
 /*Elem color Style*/
 .elemColorStyle-1s {
   background: #1c1c1c;

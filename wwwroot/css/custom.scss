@@ -4,7 +4,27 @@
 
 
 
-/*------------------  Body ------------------*/
+/*------------------ All ------------------*/
+.body-HD-size {
+    width: 1920px !important                                                                                                                                                                                                                                                                                             ;
+}
+
+.form-control {
+    border-color: $text-col-dark;
+}
+
+.form-control:focus {
+    box-shadow: none !important;
+    border-color: $text-col-dark !important;
+    color: $text-col-bright !important;
+}
+
+.form-control:focus-visible {
+    outline: none !important;
+}
+
+
+/*------------------ Body ------------------*/
 body {
     height: 100vh;
     background-color: $back-gray-normal;
@@ -20,11 +40,12 @@ main {
     padding-top: $haeder-height;
 }
 
-/*------------------  Navbar ------------------*/
+/*------------------ Navbar ------------------*/
 header {
     background-color: $back-gray-bright;
     position: fixed;
     height: $haeder-height;
+    z-index: 1;
 }
 
 #search > div{
@@ -51,9 +72,23 @@ header {
     padding: 5px;
 }
 
+#settings img {
+    @include transition($base-transition);
+}
+#settings:hover img {
+    opacity: 0.7;
+    filter: drop-shadow(0px 0px 1px $text-col-dark);
+}
 
+#logo img {
+    @include transition($base-transition);
+}
+#logo:hover img {
+    opacity: 0.7;
+    filter: drop-shadow(0px 0px 3px $text-col-dark);
+}
 
-/*------------------  Forms ------------------*/
+/*------------------ Forms ------------------*/
 
 [type="checkbox"] {
     border: 1px solid $text-col-dark;
@@ -61,7 +96,7 @@ header {
 
 
 
-/*------------------  Popups ------------------*/
+/*------------------ Popups ------------------*/
 
 .btn-close {
     filter: brightness(0) saturate(100%) invert(85%) sepia(3%) saturate(75%) hue-rotate(359deg) brightness(98%) contrast(89%);
@@ -72,7 +107,7 @@ header {
 }
 
 
-/*------------------  Home ------------------*/
+/*------------------ Home ------------------*/
 
 #home {
     height: 90vh;
@@ -88,6 +123,106 @@ header {
 
     img:hover {
         @include transform(translateY(-6px));
+    }
+}
+
+/*------------------ Movie ------------------*/
+#movie {
+
+    .w-100 {
+        padding: 0 8px;
+    }
+
+    .item {
+        position: relative;
+        display: inline-block;
+        margin: 8px;
+        width: 14%;
+        aspect-ratio: 80/120;
+
+        img {
+            vertical-align: top;
+            position: absolute;
+            overflow: hidden;
+            border: 0 none;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border-radius: $base-border-radius;
+            box-shadow: 0 1px 4px rgba(0, 0, 0, .3), 0 0 40px rgba(0, 0, 0, .1) inset;
+        }
+
+        div {
+            background: rgba(0, 0, 0, .7);
+            border-radius: 4px 4px 0 0;
+            position: absolute;
+            width: 100%;
+            aspect-ratio: 80/112;
+            top: 0;
+            left: 0;
+            opacity: 0;
+            text-align: center;
+            @include transition(all .3s ease);
+
+            p {
+                position: relative;
+                font-size: 20px;
+                padding: 5px;
+                top: 100px;
+                color: $text-col-dark;
+            }
+        }
+
+        div:hover {
+            opacity: 1;
+        }
+
+        span {
+            background: rgba(0, 0, 0, .7);
+            border-radius: 0 0 4px 4px;
+            position: absolute;
+            padding: 3px;
+            width: 100%;
+            aspect-ratio: 80/8;
+            bottom: 0;
+            left: 0;
+        }
+    }
+    /* add button row */
+    .extra-space {
+        display: flex;
+        justify-content: center;
+
+        .extra-fill {
+            width: 70%;
+            margin: 0 50px;
+        }
+
+        .extra {
+            width: 14%;
+            display: flex;
+            justify-content: end;
+
+
+            select {
+                width: 100px;
+                color: $text-col-dark;
+                background-color: $back-gray-light;
+            }
+
+            select:hover {
+                cursor: pointer;
+
+                option:hover {
+                    cursor: pointer;
+                }
+            }
+
+            select:focus {
+                background-color: $back-gray-light;
+            }
+        }
     }
 }
 
@@ -187,9 +322,6 @@ header {
 
 .itemView-edit-content {
     position: absolute;
-    display: flex;
-    justify-content: flex-end;
-    width: 44%;
 
     .item-btn-edit {
         border: none;
@@ -197,9 +329,15 @@ header {
         background-color: $back-gray-lightlight;
         border-radius: $base-border-radius;
 
+        @include transition($base-transition);
+
         img {
             padding: 2px;
         }
+    }
+
+    .item-btn-edit:hover {
+        opacity: 0.7;
     }
 }
 
@@ -208,7 +346,13 @@ header {
     background: none;
     border-radius: $base-border-radius;
 
+    @include transition($base-transition);
+
     img {
         padding: 2px;
     }
+}
+
+.item-btn-delete:hover {
+    opacity: 0.7;
 }

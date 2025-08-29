@@ -17,7 +17,7 @@
 }
 
 <section class="d-flex justify-content-center">
-    <div style="width:1920px">
+    <div class="body-HD-size">
         <div class="container-fluid">
             <div class="row mt-4">
                 @*----------------------- Left ----------------------- *@
@@ -44,7 +44,7 @@
                     }
                     @if (Model.ParentAnime != null)
                     {
-                        <div class="row my-3">
+                        <div class="row my-3 mx-0">
                             <button class="btn btn-primary" id="openCreateAnimeModal" data-parent-id="@Model.ParentAnime.Id">
                                 Add Anime vortsetzung
                             </button>
@@ -73,7 +73,7 @@
                     }
                     @if (Model.ParentMovie != null)
                     {
-                        <div class="row my-3">
+                        <div class="row my-3 mx-0">
                             <button class="btn btn-primary" id="openCreateMovieModal" data-parent-id="@Model.ParentMovie.Id">
                                 Add Film vortsetzung
                             </button>
@@ -111,18 +111,22 @@
                         <div class="col-9">
                             @if (Model.ParentAnime != null)
                             {
-                                <div class="itemView-edit-content">
-                                    <button class="p-0 m-0 item-btn-edit edit-anime-link" data-id="@Model.Id">
-                                        <img src="/img/wrench.png" />
-                                    </button>
-                                </div>                                
+                                <div class="w-100 d-flex justify-content-end">
+                                    <div class="itemView-edit-content">
+                                        <button class="p-0 m-0 item-btn-edit edit-anime-link" data-id="@Model.Id">
+                                            <img src="/img/wrench.png" />
+                                        </button>
+                                    </div>  
+                                </div>
                             }
                             @if (Model.ParentMovie != null)
                             {
-                                <div class="itemView-edit-content">
-                                    <button class="p-0 m-0 item-btn-edit edit-movie-link" data-id="@Model.Id">
-                                        <img src="/img/wrench.png" />
-                                    </button>
+                                <div class="w-100 d-flex justify-content-end">
+                                    <div class="itemView-edit-content">
+                                        <button class="p-0 m-0 item-btn-edit edit-movie-link" data-id="@Model.Id">
+                                            <img src="/img/wrench.png" />
+                                        </button>
+                                    </div>
                                 </div>
                             }
 
@@ -181,18 +185,24 @@
 
                                 @if (Model.ParentAnime != null)
                                 {
-                                    <div class="itemView-edit-content">
-                                        <button class="p-0 m-0 item-btn-delete delete-anime-link" data-id="@Model.Id" data-name="@Model.Name" data-parent-id="@Model.ParentId">
-                                            <img src="/img/delete.png" />
-                                        </button>
+                                    
+                                    <div class="w-100 d-flex justify-content-end">
+                                        <div class="itemView-edit-content">
+                                            <button class="p-0 m-0 item-btn-delete delete-anime-link" data-id="@Model.Id" data-name="@Model.Name" data-parent-id="@Model.ParentId">
+                                                <img src="/img/delete.png" />
+                                            </button>
+                                        </div>
                                     </div>
                                 }
                                 @if (Model.ParentMovie != null)
                                 {
-                                    <div class="itemView-edit-content">
-                                        <button class="p-0 m-0 item-btn-delete delete-movie-link" data-id="@Model.Id" data-name="@Model.Name" data-parent-id="@Model.ParentId">
-                                            <img src="/img/delete.png" />
-                                        </button>
+                                    
+                                    <div class="w-100 d-flex justify-content-end">
+                                        <div class="itemView-edit-content">
+                                            <button class="p-0 m-0 item-btn-delete delete-movie-link" data-id="@Model.Id" data-name="@Model.Name" data-parent-id="@Model.ParentId">
+                                                <img src="/img/delete.png" />
+                                            </button>
+                                        </div>
                                     </div>
                                 }
                         </div>

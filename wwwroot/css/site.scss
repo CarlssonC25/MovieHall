@@ -56,6 +56,26 @@ input:focus {
     color: $text-col-bright;
 }
 
+.btn-primary:active {
+    color: $text-col-bright;
+    background-color: $back-gray-lightlight;
+    border: none !important;
+    outline: none !important;
+}
+
+.btn-primary:focus {
+    background-color: $back-gray-lightlight;
+    outline: none !important;
+    border: none !important;
+    box-shadow: none;
+}
+
+.btn-primary:focus-visible {
+    background-color: $back-gray-lightlight;
+    outline: none !important;
+    border: none !important;
+}
+
 /*Elem color Style*/
 .elemColorStyle-1s {
     background: $back-gray-bright;

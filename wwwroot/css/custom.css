@@ -11,7 +11,26 @@
 /*  *  */
 /*  **  */
 /* --- Base Styles --- */
-/*------------------  Body ------------------*/
+/*------------------ All ------------------*/
+.body-HD-size {
+  width: 1920px !important;
+}
+
+.form-control {
+  border-color: #ccc;
+}
+
+.form-control:focus {
+  box-shadow: none !important;
+  border-color: #ccc !important;
+  color: #ddd !important;
+}
+
+.form-control:focus-visible {
+  outline: none !important;
+}
+
+/*------------------ Body ------------------*/
 body {
   height: 100vh;
   background-color: #0e0e0e;
@@ -27,11 +46,12 @@ main {
   padding-top: 80px;
 }
 
-/*------------------  Navbar ------------------*/
+/*------------------ Navbar ------------------*/
 header {
   background-color: #1c1c1c;
   position: fixed;
   height: 80px;
+  z-index: 1;
 }
 
 #search > div {
@@ -61,12 +81,36 @@ header {
   padding: 5px;
 }
 
-/*------------------  Forms ------------------*/
+#settings img {
+  -webkit-transition: all 0.4s ease-out;
+  -moz-transition: all 0.4s ease-out;
+  -o-transition: all 0.4s ease-out;
+  transition: all 0.4s ease-out;
+}
+
+#settings:hover img {
+  opacity: 0.7;
+  filter: drop-shadow(0px 0px 1px #ccc);
+}
+
+#logo img {
+  -webkit-transition: all 0.4s ease-out;
+  -moz-transition: all 0.4s ease-out;
+  -o-transition: all 0.4s ease-out;
+  transition: all 0.4s ease-out;
+}
+
+#logo:hover img {
+  opacity: 0.7;
+  filter: drop-shadow(0px 0px 3px #ccc);
+}
+
+/*------------------ Forms ------------------*/
 [type=checkbox] {
   border: 1px solid #ccc;
 }
 
-/*------------------  Popups ------------------*/
+/*------------------ Popups ------------------*/
 .btn-close {
   filter: brightness(0) saturate(100%) invert(85%) sepia(3%) saturate(75%) hue-rotate(359deg) brightness(98%) contrast(89%);
 }
@@ -75,7 +119,7 @@ header {
   padding: 0 1rem;
 }
 
-/*------------------  Home ------------------*/
+/*------------------ Home ------------------*/
 #home {
   height: 90vh;
 }
@@ -94,6 +138,95 @@ header {
   -moz-transform: translateY(-6px);
   -o-transform: translateY(-6px);
   transform: translateY(-6px);
+}
+
+/*------------------ Movie ------------------*/
+#movie {
+  /* add button row */
+}
+#movie .w-100 {
+  padding: 0 8px;
+}
+#movie .item {
+  position: relative;
+  display: inline-block;
+  margin: 8px;
+  width: 14%;
+  aspect-ratio: 80/120;
+}
+#movie .item img {
+  vertical-align: top;
+  position: absolute;
+  overflow: hidden;
+  border: 0 none;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  border-radius: 5px;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3), 0 0 40px rgba(0, 0, 0, 0.1) inset;
+}
+#movie .item div {
+  background: rgba(0, 0, 0, 0.7);
+  border-radius: 4px 4px 0 0;
+  position: absolute;
+  width: 100%;
+  aspect-ratio: 80/112;
+  top: 0;
+  left: 0;
+  opacity: 0;
+  text-align: center;
+  -webkit-transition: all 0.3s ease;
+  -moz-transition: all 0.3s ease;
+  -o-transition: all 0.3s ease;
+  transition: all 0.3s ease;
+}
+#movie .item div p {
+  position: relative;
+  font-size: 20px;
+  padding: 5px;
+  top: 100px;
+  color: #ccc;
+}
+#movie .item div:hover {
+  opacity: 1;
+}
+#movie .item span {
+  background: rgba(0, 0, 0, 0.7);
+  border-radius: 0 0 4px 4px;
+  position: absolute;
+  padding: 3px;
+  width: 100%;
+  aspect-ratio: 80/8;
+  bottom: 0;
+  left: 0;
+}
+#movie .extra-space {
+  display: flex;
+  justify-content: center;
+}
+#movie .extra-space .extra-fill {
+  width: 70%;
+  margin: 0 50px;
+}
+#movie .extra-space .extra {
+  width: 14%;
+  display: flex;
+  justify-content: end;
+}
+#movie .extra-space .extra select {
+  width: 100px;
+  color: #ccc;
+  background-color: #2e2e2e;
+}
+#movie .extra-space .extra select:hover {
+  cursor: pointer;
+}
+#movie .extra-space .extra select:hover option:hover {
+  cursor: pointer;
+}
+#movie .extra-space .extra select:focus {
+  background-color: #2e2e2e;
 }
 
 /*------------------ Settings ------------------*/
@@ -183,25 +316,37 @@ header {
 
 .itemView-edit-content {
   position: absolute;
-  display: flex;
-  justify-content: flex-end;
-  width: 44%;
 }
 .itemView-edit-content .item-btn-edit {
   border: none;
   background: none;
   background-color: #777;
   border-radius: 5px;
+  -webkit-transition: all 0.4s ease-out;
+  -moz-transition: all 0.4s ease-out;
+  -o-transition: all 0.4s ease-out;
+  transition: all 0.4s ease-out;
 }
 .itemView-edit-content .item-btn-edit img {
   padding: 2px;
+}
+.itemView-edit-content .item-btn-edit:hover {
+  opacity: 0.7;
 }
 
 .item-btn-delete {
   border: none;
   background: none;
   border-radius: 5px;
+  -webkit-transition: all 0.4s ease-out;
+  -moz-transition: all 0.4s ease-out;
+  -o-transition: all 0.4s ease-out;
+  transition: all 0.4s ease-out;
 }
 .item-btn-delete img {
   padding: 2px;
+}
+
+.item-btn-delete:hover {
+  opacity: 0.7;
 }
