@@ -90,6 +90,21 @@ input:focus {
   border: none !important;
 }
 
+.active .btn-primary {
+  color: #ddd !important;
+  background-color: #777 !important;
+  border: none !important;
+  outline: none !important;
+}
+
+.disabled .btn-primary {
+  background-color: #2e2e2e !important;
+  border: #2e2e2e !important;
+  border: none !important;
+  outline: none !important;
+  opacity: 0.5;
+}
+
 /*Elem color Style*/
 .elemColorStyle-1s {
   background: #1c1c1c;

@@ -30,6 +30,10 @@
   outline: none !important;
 }
 
+a {
+  text-decoration: none !important;
+}
+
 /*------------------ Body ------------------*/
 body {
   height: 100vh;
@@ -349,4 +353,13 @@ header {
 
 .item-btn-delete:hover {
   opacity: 0.7;
+}
+
+.itemFam {
+  color: #ccc !important;
+  text-shadow: none;
+}
+
+.itemFam:hover {
+  text-shadow: 0px 0px 5px #fff;
 }

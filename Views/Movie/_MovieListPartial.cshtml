@@ -1,0 +1,70 @@
+﻿@model MovieHall.ViewModels.MovieVM
+
+<div id="movieList" class="w-100">
+
+    <div class="w-100 text-center">
+        @foreach (var movie in Model.Movies)
+        {
+            <a class="item" asp-area="" asp-controller="Home" asp-action="ItemView" asp-route-id="@movie.Id" asp-route-type="Movie">
+                <img src="~/img/Movie_imgs/@movie.Img" alt="@movie.Name" />
+                <div>
+                    <p>@movie.Name</p>
+                </div>
+                <span>
+                    <i class="fa fa-good" data-toggle="tooltip" title="HD Quality"></i>
+                </span>
+            </a>
+        }
+    </div>
+
+    <div class="w-100 extra-space">
+        <div class="extra-fill">
+        </div>
+        <div class="extra">
+            <select class="form-control" id="FSK-search" name="spezial-search">
+                <option value="Alle" selected="@(Model.CurrentFilter == "Alle")">Alle</option>
+                <option value="0" selected="@(Model.CurrentFilter == "0")">0+</option>
+                <option value="6" selected="@(Model.CurrentFilter == "6")">6+</option>
+                <option value="12" selected="@(Model.CurrentFilter == "12")">12+</option>
+                <option value="16" selected="@(Model.CurrentFilter == "16")">16+</option>
+                <option value="18" selected="@(Model.CurrentFilter == "18")">18+</option>
+                <option value="Favorit" selected="@(Model.CurrentFilter == "Favorit")">Favorit</option>
+            </select>
+        </div>
+    </div>
+
+    <!-- Pagination -->
+    <div class="w-100 Pagination text-center mt-3">
+        <ul class="pagination justify-content-center">
+
+            <!-- Zurück -->
+            <li class="page-item @(Model.CurrentPage == 1 ? "disabled" : "")">
+                <a href="#" class="page-link pagination-link btn-primary" data-page="@(Model.CurrentPage - 1)">«</a>
+            </li>
+
+            @{
+                int startPage = Math.Max(1, Model.CurrentPage - 2);
+                int endPage = Math.Min(Model.TotalPages, startPage + 4);
+
+                if (endPage - startPage < 4)
+                {
+                    startPage = Math.Max(1, endPage - 4);
+                }
+
+                for (int i = startPage; i <= endPage; i++)
+                {
+                    <li class="page-item @(i == Model.CurrentPage ? "active" : "")">
+                        <a href="#" class="page-link pagination-link btn-primary" data-page="@i">@i</a>
+                    </li>
+                }
+            }
+
+            <!-- Vor -->
+            <li class="page-item @(Model.CurrentPage == Model.TotalPages ? "disabled" : "")">
+                <a href="#" class="page-link pagination-link btn-primary" data-page="@(Model.CurrentPage + 1)">»</a>
+            </li>
+
+        </ul>
+    </div>
+
+</div>

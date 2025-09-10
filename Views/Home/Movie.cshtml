@@ -1,4 +1,5 @@
-﻿@model IEnumerable<MovieHall.Models.Movie>
+﻿@* @model IEnumerable<MovieHall.Models.Movie> *@
+@model MovieHall.ViewModels.MovieVM
 @{
     ViewData["Title"] = "Movie";
 }
@@ -15,7 +16,12 @@
                 </div>
             </div>
 
-            <div class="w-100 text-center">
+            @* AJAX-Container *@
+            <div id="movieContainer">
+                @await Html.PartialAsync("~/Views/Movie/_MovieListPartial.cshtml", Model)
+            </div>
+             
+            @* <div class="w-100 text-center">
                 @for (int i = 0; i <= 11; i++)
                 {
                     <a class="item" href="">
@@ -30,34 +36,14 @@
                         </span>
                     </a>
                 }
-            </div>
-
-            <div class="w-100 extra-space">
-                <div class="extra-fill">
-                </div>
-                <div class="extra">
-                    <select class="form-control" id="spezial-search" name="spezial-search">
-                        <option value="">Select</option>
-                        <option value="0">0+</option>
-                        <option value="6">6+</option>
-                        <option value="12">12+</option>
-                        <option value="16">16+</option>
-                        <option value="18">18+</option>
-                        <option value="Favorit">Favorit</option>
-                    </select>
-                </div>
-            </div>
-
-            <div class="w-100 Pagination ">
-
-            </div>
+            </div> *@
 
         </div>
     </div>
 </section>
 
+@* 
 <h2>Movie List</h2>
-
 
 <table class="table table-bordered">
     <thead>
@@ -98,7 +84,7 @@
             </tr>
         }
     </tbody>
-</table>
+</table> *@
 
 
 @*------------------------------ Movie (Create | Edit | Delete)------------------------------*@

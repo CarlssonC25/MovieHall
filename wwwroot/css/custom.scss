@@ -23,6 +23,10 @@
     outline: none !important;
 }
 
+a {
+    text-decoration: none !important;
+}
+
 
 /*------------------ Body ------------------*/
 body {
@@ -228,8 +232,6 @@ header {
 
 
 
-
-
 /*------------------ Settings ------------------*/
 #genre,
 #setting,
@@ -355,4 +357,13 @@ header {
 
 .item-btn-delete:hover {
     opacity: 0.7;
+}
+
+.itemFam {
+    color: $text-col-dark !important;
+    text-shadow: none;
+}
+
+.itemFam:hover {
+    text-shadow: 0px 0px 5px #fff;
 }

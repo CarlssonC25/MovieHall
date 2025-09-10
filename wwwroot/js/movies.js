@@ -1,4 +1,22 @@
-﻿$(document).ready(function () {
+﻿// Filter Hilfsfunktion für AJAX-Load
+function loadMovies(page) {
+    let filter = $("#FSK-search").val();
+
+    $.ajax({
+        url: "/Home/Movie?page=" + page + "&filter=" + encodeURIComponent(filter),
+        type: "GET",
+        headers: { "X-Requested-With": "XMLHttpRequest" },
+        success: function (data) {
+            $("#movieContainer").html(data);
+            $("html, body").animate({ scrollTop: $("#movieContainer").offset().top }, 300);
+        },
+        error: function () {
+            alert("Fehler beim Laden der Filme.");
+        }
+    });
+}
+
+$(document).ready(function () {
     console.log("movies.js geladen");
     // Create Modal öffnen
     $("#openCreateMovieModal").click(function () {
@@ -41,8 +59,8 @@
     $(".edit-movie-link").click(function () {
         var id = $(this).data("id");
         $.get("/Home/EditMoviePartial?id=" + id, function (data) {
-            $("#movieModalContent").html(data); // gleiche ID wie beim Create
-            var modal = new bootstrap.Modal(document.getElementById('movieModal')); // gleiche Modal-ID
+            $("#movieModalContent").html(data);
+            var modal = new bootstrap.Modal(document.getElementById('movieModal'));
             modal.show();
 
             $("#editMovieForm").on("submit", function (e) {
@@ -65,7 +83,7 @@
                             }
                         } else {
                             console.log("Validation errors, rendering Edit PartialView");
-                            $("#movieModalContent").html(res); // auch hier anpassen
+                            $("#movieModalContent").html(res);
                         }
                     }
                 });
@@ -91,4 +109,23 @@
         });
     });
 
+    // Pagination-Click
+    $(document).on("click", ".pagination-link", function (e) {
+        e.preventDefault();
+
+        let page = $(this).data("page");
+
+        if (!page || $(this).parent().hasClass("disabled") || $(this).parent().hasClass("active")) {
+            return;
+        }
+
+        // über die Hilfsfunktion laden → Filter wird automatisch mitgeschickt
+        loadMovies(page);
+    });
+
+    // Filter-Select
+    $(document).on("change", "#FSK-search", function () {
+        console.log("Filter geändert:", $(this).val());
+        loadMovies(1); // bei Filteränderung immer auf Seite 1 springen
+    });
 });

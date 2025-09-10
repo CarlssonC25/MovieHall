@@ -7,7 +7,9 @@ using MovieHall.ViewModels;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Diagnostics;
 using System.IO;
+using System.Text.RegularExpressions;
 using System.Xml.Linq;
+using static System.Net.WebRequestMethods;
 
 namespace MovieHall.Controllers
 {
@@ -221,7 +223,8 @@ namespace MovieHall.Controllers
                 while (fileNameUnique == false)
                 {
                     Random rnd = new Random();
-                    fileName = $"{svMovie.Name}{rnd.Next(1, 100)}{Path.GetExtension(svMovie.Img.FileName)}";
+                    string cleanName = Regex.Replace(svMovie.Name, @"[^a-zA-Z0-9]", "");
+                    fileName = $"{cleanName}{rnd.Next(1, 100)}{Path.GetExtension(svMovie.Img.FileName)}";
 
                     var movieImg = await _context.Movies.FirstOrDefaultAsync(s => s.Img == fileName);
 
@@ -310,7 +313,8 @@ namespace MovieHall.Controllers
                 while (fileNameUnique == false)
                 {
                     Random rnd = new Random();
-                    fileName = $"{svAnime.Name}{rnd.Next(1, 100)}{Path.GetExtension(svAnime.Img.FileName)}";
+                    string cleanName = Regex.Replace(svAnime.Name, @"[^a-zA-Z0-9]", "");
+                    fileName = $"{cleanName}{rnd.Next(1, 100)}{Path.GetExtension(svAnime.Img.FileName)}";
 
                     var animeImg = await _context.Animes.FirstOrDefaultAsync(s => s.Img == fileName);
 
@@ -405,7 +409,8 @@ namespace MovieHall.Controllers
                 while (fileNameUnique == false)
                 {
                     Random rnd = new Random();
-                    fileName = $"{svAnime.Name}{rnd.Next(1, 100)}{Path.GetExtension(svAnime.Img.FileName)}";
+                    string cleanName = Regex.Replace(svAnime.Name, @"[^a-zA-Z0-9]", "");
+                    fileName = $"{cleanName}{rnd.Next(1, 100)}{Path.GetExtension(svAnime.Img.FileName)}";
 
                     var animeImg = await _context.Animes.FirstOrDefaultAsync(s => s.Img == fileName);
 
@@ -520,7 +525,8 @@ namespace MovieHall.Controllers
                 while (!fileNameUnique)
                 {
                     Random rnd = new Random();
-                    fileName = $"{svAnime.Name}{rnd.Next(1, 100)}{Path.GetExtension(svAnime.Img.FileName)}";
+                    string cleanName = Regex.Replace(svAnime.Name, @"[^a-zA-Z0-9]", "");
+                    fileName = $"{cleanName}{rnd.Next(1, 100)}{Path.GetExtension(svAnime.Img.FileName)}";
 
                     var animeImg = await _context.Animes.FirstOrDefaultAsync(s => s.Img == fileName);
 
@@ -622,15 +628,63 @@ namespace MovieHall.Controllers
 
 
         //----------------------------------------- Movie -----------------------------------------
-        public async Task<IActionResult> Movie()
+        public async Task<IActionResult> Movie(int page = 1, string? filter = "Alle")
         {
-            var movies = await _context.Movies
+            int pageSize = 12;
+            bool isFskFilter = false;
+
+            var query = _context.Movies
                 .Include(m => m.MovieGenres).ThenInclude(mg => mg.Genre)
                 .Include(m => m.MovieWatchedWiths).ThenInclude(mw => mw.WatchedWith)
-                .Where(m => m.ParentId == null)
+                .Where(m => m.ParentId == null);
+
+            // Filter anwenden
+            if (!string.IsNullOrEmpty(filter) && filter != "Alle")
+            {
+                if (filter == "Favorit")
+                {
+                    query = query.Where(m => m.Favorit == true);
+                }
+                else if (int.TryParse(filter, out int fskValue))
+                {
+                    isFskFilter = true;
+                    query = query.Where(m => m.FSK <= fskValue);
+                }
+            }
+
+            int totalMovies = await query.CountAsync();
+            int totalPages = (int)Math.Ceiling(totalMovies / (double)pageSize);
+
+            // Sortierung je nach Filter
+            if (isFskFilter)
+            {
+                query = query.OrderByDescending(m => m.FSK)
+                             .ThenByDescending(m => m.ReleaseDate);
+            }
+            else
+            {
+                query = query.OrderByDescending(m => m.ReleaseDate);
+            }
+
+            var movies = await query
+                .Skip((page - 1) * pageSize)
+                .Take(pageSize)
                 .ToListAsync();
 
-            return View(movies);
+            var viewModel = new MovieVM
+            {
+                Movies = movies,
+                CurrentPage = page,
+                TotalPages = totalPages,
+                CurrentFilter = filter
+            };
+
+            if (Request.Headers["X-Requested-With"] == "XMLHttpRequest")
+            {
+                return PartialView("~/Views/Movie/_MovieListPartial.cshtml", viewModel);
+            }
+
+            return View(viewModel);
         }
 
         // ---------- ADD ----------
@@ -680,7 +734,8 @@ namespace MovieHall.Controllers
                 while(fileNameUnique == false)
                 {
                     Random rnd = new Random();
-                    fileName = $"{svMovie.Name}{rnd.Next(1, 100)}{Path.GetExtension(svMovie.Img.FileName)}";
+                    string cleanName = Regex.Replace(svMovie.Name, @"[^a-zA-Z0-9]", "");
+                    fileName = $"{cleanName}{rnd.Next(1, 100)}{Path.GetExtension(svMovie.Img.FileName)}";
 
                     var movieImg = await _context.Movies.FirstOrDefaultAsync(s => s.Img == fileName);
 
@@ -793,7 +848,8 @@ namespace MovieHall.Controllers
                 while (!fileNameUnique)
                 {
                     Random rnd = new Random();
-                    fileName = $"{svMovie.Name}{rnd.Next(1, 100)}{Path.GetExtension(svMovie.Img.FileName)}";
+                    string cleanName = Regex.Replace(svMovie.Name, @"[^a-zA-Z0-9]", "");
+                    fileName = $"{cleanName}{rnd.Next(1, 100)}{Path.GetExtension(svMovie.Img.FileName)}";
 
                     var movieImg = await _context.Movies.FirstOrDefaultAsync(s => s.Img == fileName);
 
