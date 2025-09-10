@@ -361,3 +361,7 @@ MigrationBackup/
 
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
+
+# Eigene Upload-Ordner ignorieren
+MovieHall/wwwroot/img/Anime_imgs/
+MovieHall/wwwroot/img/Movie_imgs/
