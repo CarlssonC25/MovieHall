@@ -5,12 +5,12 @@
     var movieImg = Model.Settings.FirstOrDefault(s => s.SettingName == "MovieImg").Comment;
 }
 
-<section class="my-5 w-100 d-flex justify-content-center">
+<section class="my-4 w-100 d-flex justify-content-center">
     <h1>Settings</h1>
 </section>
 
 @*------------------------------ Genre ------------------------------*@
-<section class="container">
+<section class="container mt-4">
     <div class="row justify-content-center">
         <div class="col-12 text-center">
             <h2>
@@ -65,7 +65,7 @@
 
 
 @*------------------------------ Settings ------------------------------*@
-<section class="container mt-4 mb-2">
+<section class="container mt-4">
     <div class="row justify-content-center">
         <div class="col-12 text-center">
             <h2>
@@ -119,8 +119,45 @@
 </section>
 
 
+@*------------------------------ Home Imgs ------------------------------*@
+<section class="container mt-4">
+    <div class="row justify-content-center">
+
+        @*--- Image Previews ---*@
+        <div class="col-2"></div>
+        <div id="settingHome" class="d-flex col-8 my-3 text-center">
+            <div class="w-50 p-2">
+                <a class="w-100" onclick="document.getElementById('movieInput').click()" title="Uploade Move IMG">
+                    <img id="moviePreview" class="w-100" src="/img/@movieImg" alt="Movie Preview" />
+                </a>
+            </div>
+            <div class="w-50 p-2">
+                <a class="w-100" onclick="document.getElementById('animeInput').click()" title="Uploade Anime IMG">
+                    <img id="animePreview" class="w-100" src="/img/@animeImg" alt="Anime Preview" />
+                </a>
+            </div>
+
+            <input type="file" id="movieInput" accept=".jpg,.png" hidden onchange="previewImage(this, 'moviePreview', 'MovieImg')" />
+            <input type="file" id="animeInput" accept=".jpg,.png" hidden onchange="previewImage(this, 'animePreview', 'AnimeImg')" />
+        </div>
+        <div class="col-2"></div>
+
+        @*--- Save Buttons ---*@
+        <div class="col-2"></div>
+        <div class="col-4 text-center">
+            <button class="btn btn-primary" onclick="uploadImage('movieInput', 'MovieImg')">Movie speichern</button>
+        </div>
+        <div class="col-4 text-center">
+            <button class="btn btn-primary" onclick="uploadImage('animeInput', 'AnimeImg')">Anime speichern</button>
+        </div>
+        <div class="col-2"></div>
+
+    </div>
+</section>
+
+
 @*------------------------------ WatchedWith ------------------------------*@
-<section class="container mt-4 mb-2">
+<section class="container mt-4">
     <div class="row justify-content-center">
         <div class="col-12 text-center">
             <h2>
@@ -172,41 +209,40 @@
 </section>
 
 
-@*------------------------------ Home Imgs ------------------------------*@
-<section class="container">
+@*------------------------------ Export/import ------------------------------*@
+<section class="container mt-4 mb-5">
     <div class="row justify-content-center">
-
-        @*--- Image Previews ---*@
-        <div class="col-2"></div>
-        <div id="settingHome" class="d-flex col-8 my-3 text-center">
-            <div class="w-50 p-2">
-                <a class="w-100" onclick="document.getElementById('movieInput').click()" title="Uploade Move IMG">
-                    <img id="moviePreview" class="w-100" src="/img/@movieImg" alt="Movie Preview" />
-                </a>
-            </div>
-            <div class="w-50 p-2">
-                <a class="w-100" onclick="document.getElementById('animeInput').click()" title="Uploade Anime IMG">
-                    <img id="animePreview" class="w-100" src="/img/@animeImg" alt="Anime Preview" />
-                </a>
-            </div>
-
-            <input type="file" id="movieInput" accept=".jpg,.png" hidden onchange="previewImage(this, 'moviePreview', 'MovieImg')" />
-            <input type="file" id="animeInput" accept=".jpg,.png" hidden onchange="previewImage(this, 'animePreview', 'AnimeImg')" />
+        <div class="col-12 text-center">
+            <h2>
+                Datenbank
+            </h2>
         </div>
-        <div class="col-2"></div>
-
-        @*--- Save Buttons ---*@
         <div class="col-2"></div>
         <div class="col-4 text-center">
-            <button class="btn btn-primary" onclick="uploadImage('movieInput', 'MovieImg')">Movie speichern</button>
+            <a asp-controller="Db" asp-action="ExportAll" class="btn btn-primary">
+                Export DB + Igms
+            </a>
         </div>
         <div class="col-4 text-center">
-            <button class="btn btn-primary" onclick="uploadImage('animeInput', 'AnimeImg')">Anime speichern</button>
+            <form asp-controller="Import" asp-action="ImportAll" enctype="multipart/form-data" method="post">
+                <div class="mb-3">
+                    <input type="file" name="zipFile" id="zipFile" accept=".zip" style="display:none" required />
+                    <button type="button" class="btn btn-primary" onclick="document.getElementById('zipFile').click()">
+                        Datei wählen
+                    </button>
+
+                    <div class="mt-2">
+                        <span id="fileName" class="ms-2 text-muted">Keine Datei gewählt</span>
+                    </div>
+                </div>
+
+                <button type="submit" class="btn btn-primary">Import starten</button>
+            </form>
         </div>
         <div class="col-2"></div>
-
     </div>
 </section>
+
 
 
 <section class="container">
@@ -216,11 +252,10 @@
             <div>
                 Set Custum Link open
             </div>
-        </div>       
+        </div>
 
     </div>
 </section>
-
 
 
 @*------------------------------ Genre (Create | Edit | Delete)------------------------------*@

@@ -8,12 +8,6 @@
         { 2, "Blu-ray" },
         { 3, "3D" }
     };
-    var langOptions = new Dictionary<string, string>{
-        { "en", "Englisch" },
-        { "sub", "Sub" },
-        { "jap", "Japanisch" },
-        { "de", "Deutsch" }
-    };
 }
 
 <section class="d-flex justify-content-center">
@@ -33,7 +27,7 @@
                     }
                     @if (Model.ChildAnimes != null)
                     {
-                        @foreach (var child in Model.ChildAnimes)
+                        @foreach (var child in Model.ChildAnimes.OrderBy(c => c.ReleaseDate))
                         {
                             var imgSrc = "/img/Anime_imgs/" + child.Img;
                             <hr>
@@ -93,6 +87,10 @@
                         } else
                         {
                             <h1>@Model.Name</h1>
+                            if (Model.Orginal_Name != null)
+                            {
+                                <h2>@Model.Orginal_Name</h2>                                    
+                            }
                         }
                     </div>
 
@@ -103,7 +101,7 @@
                     </div>
 
                     <div class="row forece-padding">
-                        @* TODO ParentId, link und Id  *@
+                        @* TODO ParentId, link und Id *@
                         <div class="col-3">
                             <div class="w-100 text-center">
                                 <img class="w-100" src="@Model.Img" />
@@ -134,28 +132,27 @@
 
                             @if (Model.Orginal_Name != null)
                             {
-                                <p><b>Orginaler Name:</b> @Model.Orginal_Name</p>
-                            }
-                            @if(Model.Top != null)
-                            {
-                                <p><b>Rank:</b> @Model.Top</p>
-                            }
-                            @if (Model.Episodes != null)
-                            {
-                                <p class="mt-0"><b>Folgen:</b> @Model.Episodes</p>
+                                <p class="anime-info">
+                                    <b>Rank:</b> @Model.Top <br />
+                                    <b>Folgen:</b> @Model.Episodes <br />
+                                    <b>Rewatch:</b>
+                                    <button class="btn btn-primary rewatch" data-id="@Model.Id" data-rewatch="-1"><span class="rewatch-minus">-</span></button>
+                                    <span id="rewatch-count-@Model.Id">@Model.WhatTimes</span>
+                                    <button class="btn btn-primary rewatch" data-id="@Model.Id" data-rewatch="1"><span class="rewatch-plus">+</span></button>
+                                </p>
                             }
 
                             @if (Model.FSK != null)
                             {
                                 <p class="my-0"><b>FSK:</b> @Model.FSK</p>
                             }
+
                             <p>
                                 <b>Besitz:</b> @buyOptions[Model.Buy] <br />
-                                <b>Sprache:</b> @langOptions[Model.Language] <br />
-                                <b>Veröffentlicht:</b> @Model.ReleaseDate
+                                <b>Sprache:</b> @Model.Language <br />
+                                <b>Veröffentlicht:</b> @Model.ReleaseDate.ToShortDateString()
 
                             </p>
-
 
                             <p class="my-0"><b>Genres:</b></p>
                             @if(Model.AnimeGenres != null && Model.Top != null)
@@ -163,9 +160,9 @@
                                 var genreText = "";
                                 foreach (var genre in Model.AnimeGenres)
                                 {
-                                    genreText += genre.Genre.Name;
+                                    genreText +=  genre.Genre.Name + ", ";
                                 }
-                                <p>@genreText</p>
+                                <p>@genreText.Substring(0, genreText.Length - 2)</p>
                             }
 
                             @if(Model.MovieGenres != null && Model.FSK != null)
@@ -175,7 +172,7 @@
                                 {
                                     genreText += genre.Genre.Name + ", ";
                                 }
-                                <p>@genreText</p>
+                                <p>@genreText.Substring(0, genreText.Length - 2)</p>
                             }
 
                             @if (Model.Description != null)

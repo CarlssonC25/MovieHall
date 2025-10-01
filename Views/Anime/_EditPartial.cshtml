@@ -1,5 +1,53 @@
 ﻿@model MovieHall.SaveModel.SaveAnime
 
+@{
+    @*Top/Rank*@ 
+    var topOptions = new Dictionary<int, string>
+    {
+        { 1, "Top 1" },
+        { 2, "Top 2" },
+        { 3, "Top 3" },
+        { 4, "Top 4" },
+        { 5, "Top 5" },
+        { 6, "Top 6" },
+        { 7, "Top 7" },
+        { 8, "Top 8" },
+        { 9, "Top 9" },
+        { 10, "Top 10" }
+    };
+
+    @*Buy*@ 
+    var buyOptions = new Dictionary<int, string>
+    {
+        { 0, "Noch nicht" },
+        { 1, "DVD" },
+        { 2, "Blu-ray" },
+        { 3, "3D" }
+    };
+
+    @*Language*@ 
+    var isCheckedEng = Model.Language.Contains("Englisch") ? "checked" : "";
+    var isCheckedJap = Model.Language.Contains("Japanisch") ? "checked" : "";
+    var isCheckedGer = Model.Language.Contains("Deutsch") ? "checked" : "";
+
+    @*Genre*@ 
+    var selectedGenreIds = Model.AnimeGenres?.Select(g => g.GenreId).ToList() ?? new List<int>();
+    var genres = ViewBag.Genres as List<MovieHall.Models.Genre>;
+
+    @*WatchedWith*@ 
+    var selectedWatchedIds = Model.AnimeWatchedWiths?.Select(w => w.WatchedWithId).ToList() ?? new List<int>();
+    var watchedWiths = ViewBag.WatchedWiths as List<MovieHall.Models.WatchedWith>;
+
+    @*Country*@ 
+    var countryOptions = new Dictionary<string, string>
+    {
+        { "", "Land Wählen..." },
+        { "Japan", "Japan" },
+        { "China", "China" },
+        { "Korea", "Korea" }
+    };
+}
+
 
 <form id="editAnimeForm" enctype="multipart/form-data" method="post">
     <div class="modal-header">
@@ -24,30 +72,15 @@
         <div class="mb-3">
             <label asp-for="Top">Rank</label>
             <select asp-for="Top" class="form-control">
-                @{
-                    var topOptions = new Dictionary<int, string>
-                                {
-                                { 0, "Top 1" },
-                                { 1, "Top 2" },
-                                { 2, "Top 3" },
-                                { 3, "Top 4" },
-                                { 4, "Top 5" },
-                                { 5, "Top 6" },
-                                { 6, "Top 7" },
-                                { 7, "Top 8" },
-                                { 8, "Top 9" },
-                                { 9, "Top 10" }
-                                };
-                    foreach (var top in topOptions)
+                @foreach (var top in topOptions)
+                {
+                    if (Model.Top == top.Key)
                     {
-                        if (Model.Top == top.Key)
-                        {
-                            <option value="@top.Key" selected>@top.Value</option>
-                        }
-                        else
-                        {
-                            <option value="@top.Key">@top.Value</option>
-                        }
+                        <option value="@top.Key" selected>@top.Value</option>
+                    }
+                    else
+                    {
+                        <option value="@top.Key">@top.Value</option>
                     }
                 }
             </select>
@@ -56,33 +89,18 @@
         <div class="mb-3">
             <label asp-for="Buy">Kaufstatus</label>
             <select asp-for="Buy" class="form-control">
-                @{
-                    var buyOptions = new Dictionary<int, string>
-                                {
-                                { 0, "Noch nicht" },
-                                { 1, "DVD" },
-                                { 2, "Blu-ray" },
-                                { 3, "3D" }
-                                };
-                    foreach (var option in buyOptions)
+                @foreach (var option in buyOptions)
+                {
+                    if (Model.Buy == option.Key)
                     {
-                        if (Model.Buy == option.Key)
-                        {
-                            <option value="@option.Key" selected>@option.Value</option>
-                        }
-                        else
-                        {
-                            <option value="@option.Key">@option.Value</option>
-                        }
+                        <option value="@option.Key" selected>@option.Value</option>
+                    }
+                    else
+                    {
+                        <option value="@option.Key">@option.Value</option>
                     }
                 }
             </select>
-        </div>
-
-
-        <div class="mb-3">
-            <label asp-for="Description">Beschreibung</label>
-            <textarea asp-for="Description" class="form-control"></textarea>
         </div>
 
         <div class="mb-3">
@@ -113,39 +131,24 @@
             <input asp-for="Episodes" class="form-control" />
         </div>
 
-        <div class="mb-3">
-            <label asp-for="Language">Sprache</label>
-            <select asp-for="Language" class="form-control">
-                @{
-                    var langOptions = new Dictionary<string, string>
-                                {
-                                { "en", "Englisch" },
-                                { "sub", "Sub" },
-                                { "jap", "Japanisch" },
-                                { "de", "Deutsch" }
-                                };
-                    foreach (var option in langOptions)
-                    {
-                        if (Model.Language == option.Key)
-                        {
-                            <option value="@option.Key" selected>@option.Value</option>
-                        }
-                        else
-                        {
-                            <option value="@option.Key">@option.Value</option>
-                        }
-                    }
-                }
-            </select>
+        <div class="checkbox-popup mb-3 row">
+            <label class="ps-0">Sprache</label>
+            <div class="form-check col-4">
+                <input class="form-check-input" type="checkbox" name="Language" value="Englisch" id="langEng" @isCheckedEng />
+                <label class="form-check-label" for="langEng">Englisch</label>
+            </div>
+            <div class="form-check col-4">
+                <input class="form-check-input" type="checkbox" name="Language" value="Japanisch" id="langJap" @isCheckedJap />
+                <label class="form-check-label" for="langJap">Japanisch</label>
+            </div>
+            <div class="form-check col-4">
+                <input class="form-check-input" type="checkbox" name="Language" value="Deutsch" id="langGer" @isCheckedGer />
+                <label class="form-check-label" for="langGer">Deutsch</label>
+            </div>
         </div>
 
         <div class="checkbox-popup mb-3 row">
             <label class="ps-0">Genres</label>
-            @{
-                var selectedGenreIds = Model.AnimeGenres?.Select(g => g.GenreId).ToList() ?? new List<int>();
-                var genres = ViewBag.Genres as List<MovieHall.Models.Genre>;
-            }
-
             @foreach (var g in genres)
             {
                 if (g.Belonging_to.Contains("A") || g.Belonging_to.Contains("a"))
@@ -162,8 +165,6 @@
         <div class="checkbox-popup mb-3 row">
             <label class="ps-0">Mit wem gesehen</label>
             @{
-                var selectedWatchedIds = Model.AnimeWatchedWiths?.Select(w => w.WatchedWithId).ToList() ?? new List<int>();
-                var watchedWiths = ViewBag.WatchedWiths as List<MovieHall.Models.WatchedWith>;
             }
             @foreach (var w in watchedWiths)
             {
@@ -173,8 +174,31 @@
                     <label class="form-check-label" for="watched_@w.Id">@w.Name</label>
                 </div>
             }
-        </div>        
+        </div>
+
+        <div class="mb-3">
+            <label asp-for="Description">Beschreibung</label>
+            <textarea asp-for="Description" class="form-control"></textarea>
+        </div>
+
+        <div class="mb-3">
+            <label asp-for="Country">Land</label>
+            <select asp-for="Country" class="form-control">
+                @foreach (var option in countryOptions)
+                {
+                    if (Model.Country == option.Key)
+                    {
+                        <option value="@option.Key" selected>@option.Value</option>
+                    }
+                    else
+                    {
+                        <option value="@option.Key">@option.Value</option>
+                    }
+                }
+            </select>
+        </div>
     </div>
+
 
     <div class="modal-footer">
         <button type="submit" class="btn btn-primary">Speichern</button>

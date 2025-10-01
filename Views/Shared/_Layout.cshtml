@@ -1,5 +1,5 @@
 ﻿<!DOCTYPE html>
-<html lang="en">
+<html lang="de">
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -8,6 +8,14 @@
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/css/custom.css" asp-append-version="true" />
 </head>
+@{
+        // aktueller Controller
+        var currentController = ViewContext.RouteData.Values["controller"]?.ToString();
+
+        bool showSearch = currentController == "Movie"
+                        || currentController == "Anime"
+                        || currentController == "ItemView";
+}
 <body>
     <header class="container-fluid">
         <nav class="row">
@@ -17,20 +25,29 @@
                 </a>
             </div>
 
+            @* search *@
             <div class="col-6 d-flex justify-content-center">
-                <div id="search" class="d-flex align-items-center">
-                    <div class="d-flex align-items-center">
-                        <input class="ps-1" type="text" name="search" value="" />
-                        <a asp-area="" asp-controller="Home" asp-action="Search">
-                            <img src="~/img/lupe.png" alt="Search" />
-                        </a>
+                @if (showSearch)
+                {
+                    <div id="search" class="position-relative d-flex align-items-center">
+                        <div class="d-flex align-items-center">
+                            <input id="searchInput" class="ps-1" type="text" placeholder="Suche..." autocomplete="off" />
+                            <a id="searchButton" href="#">
+                                <img src="~/img/lupe.png" alt="Search" />
+                            </a>
+                        </div>
+
+                        <!-- Dropdown für Autocomplete -->
+                        <ul id="searchResults" class="list-group position-absolute"
+                            style="top:100%; z-index:1000; display:none;">
+                        </ul>
                     </div>
-                </div>
+                }
             </div>
 
             <div class="col-3 d-flex justify-content-end">
                 <div class="d-flex align-items-center justify-content-end nav-link">
-                    <a id="settings" class=" p-0 w-75" asp-area="" asp-controller="Home" asp-action="Settings">
+                    <a id="settings" class=" p-0 w-75" asp-area="" asp-controller="Settings" asp-action="Index">
                         <img class="w-100" src="~/img/settings.png" alt="Settings" />
                     </a>
                 </div>
@@ -47,3 +64,7 @@
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>
+
+@section Scripts {
+    <script src="~/js/layout.js"></script>
+}

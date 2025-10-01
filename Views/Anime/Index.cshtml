@@ -1,51 +1,27 @@
-﻿@model IEnumerable<MovieHall.Models.Anime>
+﻿@model MovieHall.ViewModels.AnimeVM
 @{
     ViewData["Title"] = "Anime";
 }
 
-<h2>Anime List</h2>
+
 
 <button class="btn btn-primary mb-3" id="openCreateAnimeModal">Neuer Anime</button>
 
-<table class="table table-bordered">
-    <thead>
-        <tr>
-            <th>Name</th>
-            <th>Orginal name</th>
-            <th>Sprache</th>
-            <th>Genres</th>
-            <th>Gesehen mit</th>
-            <th>Aktionen</th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var anime in Model)
-        {
-            <tr>
+<section id="anime" class="my-5">
+    <div class="container-fluid">
+        <div class="d-flex justify-content-center">
+            <div class="body-HD-size">
+
+                @* AJAX-Container *@
+                <div id="animeContainer">
+                    @await Html.PartialAsync("~/Views/Anime/_AnimeListPartial.cshtml", Model)
+                </div>
                 
-                <td>
-                    <a asp-area="" asp-controller="Home" asp-action="ItemView" asp-route-id="@anime.Id" asp-route-type="Anime">
-                        @anime.Name
-                    </a>
-                </td>
-                <td>@anime.Orginal_Name</td>
-                <td>
-                    @{
-                        var langOptions = new Dictionary<string, string>
-                                {{ "de", "Deutsch" },{ "en", "Englisch" },{"jap","Japanisch"},{"sub","Sub"}};
-                    }
-                    @langOptions[anime.Language]
-                </td>
-                <td>@string.Join(", ", anime.AnimeGenres.Select(g => g.Genre.Name))</td>
-                <td>@string.Join(", ", anime.AnimeWatchedWiths.Select(w => w.WatchedWith.Name))</td>
-                <td>
-                    <button class="btn btn-sm btn-warning edit-anime-link" data-id="@anime.Id">Bearbeiten</button>
-                    <button class="btn btn-sm btn-danger delete-anime-link" data-id="@anime.Id" data-name="@anime.Name">Löschen</button>
-                </td>
-            </tr>
-        }
-    </tbody>
-</table>
+            </div>
+        </div>
+    </div>
+</section>
+
 
 
 @*------------------------------ Anime (Create | Edit | Delete)------------------------------*@

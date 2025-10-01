@@ -34,6 +34,10 @@ a {
   text-decoration: none !important;
 }
 
+textarea {
+  background-color: #1c1c1c !important;
+}
+
 /*------------------ Body ------------------*/
 body {
   height: 100vh;
@@ -144,9 +148,125 @@ header {
   transform: translateY(-6px);
 }
 
+/*------------------ Anime/Movie ------------------*/
+/* add row space */
+.extra-space {
+  display: flex;
+  justify-content: center;
+}
+.extra-space .extra-fill {
+  width: 70%;
+  margin: 0 50px;
+}
+.extra-space .extra {
+  width: 14%;
+  display: flex;
+  justify-content: end;
+}
+
+.checkbox-popup label {
+  cursor: pointer;
+}
+
+.form-check-input:checked {
+  border-color: #ccc;
+  background-color: transparent;
+}
+
+.form-check-input:focus {
+  border-color: #ccc;
+  box-shadow: 0 0 0 0.25rem rgba(204, 204, 204, 0.25);
+}
+
+/*------------------ Anime ------------------*/
+#anime .w-100 {
+  padding: 0 8px;
+}
+#anime .item {
+  position: relative;
+  display: inline-block;
+  margin: 8px;
+  width: 14%;
+  aspect-ratio: 80/120;
+}
+#anime .item img {
+  vertical-align: top;
+  position: absolute;
+  overflow: hidden;
+  border: 0 none;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  border-radius: 5px;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3), 0 0 40px rgba(0, 0, 0, 0.1) inset;
+}
+#anime .item div {
+  background: rgba(0, 0, 0, 0.7);
+  border-radius: 4px 4px 0 0;
+  position: absolute;
+  width: 100%;
+  aspect-ratio: 80/112;
+  top: 0;
+  left: 0;
+  opacity: 0;
+  text-align: center;
+  -webkit-transition: all 0.3s ease;
+  -moz-transition: all 0.3s ease;
+  -o-transition: all 0.3s ease;
+  transition: all 0.3s ease;
+}
+#anime .item div p {
+  position: relative;
+  font-size: 20px;
+  padding: 5px;
+  top: 100px;
+  color: #ccc;
+}
+#anime .item div:hover {
+  opacity: 1;
+}
+#anime .item span {
+  background: rgba(0, 0, 0, 0.7);
+  border-radius: 0 0 4px 4px;
+  position: absolute;
+  padding: 3px;
+  width: 100%;
+  aspect-ratio: 80/8;
+  bottom: 0;
+  left: 0;
+}
+#anime .extra-space .extra-fill {
+  width: 42%;
+  margin: 0;
+}
+#anime .extra-space .extra {
+  width: 42%;
+  margin-left: 100px;
+  text-align: end;
+  align-content: end;
+  display: block;
+}
+#anime .extra-space .extra span {
+  position: relative;
+  top: -2px;
+}
+#anime .extra-space .btn-primary {
+  border: 2px solid #1c1c1c !important;
+}
+#anime .extra-space .aktiv-btn {
+  background-color: #0e0e0e;
+}
+#anime .extra-space .aktiv-btn:hover {
+  background-color: #1c1c1c;
+}
+#anime .extra-space .disabled {
+  background-color: #1c1c1c;
+}
+
 /*------------------ Movie ------------------*/
 #movie {
-  /* add button row */
+  /* add row space */
 }
 #movie .w-100 {
   padding: 0 8px;
@@ -204,19 +324,6 @@ header {
   aspect-ratio: 80/8;
   bottom: 0;
   left: 0;
-}
-#movie .extra-space {
-  display: flex;
-  justify-content: center;
-}
-#movie .extra-space .extra-fill {
-  width: 70%;
-  margin: 0 50px;
-}
-#movie .extra-space .extra {
-  width: 14%;
-  display: flex;
-  justify-content: end;
 }
 #movie .extra-space .extra select {
   width: 100px;
@@ -362,4 +469,16 @@ header {
 
 .itemFam:hover {
   text-shadow: 0px 0px 5px #fff;
+}
+
+.anime-info button {
+  padding: 0.2rem 0.75rem;
+}
+.anime-info button .rewatch-minus {
+  position: relative;
+  top: -3px;
+}
+.anime-info button .rewatch-plus {
+  position: relative;
+  top: -3px;
 }

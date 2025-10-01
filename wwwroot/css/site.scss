@@ -39,6 +39,10 @@ input:focus {
     color: $text-col-dark;
 }
 
+[type="checkbox"] {
+    cursor: pointer;
+}
+
 .btn {
     border-radius: $base-border-radius;
 }

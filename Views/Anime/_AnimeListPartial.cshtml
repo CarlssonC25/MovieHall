@@ -1,0 +1,81 @@
+﻿@model MovieHall.ViewModels.AnimeVM
+
+
+<div id="movieList" class="w-100"> 
+
+    <div class="w-100 extra-space">
+        <div class="extra-fill">
+            <div class="">
+                <div>
+                    <div class="mb-1">
+                        <button type="button" class="btn btn-primary language @(Model.LanguageFilter == "ALL" ? "aktiv-btn" : "")" data-filter="ALL">
+                            ALL
+                        </button>
+                        <button type="button" class="btn btn-primary language @(Model.LanguageFilter == "DUB" ? "aktiv-btn" : "")" data-filter="DUB">
+                            DUB
+                        </button>
+                        <button type="button" class="btn btn-primary language @(Model.LanguageFilter == "SUB" ? "aktiv-btn" : "")" data-filter="SUB">
+                            SUB
+                        </button>
+                    </div>  
+                    <div>
+
+                        <button type="button" class="btn btn-primary country @(Model.CountryFilter == "ALL" ? "aktiv-btn" : "")" data-filter="ALL">
+                            ALL
+                        </button>
+                        <button type="button" class="btn btn-primary country @(Model.CountryFilter == "JAPAN" ? "aktiv-btn" : "")" data-filter="JAPAN">
+                            JAPAN
+                        </button>
+                        <button type="button" class="btn btn-primary country @(Model.CountryFilter == "CHINA" ? "aktiv-btn" : "")" data-filter="CHINA">
+                            CHINA
+                        </button>
+                        <button type="button" class="btn btn-primary country @(Model.CountryFilter == "KOREA" ? "aktiv-btn" : "")" data-filter="KOREA">
+                            KOREA
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="extra">            
+            @for (int i = 1; i <= 10; i++)
+            {
+                string num = ""+i;
+                string rank = "rank" + num;
+                if (Model.RankFilter == num)
+                {
+                    <button id="@rank" class="btn btn-primary aktiv-btn rank" data-filter="@i">@i</button>
+                } else
+                {
+                    <button id="@rank" class="btn btn-primary rank" data-filter="@i">@i</button>
+                }
+            }
+            <!-- Zurück -->
+            <button class="btn btn-primary pagination-link @(Model.CurrentPage == 1 ? "disabled" : "")"
+                    data-page="@(Model.CurrentPage - 1)">
+                <span class="sign-mid"> < </span>
+            </button>
+
+            <!-- Vor -->
+            <button class="btn btn-primary pagination-link @(Model.CurrentPage == Model.TotalPages ? "disabled" : "")"
+                    data-page="@(Model.CurrentPage + 1)">
+                <span class="sign-mid"> > </span>
+            </button>
+        </div>
+    </div>
+
+    <div class="w-100 text-center">
+        @foreach (var anime in Model.Animes)
+        {
+            <a class="item" asp-area="" asp-controller="ItemView" asp-action="Index" asp-route-id="@anime.Id" asp-route-type="Anime">
+                <img src="~/img/Anime_imgs/@anime.Img" alt="@anime.Name" />
+                <div>
+                    <p>@anime.Name</p>
+                </div>
+                <span>
+                    <i class="fa fa-good" data-toggle="tooltip" title="HD Quality"></i>
+                </span>
+            </a>
+        }
+    </div>
+
+</div>

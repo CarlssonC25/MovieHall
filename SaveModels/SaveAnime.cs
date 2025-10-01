@@ -21,7 +21,9 @@ namespace MovieHall.SaveModel
         public string? Link { get; set; }
         public DateTime ReleaseDate { get; set; }
         public int? Episodes { get; set; }
-        public string Language { get; set; }
+        public List<string> Language { get; set; } = new List<string>();
+        public int WhatTimes { get; set; }
+        public string? Country { get; set; }
 
         // Fortsetzung (Verweis auf einen anderen Movie)
         public int? ParentId { get; set; }

@@ -5,7 +5,7 @@
     <div class="w-100 text-center">
         @foreach (var movie in Model.Movies)
         {
-            <a class="item" asp-area="" asp-controller="Home" asp-action="ItemView" asp-route-id="@movie.Id" asp-route-type="Movie">
+            <a class="item" asp-area="" asp-controller="ItemView" asp-action="Index" asp-route-id="@movie.Id" asp-route-type="Movie">
                 <img src="~/img/Movie_imgs/@movie.Img" alt="@movie.Name" />
                 <div>
                     <p>@movie.Name</p>
@@ -22,7 +22,7 @@
         </div>
         <div class="extra">
             <select class="form-control" id="FSK-search" name="spezial-search">
-                <option value="Alle" selected="@(Model.CurrentFilter == "Alle")">Alle</option>
+                <option value="All" selected="@(Model.CurrentFilter == "All")">Alle</option>
                 <option value="0" selected="@(Model.CurrentFilter == "0")">0+</option>
                 <option value="6" selected="@(Model.CurrentFilter == "6")">6+</option>
                 <option value="12" selected="@(Model.CurrentFilter == "12")">12+</option>

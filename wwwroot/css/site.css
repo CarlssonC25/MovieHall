@@ -50,6 +50,10 @@ input:focus {
   color: #ccc;
 }
 
+[type=checkbox] {
+  cursor: pointer;
+}
+
 .btn {
   border-radius: 5px;
 }

@@ -24,6 +24,7 @@ namespace MovieHall.ViewModels
         public int? Top { get; set; }
         public string? Orginal_Name { get; set; }
         public int? Episodes { get; set; }
+        public int? WhatTimes { get; set; }
 
 
         // Parent (Verweis auf Parent Anime)

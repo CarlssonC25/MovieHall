@@ -20,6 +20,8 @@ namespace MovieHall.Models
         public DateTime ReleaseDate { get; set; }
         public int? Episodes { get; set; }
         public string Language { get; set; }
+        public int WhatTimes { get; set; }
+        public string? Country { get; set; }
 
 
         // Fortsetzung (Verweis auf einen anderen Movie)

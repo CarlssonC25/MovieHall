@@ -1,13 +1,13 @@
 ﻿// Genre
 $(document).ready(function () {
     $("#openCreateModal").click(function () {
-        $.get("/Home/CreatePartial", function (data) {
+        $.get("/Settings/CreatePartial", function (data) {
             $("#createModalContent").html(data);
             new bootstrap.Modal('#createModal').show();
 
             $("#createGenreForm").on("submit", function (e) {
                 e.preventDefault();
-                $.post("/Home/CreatePartial", $(this).serialize(), function (res) {
+                $.post("/Settings/CreatePartial", $(this).serialize(), function (res) {
                     if (res.success) location.reload();
                     else $("#createModalContent").html(res);
                 });
@@ -17,13 +17,13 @@ $(document).ready(function () {
 
     $(".edit-link").click(function () {
         let id = $(this).data("id");
-        $.get("/Home/EditPartial/" + id, function (data) {
+        $.get("/Settings/EditPartial/" + id, function (data) {
             $("#editModalContent").html(data);
             new bootstrap.Modal('#editModal').show();
 
             $("#editGenreForm").on("submit", function (e) {
                 e.preventDefault();
-                $.post("/Home/EditPartial", $(this).serialize(), function (res) {
+                $.post("/Settings/EditPartial", $(this).serialize(), function (res) {
                     if (res.success) location.reload();
                     else $("#editModalContent").html(res);
                 });
@@ -42,7 +42,7 @@ $(document).ready(function () {
     $("#deleteGenreForm").on("submit", function (e) {
         e.preventDefault();
         let id = $("#deleteGenreId").val();
-        $.post("/Home/DeleteConfirmed", { id: id }, function () {
+        $.post("/Settings/DeleteConfirmed", { id: id }, function () {
             location.reload();
         });
     });
@@ -52,7 +52,7 @@ $(document).ready(function () {
 // Settings
 $(document).ready(function () {    
     $("#openCreateSettingModal").click(function () {
-        $.get("/Home/CreateSettingPartial", function (data) {
+        $.get("/Settings/CreateSettingPartial", function (data) {
             $("#createSettingModalContent").html(data);
             var modal = new bootstrap.Modal(document.getElementById('createSettingModal'));
             modal.show();
@@ -61,7 +61,7 @@ $(document).ready(function () {
                 e.preventDefault();
                 $.ajax({
                     type: "POST",
-                    url: "/Home/CreateSettingPartial",
+                    url: "/Settings/CreateSettingPartial",
                     data: $(this).serialize(),
                     success: function (res) {
                         if (res.success) location.reload();
@@ -74,7 +74,7 @@ $(document).ready(function () {
 
     $(".edit-setting-link").click(function () {
         var id = $(this).data("id");
-        $.get("/Home/EditSettingPartial/" + id, function (data) {
+        $.get("/Settings/EditSettingPartial/" + id, function (data) {
             $("#editSettingModalContent").html(data);
             var modal = new bootstrap.Modal(document.getElementById('editSettingModal'));
             modal.show();
@@ -83,7 +83,7 @@ $(document).ready(function () {
                 e.preventDefault();
                 $.ajax({
                     type: "POST",
-                    url: "/Home/EditSettingPartial",
+                    url: "/Settings/EditSettingPartial",
                     data: $(this).serialize(),
                     success: function (res) {
                         if (res.success) location.reload();
@@ -106,7 +106,7 @@ $(document).ready(function () {
     $("#deleteSettingForm").on("submit", function (e) {
         e.preventDefault();
         var id = $("#deleteSettingId").val();
-        $.post("/Home/DeleteSettingConfirmed/" + id, function () {
+        $.post("/Settings/DeleteSettingConfirmed/" + id, function () {
             location.reload();
         });
     });
@@ -117,7 +117,7 @@ $(document).ready(function () {
 // WatchedWith
 $(document).ready(function () {    
     $("#openCreateWatchedWithModal").click(function () {
-        $.get("/Home/CreateWatchedWithPartial", function (data) {
+        $.get("/Settings/CreateWatchedWithPartial", function (data) {
             $("#createWatchedWithModalContent").html(data);
             var modal = new bootstrap.Modal(document.getElementById('createWatchedWithModal'));
             modal.show();
@@ -126,7 +126,7 @@ $(document).ready(function () {
                 e.preventDefault();
                 $.ajax({
                     type: "POST",
-                    url: "/Home/CreateWatchedWithPartial",
+                    url: "/Settings/CreateWatchedWithPartial",
                     data: $(this).serialize(),
                     success: function (res) {
                         if (res.success) location.reload();
@@ -139,7 +139,7 @@ $(document).ready(function () {
 
     $(".edit-watchedWith-link").click(function () {
         var id = $(this).data("id");
-        $.get("/Home/EditWatchedWithPartial/" + id, function (data) {
+        $.get("/Settings/EditWatchedWithPartial/" + id, function (data) {
             $("#editWatchedWithModalContent").html(data);
             var modal = new bootstrap.Modal(document.getElementById('editWatchedWithModal'));
             modal.show();
@@ -148,7 +148,7 @@ $(document).ready(function () {
                 e.preventDefault();
                 $.ajax({
                     type: "POST",
-                    url: "/Home/EditWatchedWithPartial",
+                    url: "/Settings/EditWatchedWithPartial",
                     data: $(this).serialize(),
                     success: function (res) {
                         if (res.success) location.reload();
@@ -171,7 +171,7 @@ $(document).ready(function () {
     $("#deleteWatchedWithForm").on("submit", function (e) {
         e.preventDefault();
         var id = $("#deleteWatchedWithId").val();
-        $.post("/Home/DeleteWatchedWithConfirmed/" + id, function () {
+        $.post("/Settings/DeleteWatchedWithConfirmed/" + id, function () {
             location.reload();
         });
     });
@@ -204,7 +204,7 @@ function uploadImage(inputId, settingName) {
     formData.append("file", file);
     formData.append("settingName", settingName);
 
-    fetch("/Home/UploadSettingImage", {
+    fetch("/Settings/UploadSettingImage", {
         method: "POST",
         body: formData
     })
@@ -217,3 +217,10 @@ function uploadImage(inputId, settingName) {
             }
         });
 }
+
+
+// DB import
+document.getElementById('zipFile').addEventListener('change', function () {
+    let fileName = this.files.length > 0 ? this.files[0].name : "Keine Datei gewählt";
+    document.getElementById('fileName').textContent = fileName;
+});

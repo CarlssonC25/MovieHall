@@ -7,7 +7,7 @@
     $("#openCreateMovieModal").click(function () {
         var parentId = $(this).data("parent-id");
 
-        $.get("/Home/CreateMovieChildPartial", { parentId: parentId }, function (data) {
+        $.get("ItemView/CreateMovieChildPartial", { parentId: parentId }, function (data) {
             $("#movieModalContent").html(data);
 
             var modal = new bootstrap.Modal(document.getElementById('movieModal'));
@@ -19,7 +19,7 @@
 
                 $.ajax({
                     type: "POST",
-                    url: "/Home/CreateMovieChildPartial",
+                    url: "ItemView/CreateMovieChildPartial",
                     data: formData,
                     processData: false,
                     contentType: false,
@@ -43,7 +43,7 @@
     // --- Edit Movie ---
     $(".edit-movie-link").click(function () {
         var id = $(this).data("id");
-        $.get("/Home/EditMoviePartial?id=" + id, function (data) {
+        $.get("ItemView/EditMoviePartial?id=" + id, function (data) {
             $("#movieModalContent").html(data); // gleiche ID wie beim Create
             var modal = new bootstrap.Modal(document.getElementById('movieModal')); // gleiche Modal-ID
             modal.show();
@@ -54,7 +54,7 @@
 
                 $.ajax({
                     type: "POST",
-                    url: "/Home/EditMoviePartial",
+                    url: "ItemView/EditMoviePartial",
                     data: formData,
                     processData: false,
                     contentType: false,
@@ -94,16 +94,16 @@
         var id = $("#deleteMovieId").val();
         var parentId = $(this).data("parent-id");
 
-        $.post("/Home/DeleteMovieConfirmed/" + id, function () {
+        $.post("ItemView/DeleteMovieConfirmed/" + id, function () {
             if (parentId) {
                 // Redirect zur ParentId
                 const currentUrl = new URL(window.location.href);
-                currentUrl.pathname = "/Home/ItemView/" + parentId;
+                currentUrl.pathname = "ItemView/Index/" + parentId;
                 currentUrl.searchParams.set("type", "Movie");
                 window.location.href = currentUrl.toString();
             } else {
                 // Fallback-Redirect, z.B. auf Home
-                window.location.href = "/Home/Movie";
+                window.location.href = "/Movie/Index";
             }
         });
     });
@@ -113,7 +113,7 @@
     $("#openCreateAnimeModal").click(function () {
         var parentId = $(this).data("parent-id");
 
-        $.get("/Home/CreateAnimeChildPartial", { parentId: parentId }, function (data) {
+        $.get("ItemView/CreateAnimeChildPartial", { parentId: parentId }, function (data) {
             $("#animeModalContent").html(data);
 
             var modal = new bootstrap.Modal(document.getElementById('animeModal'));
@@ -125,7 +125,7 @@
 
                 $.ajax({
                     type: "POST",
-                    url: "/Home/CreateAnimeChildPartial",
+                    url: "ItemView/CreateAnimeChildPartial",
                     data: formData,
                     processData: false,
                     contentType: false,
@@ -149,7 +149,7 @@
     // --- Edit Anime ---
     $(".edit-anime-link").click(function () {
         var id = $(this).data("id");
-        $.get("/Home/EditAnimePartial?id=" + id, function (data) {
+        $.get("ItemView/EditAnimePartial?id=" + id, function (data) {
             $("#animeModalContent").html(data); // gleiche ID wie beim Create
             var modal = new bootstrap.Modal(document.getElementById('animeModal')); // gleiche Modal-ID
             modal.show();
@@ -160,7 +160,7 @@
 
                 $.ajax({
                     type: "POST",
-                    url: "/Home/EditAnimePartial",
+                    url: "ItemView/EditAnimePartial",
                     data: formData,
                     processData: false,
                     contentType: false,
@@ -200,16 +200,33 @@
         var id = $("#deleteAnimeId").val();
         var parentId = $(this).data("parent-id");
 
-        $.post("/Home/DeleteAnimeConfirmed/" + id, function () {
+        $.post("ItemView/DeleteAnimeConfirmed/" + id, function () {
             if (parentId) {
                 // Redirect zur ParentId
                 const currentUrl = new URL(window.location.href);
-                currentUrl.pathname = "/Home/ItemView/" + parentId;
+                currentUrl.pathname = "ItemView/Index/" + parentId;
                 currentUrl.searchParams.set("type", "Anime");
                 window.location.href = currentUrl.toString();
             } else {
                 // Fallback-Redirect, z.B. auf Home
-                window.location.href = "/Home/Anime";
+                window.location.href = "/Anime/Index";
+            }
+        });
+    });
+
+    // --- WhatTimes EDIT ---
+    $(".rewatch").click(function () {
+        var id = $(this).data("id");
+        var rewatch = $(this).data("rewatch");
+
+        $.ajax({
+            url: "ItemView/UpdateRewatch",
+            type: "POST",
+            data: { id: id, change: rewatch },
+            success: function (response) {
+                if (response.success) {
+                    $("#rewatch-count-" + id).text(response.newValue);
+                }
             }
         });
     });

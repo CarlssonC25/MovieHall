@@ -3,7 +3,7 @@ function loadMovies(page) {
     let filter = $("#FSK-search").val();
 
     $.ajax({
-        url: "/Home/Movie?page=" + page + "&filter=" + encodeURIComponent(filter),
+        url: "/Movie/Index?page=" + page + "&filter=" + encodeURIComponent(filter),
         type: "GET",
         headers: { "X-Requested-With": "XMLHttpRequest" },
         success: function (data) {
@@ -20,7 +20,7 @@ $(document).ready(function () {
     console.log("movies.js geladen");
     // Create Modal öffnen
     $("#openCreateMovieModal").click(function () {
-        $.get("/Home/CreateMoviePartial", function (data) {
+        $.get("/Movie/CreateMoviePartial", function (data) {
             $("#movieModalContent").html(data);
             var modal = new bootstrap.Modal(document.getElementById('movieModal'));
             modal.show();
@@ -33,7 +33,7 @@ $(document).ready(function () {
                 $.ajax(
                     {
                     type: "POST",
-                    url: "/Home/CreateMoviePartial",
+                    url: "/Movie/CreateMoviePartial",
                     data: formData,
                     processData: false,
                     contentType: false,
@@ -58,7 +58,7 @@ $(document).ready(function () {
     // Edit Modal öffnen
     $(".edit-movie-link").click(function () {
         var id = $(this).data("id");
-        $.get("/Home/EditMoviePartial?id=" + id, function (data) {
+        $.get("/Movie/EditMoviePartial?id=" + id, function (data) {
             $("#movieModalContent").html(data);
             var modal = new bootstrap.Modal(document.getElementById('movieModal'));
             modal.show();
@@ -69,7 +69,7 @@ $(document).ready(function () {
 
                 $.ajax({
                     type: "POST",
-                    url: "/Home/EditMoviePartial",
+                    url: "/Movie/EditMoviePartial",
                     data: formData,
                     processData: false,
                     contentType: false,
@@ -104,7 +104,7 @@ $(document).ready(function () {
     $("#deleteMovieForm").on("submit", function (e) {
         e.preventDefault();
         var id = $("#deleteMovieId").val();
-        $.post("/Home/DeleteMovieConfirmed/" + id, function () {
+        $.post("/Movie/DeleteMovieConfirmed/" + id, function () {
             location.reload();
         });
     });

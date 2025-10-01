@@ -1,7 +1,40 @@
 ﻿@model MovieHall.SaveModel.SaveAnime
 @{
+    @*Top/Rank*@ 
+    var topOptions = new Dictionary<int, string>
+    {
+        { 1, "Top 1" },
+        { 2, "Top 2" },
+        { 3, "Top 3" },
+        { 4, "Top 4" },
+        { 5, "Top 5" },
+        { 6, "Top 6" },
+        { 7, "Top 7" },
+        { 8, "Top 8" },
+        { 9, "Top 9" },
+        { 10, "Top 10" }
+    };
+
+    @*Language*@ 
+    var isCheckedEng = Model.Language.Contains("Englisch") ? "checked" : "";
+    var isCheckedJap = Model.Language.Contains("Japanisch") ? "checked" : "";
+    var isCheckedGer = Model.Language.Contains("Deutsch") ? "checked" : "";
+
+    @*Genre*@ 
     var genres = ViewBag.Genres as List<MovieHall.Models.Genre>;
+    var selectedGenreIds = Model.AnimeGenres?.Select(g => g.GenreId).ToList() ?? new List<int>();
+
+    @*WatchedWith*@ 
     var watched = ViewBag.WatchedWith as List<MovieHall.Models.WatchedWith>;
+
+    @*Country*@ 
+    var countryOptions = new Dictionary<string, string>
+    {
+        { "", "Land Wählen..." },
+        { "Japan", "Japan" },
+        { "China", "China" },
+        { "Korea", "Korea" }
+    };
 }
 
 <form id="createAnimeForm" enctype="multipart/form-data">
@@ -15,6 +48,7 @@
             <label for="animeName">Name</label>
             <input class="form-control" id="animeName" name="Name" required />
             <input type="hidden" name="ParentId" value="@Model.ParentId" />
+            <input type="hidden" name="WhatTimes" value="1" />
         </div>
 
         <div class="mb-3">
@@ -23,18 +57,19 @@
         </div>
 
         <div class="mb-3">
-            <label for="top">Rank</label>
-            <select class="form-control" id="top" name="Top">
-                <option value="0">1</option>
-                <option value="1">2</option>
-                <option value="2">3</option>
-                <option value="3">4</option>
-                <option value="4">5</option>
-                <option value="5">6</option>
-                <option value="6">7</option>
-                <option value="7">8</option>
-                <option value="8">9</option>
-                <option value="9">10</option>
+            <label asp-for="Top">Rank</label>
+            <select asp-for="Top" class="form-control">
+                @foreach (var top in topOptions)
+                {
+                    if (Model.Top == top.Key)
+                    {
+                        <option value="@top.Key" selected>@top.Value</option>
+                    }
+                    else
+                    {
+                        <option value="@top.Key">@top.Value</option>
+                    }
+                }
             </select>
         </div>
 
@@ -46,11 +81,6 @@
                 <option value="2">Blu-ray</option>
                 <option value="3">3D</option>
             </select>
-        </div>
-
-        <div class="mb-3">
-            <label for="description">Beschreibung</label>
-            <textarea class="form-control" id="description" name="Description" rows="3"></textarea>
         </div>
 
         <div class="mb-3">
@@ -73,14 +103,20 @@
             <input type="number" name="Episodes" id="episodes" class="form-control" />
         </div>
 
-        <div class="mb-3">
-            <label for="language">Sprache</label>
-            <select class="form-control" name="Language" id="language">
-                <option value="en">Englisch</option>
-                <option value="sub">Sub</option>
-                <option value="jap">Japanisch</option>
-                <option value="de">Deutsch</option>
-            </select>
+        <div class="checkbox-popup mb-3 row">
+            <label class="ps-0">Sprache</label>
+            <div class="form-check col-4">
+                <input class="form-check-input" type="checkbox" name="Language" value="Englisch" id="langEng" @isCheckedEng />
+                <label class="form-check-label" for="langEng">Englisch</label>
+            </div>
+            <div class="form-check col-4">
+                <input class="form-check-input" type="checkbox" name="Language" value="Japanisch" id="langJap" @isCheckedJap />
+                <label class="form-check-label" for="langJap">Japanisch</label>
+            </div>
+            <div class="form-check col-4">
+                <input class="form-check-input" type="checkbox" name="Language" value="Deutsch" id="langGer" @isCheckedGer />
+                <label class="form-check-label" for="langGer">Deutsch</label>
+            </div>
         </div>
 
         <div class="checkbox-popup mb-3 row">
@@ -89,8 +125,9 @@
             {
                 if (g.Belonging_to.Contains("A") || g.Belonging_to.Contains("a"))
                 {
+                    var isChecked = selectedGenreIds.Contains(g.Id) ? "checked" : "";
                     <div class="form-check col-4">
-                        <input class="form-check-input" type="checkbox" name="SelectedGenreIds" value="@g.Id" id="genre_@g.Id" />
+                        <input class="form-check-input" type="checkbox" name="SelectedGenreIds" value="@g.Id" id="genre_@g.Id" @isChecked />
                         <label class="form-check-label" for="genre_@g.Id">@g.Name</label>
                     </div>
                 }
@@ -106,6 +143,28 @@
                     <label class="form-check-label" for="watched_@w.Id">@w.Name</label>
                 </div>
             }
+        </div>
+
+        <div class="mb-3">
+            <label for="description">Beschreibung</label>
+            <textarea class="form-control" id="description" name="Description" rows="3"></textarea>
+        </div>
+
+        <div class="mb-3">
+            <label asp-for="Country">Land</label>
+            <select asp-for="Country" class="form-control">
+                @foreach (var option in countryOptions)
+                {
+                    if (Model.Country == option.Key)
+                    {
+                        <option value="@option.Key" selected>@option.Value</option>
+                    }
+                    else
+                    {
+                        <option value="@option.Key">@option.Value</option>
+                    }
+                }
+            </select>
         </div>
     </div>
 
