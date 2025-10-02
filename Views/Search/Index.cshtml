@@ -1,7 +1,14 @@
-﻿@model MovieHall.ViewModels.Search
-@{
+﻿@{
     ViewData["Title"] = "Search";
 }
 
+<h2>Suchergebnisse</h2>
 
-<input type="type" name="Search" value="@Model.search" />
+@if (!string.IsNullOrEmpty(ViewBag.Query))
+{
+    <p>Du hast gesucht nach: <strong>@ViewBag.Query</strong> (@ViewBag.Type)</p>
+}
+else
+{
+    <p>Bitte gib einen Suchbegriff ein.</p>
+}

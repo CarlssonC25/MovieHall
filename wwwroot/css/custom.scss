@@ -56,29 +56,68 @@ header {
     z-index: 1;
 }
 
-#search > div{
-    background-color: $back-gray-normal;
-    border-radius: $base-border-radius;
+#search {
+    width: 30%;
+
+    > div {
+        background-color: $back-gray-normal;
+        border-radius: $base-border-radius;
+        width: 100%;
+    }
+
+    input {
+        border-radius: $base-border-radius 0 0 $base-border-radius;
+        background-color: transparent;
+        height: 34px;
+        width: 100%;
+    }
+
+    > div input:hover,
+    > div input:focus,
+    > div img:hover,
+    > div img:focus {
+        background-color: $back-gray-light;
+    }
+
+    img {
+        @include transition($base-transition);
+        border-radius: 0 $base-border-radius $base-border-radius 0;
+        padding: 5px;
+    }
+
+    > ul {
+        border-radius: $base-border-radius;
+        top: 80%;
+        z-index: 10000;
+        background-color: $back-gray-light;
+        border: none;
+        padding: .125rem 0;
+        width: 100%;
+        box-shadow: 0px 0px 5px $back-gray-dark;
+
+        > a {
+            background-color: $back-gray-bright;
+            margin: .125rem .25rem !important;
+
+            img {
+                width: 25%;
+                margin-right: 8px;
+            }
+
+            span {
+                color: $text-col-bright;
+            }
+        }
+
+        > a:hover {
+
+            span {
+                text-shadow: 0px 0px 5px #fff;
+            }
+        }
+    }
 }
 
-#search input {
-    border-radius: $base-border-radius 0 0 $base-border-radius;
-    background-color: transparent;
-    height: 34px;
-}
-
-#search input:hover,
-#search input:focus,
-#search img:hover,
-#search img:focus {
-    background-color: $back-gray-light;
-}
-
-#search img {
-    @include transition($base-transition);
-    border-radius: 0 $base-border-radius $base-border-radius 0;
-    padding: 5px;
-}
 
 #settings img {
     @include transition($base-transition);

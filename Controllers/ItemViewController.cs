@@ -19,6 +19,7 @@ namespace MovieHall.Controllers
         public async Task<IActionResult> Index(string id, string type)
         {
             var ID = Int32.Parse(id);
+            ViewBag.Type = type;
 
             // Error check
             if (ID <= 0 || type == null)

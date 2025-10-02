@@ -9,14 +9,12 @@
     <link rel="stylesheet" href="~/css/custom.css" asp-append-version="true" />
 </head>
 @{
-        // aktueller Controller
         var currentController = ViewContext.RouteData.Values["controller"]?.ToString();
-
         bool showSearch = currentController == "Movie"
                         || currentController == "Anime"
                         || currentController == "ItemView";
 }
-<body>
+<body data-controller="@currentController" data-type="@ViewBag.Type">
     <header class="container-fluid">
         <nav class="row">
             <div class="col-3 d-flex">
@@ -38,8 +36,7 @@
                         </div>
 
                         <!-- Dropdown für Autocomplete -->
-                        <ul id="searchResults" class="list-group position-absolute"
-                            style="top:100%; z-index:1000; display:none;">
+                        <ul id="searchResults" class="list-group position-absolute" style="display:none;">
                         </ul>
                     </div>
                 }
@@ -61,10 +58,7 @@
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
+    <script src="~/js/layout.js"></script>
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>
-
-@section Scripts {
-    <script src="~/js/layout.js"></script>
-}

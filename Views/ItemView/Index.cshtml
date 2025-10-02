@@ -20,7 +20,7 @@
                     @if (Model.ParentAnime != null)
                     {
                         var imgSrc = "/img/Anime_imgs/" + Model.ParentAnime.Img;
-                        <a class="row itemFam mb-3" asp-area="" asp-controller="Home" asp-action="ItemView" asp-route-id="@Model.ParentAnime.Id" asp-route-type="Anime">
+                        <a class="row itemFam mb-3" asp-area="" asp-controller="ItemView" asp-action="Index" asp-route-id="@Model.ParentAnime.Id" asp-route-type="Anime">
                             <div class="col-4"><img class="w-100" src="@imgSrc" /></div>
                             <div class="col-8 align-content-center"><p>@Model.ParentAnime.Name</p></div>
                         </a>
@@ -31,7 +31,7 @@
                         {
                             var imgSrc = "/img/Anime_imgs/" + child.Img;
                             <hr>
-                            <a class="row itemFam mb-3" asp-area="" asp-controller="Home" asp-action="ItemView" asp-route-id="@child.Id" asp-route-type="Anime">
+                            <a class="row itemFam mb-3" asp-area="" asp-controller="ItemView" asp-action="Index" asp-route-id="@child.Id" asp-route-type="Anime">
                                 <div class="col-4"><img class="w-100" src="@imgSrc" /></div>
                                 <div class="col-8 align-content-center"><p>@child.Name</p></div>
                             </a>
@@ -50,7 +50,7 @@
                     @if (Model.ParentMovie != null)
                     {
                         var imgSrc = "/img/Movie_imgs/" + Model.ParentMovie.Img;
-                        <a class="row itemFam mb-3" asp-area="" asp-controller="Home" asp-action="ItemView" asp-route-id="@Model.ParentMovie.Id" asp-route-type="Movie">
+                        <a class="row itemFam mb-3" asp-area="" asp-controller="ItemView" asp-action="Index" asp-route-id="@Model.ParentMovie.Id" asp-route-type="Movie">
                             <div class="col-4"><img class="w-100" src="@imgSrc" /></div>
                             <div class="col-8 align-content-center"><p>@Model.ParentMovie.Name</p></div>
                         </a>
@@ -61,7 +61,7 @@
                         {
                             var imgSrc = "/img/Movie_imgs/" + child.Img;
                             <hr>
-                            <a class="row itemFam mb-3" asp-area="" asp-controller="Home" asp-action="ItemView" asp-route-id="@child.Id" asp-route-type="Movie">
+                            <a class="row itemFam mb-3" asp-area="" asp-controller="ItemView" asp-action="Index" asp-route-id="@child.Id" asp-route-type="Movie">
                                 <div class="col-4"><img class="w-100" src="@imgSrc" /></div>
                                 <div class="col-8 align-content-center"><p>@child.Name</p></div>
                             </a>
