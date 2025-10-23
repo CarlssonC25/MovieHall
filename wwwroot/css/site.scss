@@ -23,6 +23,16 @@
     background: $back-gray-lightlight;
 }
 
+img {
+    border-radius: $base-border-radius;
+}
+
+a {
+    color: $text-col-dark;
+}
+a:hover {
+    color: $text-col-dark;
+}
 
 input {
     @include transition($base-transition);
@@ -41,6 +51,10 @@ input:focus {
 
 [type="checkbox"] {
     cursor: pointer;
+}
+
+textarea {
+    color: $text-col-dark !important;
 }
 
 .btn {
@@ -93,6 +107,12 @@ input:focus {
     border: none !important;
     outline: none !important;
     opacity: 0.5;
+}
+.rotate-90 {
+    transform: rotate(90deg);
+}
+.rotate-180 {
+    transform: rotate(180deg);
 }
 
 /*Elem color Style*/

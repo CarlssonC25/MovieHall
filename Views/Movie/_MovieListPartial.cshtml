@@ -39,7 +39,9 @@
 
             <!-- Zurück -->
             <li class="page-item @(Model.CurrentPage == 1 ? "disabled" : "")">
-                <a href="#" class="page-link pagination-link btn-primary" data-page="@(Model.CurrentPage - 1)">«</a>
+                <a href="#" class="page-link pagination-link btn-primary" data-page="@(Model.CurrentPage - 1)">
+                    <img class="rotate-180" src="~/img/smal_arrows.png" />
+                </a>
             </li>
 
             @{
@@ -61,7 +63,9 @@
 
             <!-- Vor -->
             <li class="page-item @(Model.CurrentPage == Model.TotalPages ? "disabled" : "")">
-                <a href="#" class="page-link pagination-link btn-primary" data-page="@(Model.CurrentPage + 1)">»</a>
+                <a href="#" class="page-link pagination-link btn-primary" data-page="@(Model.CurrentPage + 1)">
+                    <img src="~/img/smal_arrows.png"/>
+                </a>
             </li>
 
         </ul>

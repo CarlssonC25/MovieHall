@@ -47,6 +47,23 @@ namespace MovieHall.Controllers
                     .Include(m => m.AnimeWatchedWiths).ThenInclude(mw => mw.WatchedWith)
                     .Where(m => m.Id == ID).FirstOrDefaultAsync();
 
+                var DBnotes = await _context.AnimeNotes
+                    .Include(n => n.Anime)
+                    .ToListAsync();
+
+                var notes = new List<AnimeNoteVM>();
+
+                if (DBnotes.Any())
+                {
+                    notes = DBnotes.Select(note => new AnimeNoteVM
+                    {
+                        Id = note.Id,
+                        Comment = note.Comment,
+                        AnimeId = note.AnimeId,
+                        Img = note.Anime.Img
+                    }).ToList();
+                }
+
                 aniMov.Id = ID;
                 aniMov.Name = item.Name;
                 aniMov.Buy = item.Buy;
@@ -60,11 +77,15 @@ namespace MovieHall.Controllers
 
                 aniMov.Orginal_Name = item.Orginal_Name;
                 aniMov.Top = item.Top;
+                aniMov.Country = item.Country;
                 aniMov.Episodes = item.Episodes;
                 aniMov.WhatTimes = item.WhatTimes;
                 aniMov.ParentAnime = item.Parent;
                 aniMov.AnimeGenres = item.AnimeGenres;
                 aniMov.AnimeWatchedWiths = item.AnimeWatchedWiths;
+                aniMov.AnimeSum = await _context.Animes.CountAsync();
+                aniMov.AnimeEpSum = (int)await _context.Animes.SumAsync(a => a.Episodes);
+                aniMov.AnimeNotes = notes;
 
                 if (aniMov.ParentId != null)
                 {
@@ -98,6 +119,23 @@ namespace MovieHall.Controllers
                     .Include(m => m.MovieWatchedWiths).ThenInclude(mw => mw.WatchedWith)
                     .Where(m => m.Id == ID).FirstOrDefaultAsync();
 
+                var DBnotes = await _context.MovieNotes
+                    .Include(n => n.Movie)
+                    .ToListAsync();
+
+                var notes = new List<MovieNoteVM>();
+
+                if (DBnotes.Any())
+                {
+                    notes = DBnotes.Select(note => new MovieNoteVM
+                    {
+                        Id = note.Id,
+                        Comment = note.Comment,
+                        MovieId = note.MovieId,
+                        Img = note.Movie.Img
+                    }).ToList();
+                }
+
                 aniMov.Id = ID;
                 aniMov.Name = item.Name;
                 aniMov.Buy = item.Buy;
@@ -113,6 +151,8 @@ namespace MovieHall.Controllers
                 aniMov.ParentMovie = item.Parent;
                 aniMov.MovieGenres = item.MovieGenres;
                 aniMov.MovieWatchedWiths = item.MovieWatchedWiths;
+                aniMov.MovieSum = await _context.Movies.CountAsync();
+                aniMov.MovieNotes = notes;
 
                 if (aniMov.ParentId != null)
                 {
@@ -150,9 +190,16 @@ namespace MovieHall.Controllers
         [HttpGet]
         public async Task<IActionResult> CreateMovieChildPartial(int parentId)
         {
+            var parent = await _context.Movies
+                .Include(m => m.MovieGenres).ThenInclude(mg => mg.Genre)
+                .Include(m => m.MovieWatchedWiths).ThenInclude(mw => mw.WatchedWith)
+                .Where(a => a.Id == parentId).FirstOrDefaultAsync();
+
             var model = new SaveMovie
             {
-                ParentId = parentId
+                ParentId = parent.Id,
+                MovieGenres = parent.MovieGenres,
+                FSK = parent.FSK
             };
 
             ViewBag.Genres = await _context.Genre.OrderBy(g => g.Name).ToListAsync();

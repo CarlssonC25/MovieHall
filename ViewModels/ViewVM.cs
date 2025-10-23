@@ -25,7 +25,13 @@ namespace MovieHall.ViewModels
         public string? Orginal_Name { get; set; }
         public int? Episodes { get; set; }
         public int? WhatTimes { get; set; }
+        public string? Country { get; set; }
 
+        public int? AnimeSum { get; set; }
+        public int? AnimeEpSum { get; set; }
+
+
+        public List<AnimeNoteVM>? AnimeNotes { get; set; }
 
         // Parent (Verweis auf Parent Anime)
         public Anime? ParentAnime { get; set; }
@@ -41,6 +47,10 @@ namespace MovieHall.ViewModels
         public int? FSK { get; set; }
         public bool? Favorit { get; set; }
 
+        public int? MovieSum { get; set; }
+
+
+        public List<MovieNoteVM>? MovieNotes { get; set; }
 
         // Parent (Verweis Parent Movie)
         public Movie? ParentMovie { get; set; }

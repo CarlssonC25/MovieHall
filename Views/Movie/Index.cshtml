@@ -3,23 +3,70 @@
     ViewData["Title"] = "Movie";
 }
 
-<section id="movie" class="container-fluid">
+<section id="movie" class="container-fluid mt-4">
     <div class="d-flex justify-content-center">
         <div class="body-HD-size">
 
-            <div class="w-100 extra-space">
-                <div class="extra-fill">
-                </div>
-                <div class="extra">
-                    <button class="btn btn-primary mt-3" id="openCreateMovieModal">Neuer Film</button>
+            <div class="under-content px-4">
+                <div class="under-content-container py-2 pb-0">
+                    <div class="d-flex">
+                        <label for="toggleNote" class="btn btn-primary">Notes</label>
+
+                        <div class="under-content-info ms-3">
+                            <b>Film Nummer:</b> @Model.MovieSume
+                        </div>
+                    </div>
+
+                    <button class="btn btn-primary" id="openCreateMovieModal">Neuer Film</button>
+
                 </div>
             </div>
+            @if (Model.Notes != null && Model.Notes.Any())
+            {
+                <div class="under-content px-4">
+                    <div class="under-content-container">
+                        <input type="checkbox" id="toggleNote" hidden>
+                        <div id="note" class="container-fluid">
+                            <div class="row py-3">
+                                <div class="col-1 align-content-center text-center">
+                                    <button id="scrollLeft">
+                                        <img class="rotate-180" src="~/img/big_arrow.png" />
+                                    </button>
+                                </div>
+                                <div class="col-10">
+                                    <div class="gallery-container">
+                                        <div class="gallery-track">
+                                            @foreach (var note in Model.Notes)
+                                            {
+                                                <a class="note-elem w-25 d-flex p-2 mx-2" asp-area="" asp-controller="ItemView" asp-action="Index" asp-route-id="@note.MovieId" asp-route-type="Movie">
+                                                    <div class="note-L">
+                                                        <img class="w-100" src="~/img/Movie_imgs/@note.Img" />
+                                                    </div>
+                                                    <div class="note-R ps-2">
+                                                        @note.Comment
+                                                    </div>
+                                                </a>
+                                            }
+                                        </div>
+                                    </div>
+
+                                </div>
+                                <div class="col-1 align-content-center text-center">
+                                    <button id="scrollRight">
+                                        <img src="~/img/big_arrow.png" />
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
 
             @* AJAX-Container *@
             <div id="movieContainer">
                 @await Html.PartialAsync("~/Views/Movie/_MovieListPartial.cshtml", Model)
             </div>
-             
+                         
         </div>
     </div>
 </section>

@@ -1,14 +1,206 @@
-﻿@{
+﻿@model MovieHall.ViewModels.SearchVM
+@{
     ViewData["Title"] = "Search";
+
+    var selectedGenreIds = Model.FilterGenres ?? new List<int>();
+
+    var gernes = new List<Genre>();
+
+    if (Model.Type == "Anime")
+    {
+        gernes = Model.Genres
+            .Where(g => g.Belonging_to.Contains("A", StringComparison.OrdinalIgnoreCase))
+            .ToList();
+    }
+    else if (Model.Type == "Movie")
+    {
+        gernes = Model.Genres
+            .Where(g => g.Belonging_to.Contains("M", StringComparison.OrdinalIgnoreCase))
+            .ToList();
+    }
+    
+    var countrys = new List<string>{
+        {"Japan"},
+        {"China"},
+        {"Korea"}
+    };
+
+    var FSKOptions = new Dictionary<int, string>{
+        { 0, "0+" },
+        { 6, "6+" },
+        { 12, "12+" },
+        { 16, "16+" },
+        { 18, "18+" }
+    };
 }
 
-<h2>Suchergebnisse</h2>
+<section id="Search" class="mt-5">
+    <div class="d-flex justify-content-center">
+        <div class="body-HD-size">
 
-@if (!string.IsNullOrEmpty(ViewBag.Query))
-{
-    <p>Du hast gesucht nach: <strong>@ViewBag.Query</strong> (@ViewBag.Type)</p>
-}
-else
-{
-    <p>Bitte gib einen Suchbegriff ein.</p>
-}
+            <form enctype="multipart/form-data" method="post">
+                <input type="text" value="@Model.Type" asp-for="Type" hidden/>
+                <div class="d-flex justify-content-center">
+                    <div>
+                        <label for="toggleFilter" class="btn btn-primary me-3">Filter</label>
+                    </div>
+                    <div class="w-25 align-content-center">
+                        <div class="search-input align-items-center">
+                            <label for="search-input" class="ps-1">Suche:</label>
+                            <input id="search-input" type="text" asp-for="SearchString"/>
+                        </div>
+                    </div>
+                    <div>                    
+                        <button type="submit" class="btn btn-primary ms-3">Suchen</button>
+                    </div>
+                </div>
+
+                <div class="w-100 d-flex justify-content-center">
+                    <div class="filter-popup position-relative">
+
+                        <input type="checkbox" id="toggleFilter" hidden>
+                        <div class="filter-dropdown py-2 mt-2">
+
+                            <div class="genre-filter">
+                                <div class="text-center">
+                                    <b>Genre:</b>
+                                </div>
+                                <div class="gernes row mx-3 my-2 py-2 px-3">
+                                    @foreach (var genre in gernes)
+                                    {
+                                        var isChecked = selectedGenreIds.Contains(genre.Id) ? "checked" : "";
+                                        <div class="form-check col-3 my-1">
+                                            <input class="form-check-input" type="checkbox" name="FilterGenres" value="@genre.Id" id="genre_@genre.Id" @isChecked />
+                                            <label class="form-check-label" for="genre_@genre.Id">@genre.Name</label>
+                                        </div>
+                                    }
+                                </div>
+                            </div>
+
+
+                            <div class="filter-plus">
+
+                                @if (Model.Type == "Anime")
+                                {
+                                    <div class="country-filter mx-2 p-1">
+                                        <label id="lbcountFilter" for="countFilter" class="mb-1"><b>Land:</b></label>
+
+                                        <select id="countFilter" asp-for="FilterContry" class="p-0">
+                                            <option value="">Alle</option>
+                                            @foreach (var countrys in countrys)
+                                            {
+                                                if (Model.FilterContry == countrys)
+                                                {
+                                                    <option value="@countrys" selected>@countrys</option>
+                                                }
+                                                else
+                                                {
+                                                    <option value="@countrys">@countrys</option>
+                                                }
+                                            }
+                                        </select>
+                                    </div>
+                                
+                                
+                                    <div class="ww-filter mx-2 p-1">
+                                        <label for="wwFilter" class="mb-1"><b>Geguckt mit:</b></label>
+
+                                        <select id="wwFilter" asp-for="FilterWatchWitch" class="p-0">
+                                            <option value="">Kein</option>
+                                            @foreach (var ww in ViewBag.WW)
+                                            {
+                                                if (Model.FilterWatchWitch == ww)
+                                                {
+                                                    <option value="@ww" selected>@ww</option>
+                                                }
+                                                else
+                                                {
+                                                    <option value="@ww">@ww</option>
+                                                }
+                                            }
+                                        </select>
+                                    </div>
+                                }
+
+
+                                @if (Model.Type == "Movie")
+                                {
+                                    <div class="fsk-filter mx-2 p-1">
+                                        <label for="fskFilter" class="mb-1"><b>FSK:</b></label>
+
+                                        <select id="fskFilter" asp-for="FilterFSK" class="p-0">
+                                            <option value="">Alle</option>
+                                            @foreach (var fsk in FSKOptions)
+                                            {
+                                                if (Model.FilterFSK == fsk.Key)
+                                                {
+                                                    <option value="@fsk.Key" selected>@fsk.Value</option>
+                                                }
+                                                else
+                                                {
+                                                    <option value="@fsk.Key">@fsk.Value</option>
+                                                }
+                                            }
+                                        </select>
+                                    </div>
+                                }
+
+                                <div class="parent-filter mx-2 p-1">
+                                    <label class="form-check-label" for="parent-filter"><b>Nur Erste:</b></label>
+                                    <input id="parent-filter" class="form-check-input" type="checkbox" asp-for="FilterParents" checked/>
+                                </div>
+
+                            </div>                        
+                        </div>
+                    </div>
+                </div>                
+            </form>
+
+        </div>
+    </div>
+</section>
+
+<section id="SearchContent">
+    <div class="d-flex justify-content-center">
+        <div class="body-HD-size"> 
+
+            @if(Model.Type == "Anime" && Model.Animes != null) 
+            {
+                <div class="search-anime w-100 text-center">
+                    @foreach (var anime in Model.Animes)
+                    {
+                        <a class="item" asp-area="" asp-controller="ItemView" asp-action="Index" asp-route-id="@anime.Id" asp-route-type="Anime">
+                            <img src="~/img/Anime_imgs/@anime.Img" alt="@anime.Name" />
+                            <div>
+                                <p>@anime.Name</p>
+                            </div>
+                            <span>
+                                <i class="fa fa-good" data-toggle="tooltip" title="HD Quality"></i>
+                            </span>
+                        </a>
+                    }
+                </div>
+
+            } else if(Model.Type == "Movie" && Model.Movies != null)
+            {
+                <div class="search-movie w-100 text-center">
+                    @foreach (var movie in Model.Movies)
+                    {
+                        <a class="item" asp-area="" asp-controller="ItemView" asp-action="Index" asp-route-id="@movie.Id" asp-route-type="Movie">
+                            <img src="~/img/Movie_imgs/@movie.Img" alt="@movie.Name" />
+                            <div>
+                                <p>@movie.Name</p>
+                            </div>
+                            <span>
+                                <i class="fa fa-good" data-toggle="tooltip" title="HD Quality"></i>
+                            </span>
+                        </a>
+                    }
+                </div>
+
+            }
+
+
+        </div>
+    </div>
+</section>

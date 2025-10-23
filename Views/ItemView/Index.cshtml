@@ -10,7 +10,7 @@
     };
 }
 
-<section class="d-flex justify-content-center">
+<section id="ItemView" class="d-flex justify-content-center">
     <div class="body-HD-size">
         <div class="container-fluid">
             <div class="row mt-4">
@@ -20,7 +20,7 @@
                     @if (Model.ParentAnime != null)
                     {
                         var imgSrc = "/img/Anime_imgs/" + Model.ParentAnime.Img;
-                        <a class="row itemFam mb-3" asp-area="" asp-controller="ItemView" asp-action="Index" asp-route-id="@Model.ParentAnime.Id" asp-route-type="Anime">
+                        <a class="row itemFam mb-3 @(Model.Name == Model.ParentAnime.Name ? "itemFam-aktiv" : "")" asp-area="" asp-controller="ItemView" asp-action="Index" asp-route-id="@Model.ParentAnime.Id" asp-route-type="Anime">
                             <div class="col-4"><img class="w-100" src="@imgSrc" /></div>
                             <div class="col-8 align-content-center"><p>@Model.ParentAnime.Name</p></div>
                         </a>
@@ -30,8 +30,7 @@
                         @foreach (var child in Model.ChildAnimes.OrderBy(c => c.ReleaseDate))
                         {
                             var imgSrc = "/img/Anime_imgs/" + child.Img;
-                            <hr>
-                            <a class="row itemFam mb-3" asp-area="" asp-controller="ItemView" asp-action="Index" asp-route-id="@child.Id" asp-route-type="Anime">
+                            <a class="row itemFam mb-3 @(Model.Name == child.Name ? "itemFam-aktiv" : "")" asp-area="" asp-controller="ItemView" asp-action="Index" asp-route-id="@child.Id" asp-route-type="Anime">
                                 <div class="col-4"><img class="w-100" src="@imgSrc" /></div>
                                 <div class="col-8 align-content-center"><p>@child.Name</p></div>
                             </a>
@@ -50,7 +49,7 @@
                     @if (Model.ParentMovie != null)
                     {
                         var imgSrc = "/img/Movie_imgs/" + Model.ParentMovie.Img;
-                        <a class="row itemFam mb-3" asp-area="" asp-controller="ItemView" asp-action="Index" asp-route-id="@Model.ParentMovie.Id" asp-route-type="Movie">
+                        <a class="row itemFam mb-3 @(Model.Name == Model.ParentMovie.Name ? "itemFam-aktiv" : "")" asp-area="" asp-controller="ItemView" asp-action="Index" asp-route-id="@Model.ParentMovie.Id" asp-route-type="Movie">
                             <div class="col-4"><img class="w-100" src="@imgSrc" /></div>
                             <div class="col-8 align-content-center"><p>@Model.ParentMovie.Name</p></div>
                         </a>
@@ -60,8 +59,7 @@
                         @foreach (var child in Model.ChildMovies)
                         {
                             var imgSrc = "/img/Movie_imgs/" + child.Img;
-                            <hr>
-                            <a class="row itemFam mb-3" asp-area="" asp-controller="ItemView" asp-action="Index" asp-route-id="@child.Id" asp-route-type="Movie">
+                            <a class="row itemFam mb-3 @(Model.Name == child.Name ? "itemFam-aktiv" : "")" asp-area="" asp-controller="ItemView" asp-action="Index" asp-route-id="@child.Id" asp-route-type="Movie">
                                 <div class="col-4"><img class="w-100" src="@imgSrc" /></div>
                                 <div class="col-8 align-content-center"><p>@child.Name</p></div>
                             </a>
@@ -87,10 +85,6 @@
                         } else
                         {
                             <h1>@Model.Name</h1>
-                            if (Model.Orginal_Name != null)
-                            {
-                                <h2>@Model.Orginal_Name</h2>                                    
-                            }
                         }
                     </div>
 
@@ -133,6 +127,7 @@
                             @if (Model.Orginal_Name != null)
                             {
                                 <p class="anime-info">
+                                    <b>Orginal Name:</b> @Model.Orginal_Name <br />
                                     <b>Rank:</b> @Model.Top <br />
                                     <b>Folgen:</b> @Model.Episodes <br />
                                     <b>Rewatch:</b>
@@ -150,8 +145,15 @@
                             <p>
                                 <b>Besitz:</b> @buyOptions[Model.Buy] <br />
                                 <b>Sprache:</b> @Model.Language <br />
-                                <b>Veröffentlicht:</b> @Model.ReleaseDate.ToShortDateString()
-
+                                @if (Model.Favorit != null)
+                                {                                    
+                                    <b>Veröffentlicht:</b> @Model.ReleaseDate.ToString("yyyy") <br />
+                                }
+                                @if (Model.Country != null)
+                                {
+                                    <b>Veröffentlicht:</b> @Model.ReleaseDate.ToString("MM'-'yyyy") <br />
+                                    <b>Land:</b> @Model.Country
+                                }
                             </p>
 
                             <p class="my-0"><b>Genres:</b></p>
@@ -182,40 +184,215 @@
                                 </p>
                             }
 
-                                @if (Model.ParentAnime != null)
-                                {
+                            @if (Model.ParentAnime != null)
+                            {
                                     
-                                    <div class="w-100 d-flex justify-content-end">
-                                        <div class="itemView-edit-content">
-                                            <button class="p-0 m-0 item-btn-delete delete-anime-link" data-id="@Model.Id" data-name="@Model.Name" data-parent-id="@Model.ParentId">
-                                                <img src="/img/delete.png" />
-                                            </button>
-                                        </div>
+                                <div class="w-100 d-flex justify-content-end">
+                                    <div class="itemView-edit-content">
+                                        <button class="p-0 m-0 item-btn-delete delete-anime-link" data-id="@Model.Id" data-name="@Model.Name" data-parent-id="@Model.ParentId">
+                                            <img src="/img/delete.png" />
+                                        </button>
                                     </div>
-                                }
-                                @if (Model.ParentMovie != null)
-                                {
+                                </div>
+                            }
+                            @if (Model.ParentMovie != null)
+                            {
                                     
-                                    <div class="w-100 d-flex justify-content-end">
-                                        <div class="itemView-edit-content">
-                                            <button class="p-0 m-0 item-btn-delete delete-movie-link" data-id="@Model.Id" data-name="@Model.Name" data-parent-id="@Model.ParentId">
-                                                <img src="/img/delete.png" />
-                                            </button>
-                                        </div>
+                                <div class="w-100 d-flex justify-content-end">
+                                    <div class="itemView-edit-content">
+                                        <button class="p-0 m-0 item-btn-delete delete-movie-link" data-id="@Model.Id" data-name="@Model.Name" data-parent-id="@Model.ParentId">
+                                            <img src="/img/delete.png" />
+                                        </button>
                                     </div>
-                                }
+                                </div>
+                            }
                         </div>
                     </div>
                 </div>
 
                 @* ----------------------- rigth ----------------------- *@
-                <div class="col-2 ">
-                    <h1>3333 33 33333 33 3333333333 3 333333 3 33333 33 3 3333 33333 33 333 33 3 3 3333 333 33 3 3 33 333 33 333</h1>
+                <div class="col-2">
+                    @if(Model.ParentAnime != null)
+                    {
+                        var itemFolgen = Model.ChildAnimes.Count() + 1;
+                        var itemEpisoden = Model.ChildAnimes.Sum(a => a.Episodes) + Model.ParentAnime.Episodes;
+
+                        <div class="mini-info d-flex justify-content-between px-4 py-2 mb-3">
+                            <div class="text-center">
+                                <b>Anime Folgen</b> <br />
+                                @itemFolgen <br />
+                                <b>Anime Episoden</b> <br />
+                                @itemEpisoden
+                            </div>
+                            <div class="text-center">
+                                <b>Alle Animes</b> <br /> 
+                                @Model.AnimeSum <br />
+                                <b>Alle Episoden</b> <br />
+                                @Model.AnimeEpSum
+                            </div>
+                        </div>
+
+                        <div class="mini-info text-center py-2 mb-2">
+                            <div class="w-100 d-flex justify-content-end">      
+                                <div class="position-absolute">                                          
+                                    <button id="addAnimeNote" class="d-flex p-0 notes" data-id="@Model.Id" data-img="@Model.Img">
+                                        <img src="~/img/note.png"/>
+                                    </button>
+                                </div> 
+                             </div>
+
+                            <b>Anime Notes</b>   
+                        </div>
+                                            
+                        @if (Model.AnimeNotes != null){                            
+                            @foreach(var note in Model.AnimeNotes)
+                            {
+                                <div class="note-elem">     
+                                                                  
+                                    <a class="anime-notes py-2 px-2 mb-2 d-flex" asp-area="" asp-controller="ItemView" asp-action="Index" asp-route-id="@note.AnimeId" asp-route-type="Anime">
+                                        <div class="note-L">
+                                            <img class="w-100" src="~/img/Anime_imgs/@note.Img" />
+                                        </div>
+                                        <p class="note-R ps-2">
+                                            @note.Comment
+                                        </p>
+                                    </a>
+                                    @if(note.AnimeId == Model.Id)
+                                    {                                        
+                                        <div class="w-100 d-flex justify-content-end">
+                                            <div class="position-absolute pb-2 align-self-end">                                            
+                                                <button class="delete-a-note pb-1" data-id="@note.Id" data-comment="@note.Comment" data-img="@note.Img" data-animeid="@note.AnimeId">
+                                                    <img class="w-75" src="/img/delete.png" />
+                                                </button>
+                                            </div>
+                                        </div>
+                                    } 
+                                </div>
+                            }  
+                        }
+                    }
+                    @if (Model.ParentMovie != null)
+                    {
+                        var itemFolgen = Model.ChildMovies.Count() + 1;
+                        <div class="mini-info d-flex justify-content-between px-4 py-2 mb-3">
+                            <div class="text-center">
+                                <b>Film Folgen</b> <br />
+                                @itemFolgen
+                            </div>
+                            <div class="text-center">
+                                <b>Alle Filme</b> <br />
+                                @Model.MovieSum
+                            </div>
+                        </div>
+
+                        <div class="mini-info text-center py-2 mb-2">
+                            <div class="w-100 d-flex justify-content-end">      
+                                <div class="position-absolute">                                    
+                                    <button id="addMovieNote" class="d-flex p-0 notes" data-id="@Model.Id" data-Img="@Model.Img">
+                                        <img src="~/img/note.png"/>
+                                    </button>   
+                                </div>
+                            </div>
+
+                            <b>Movie Notes</b>                      
+                        </div>
+                              
+                        @if (Model.MovieNotes != null)
+                        {                            
+                            @foreach(var note in Model.MovieNotes)
+                            {
+                                <div class="note-elem">                                    
+                                    <a class="movie-notes py-2 px-2 mb-2 d-flex" asp-area="" asp-controller="ItemView" asp-action="Index" asp-route-id="@note.MovieId" asp-route-type="Movie">
+                                        <div class="note-L">
+                                            <img src="~/img/Movie_imgs/@note.Img" />
+                                        </div>
+                                        <p class="note-R ps-2">
+                                            @note.Comment
+                                        </p>
+                                    </a>
+
+                                    @if(note.MovieId == Model.Id)
+                                    {                                        
+                                        <div class="w-100 d-flex justify-content-end">
+                                            <div class="position-absolute pb-2 align-self-end">                                            
+                                                <button class="delete-m-note pb-1" data-id="@note.Id" data-comment="@note.Comment" data-img="@note.Img" data-movieid="@note.MovieId">
+                                                    <img class="w-75" src="/img/delete.png" />
+                                                </button>
+                                            </div>
+                                        </div>
+                                    } 
+                                </div>
+                            } 
+                        }
+                    }
                 </div>
             </div>
         </div>
     </div>
 </section>
+
+@* popup Kontetnt *@
+<div class="modal fade" id="popupModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content" id="popup">
+            @* Inhalt von PartialView wird hier per JS geladen *@
+        </div>
+    </div>
+</div>
+
+@* Anime add Child, edit and Delete Anime *@
+<div class="modal fade" id="animeModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content" id="animeModalContent">
+            @* Inhalt von PartialView wird hier per JS geladen *@
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="deleteAnimeModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form id="deleteAnimeForm">
+                <div class="modal-header">
+                    <h5 class="modal-title">Film löschen</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <input type="hidden" id="deleteAnimeId" />
+                    <p>Soll der Film <strong>"<span id="deleteAnimeName"></span>"</strong> wirklich gelöscht werden?</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Abbrechen</button>
+                    <button type="submit" class="btn btn-danger">Löschen</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@* Anime Note Delet *@
+<div class="modal fade" id="deleteAnimeNoteModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form id="deleteAnimeNoteForm">
+                <div class="modal-header">
+                    <h5 class="modal-title">Anime Note löschen</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <input type="hidden" id="deleteAnimeNoteId" />
+                    <p>Soll die Note wirklich gelöscht werden?</p>
+
+                    <img class="w-25" id="deleteAnimeNoteImg"/>
+                    <p id="deleteAnimeNoteText"></p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Abbrechen</button>
+                    <button type="submit" class="btn btn-danger">Löschen</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
 
 @* Movie add Child, edit and Delete Movie *@
 <div class="modal fade" id="movieModal" tabindex="-1">
@@ -246,26 +423,21 @@
     </div>
 </div>
 
-
-@* Anime add Child, edit and Delete Anime *@
-<div class="modal fade" id="animeModal" tabindex="-1">
-    <div class="modal-dialog">
-        <div class="modal-content" id="animeModalContent">
-            @* Inhalt von PartialView wird hier per JS geladen *@
-        </div>
-    </div>
-</div>
-<div class="modal fade" id="deleteAnimeModal" tabindex="-1">
+@* Movie Note Delet *@
+<div class="modal fade" id="deleteMovieNoteModal" tabindex="-1">
     <div class="modal-dialog">
         <div class="modal-content">
-            <form id="deleteAnimeForm">
+            <form id="deleteMovieNoteForm">
                 <div class="modal-header">
-                    <h5 class="modal-title">Film löschen</h5>
+                    <h5 class="modal-title">Movie Note löschen</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                 </div>
                 <div class="modal-body">
-                    <input type="hidden" id="deleteAnimeId" />
-                    <p>Soll der Film <strong>"<span id="deleteAnimeName"></span>"</strong> wirklich gelöscht werden?</p>
+                    <input type="hidden" id="deleteMovieNoteId" />
+                    <p>Soll die Note wirklich gelöscht werden?</p>
+
+                    <img class="w-25" id="deleteMovieNoteImg"/>
+                    <p id="deleteMovieNoteText"></p>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Abbrechen</button>

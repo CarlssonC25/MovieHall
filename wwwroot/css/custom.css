@@ -204,6 +204,73 @@ header {
   box-shadow: 0 0 0 0.25rem rgba(204, 204, 204, 0.25);
 }
 
+.under-content {
+  display: flex;
+  justify-content: center;
+}
+.under-content .under-content-container {
+  width: 90%;
+  border-radius: 5px;
+  display: flex;
+  justify-content: space-between;
+}
+.under-content .under-content-container .under-content-info {
+  background-color: #1c1c1c;
+  border-radius: 5px;
+  padding: 5px;
+}
+
+#note {
+  overflow: hidden;
+  max-height: 0;
+  transition: max-height 0.5s ease, opacity 0.5s ease;
+  opacity: 0;
+}
+#note button {
+  background-color: transparent;
+  border: none;
+}
+#note .gallery-container {
+  overflow: hidden;
+  width: 100%;
+  position: relative;
+}
+#note .gallery-track {
+  display: flex;
+  transition: transform 0.4s ease;
+}
+#note .note-elem {
+  background-color: #1c1c1c;
+  border-radius: 5px;
+  flex: 0 0 calc(25% - 1rem);
+  box-sizing: border-box;
+  transition: transform 0.2s;
+  min-width: 200px;
+}
+#note .note-elem .note-L {
+  width: 30%;
+}
+#note .note-elem .note-R {
+  width: 70%;
+  align-content: center;
+  text-align: center;
+}
+#note .note-elem img {
+  padding: 0px;
+  border-radius: 5px;
+}
+#note .note-elem:hover img {
+  box-shadow: 0px 0px 10px #777;
+}
+#note .note-elem:hover .note-R {
+  text-shadow: 0px 0px 5px #fff;
+}
+
+#toggleNote:checked ~ #note {
+  max-height: 300px;
+  opacity: 1;
+}
+
 /*------------------ Anime ------------------*/
 #anime .w-100 {
   padding: 0 8px;
@@ -227,7 +294,7 @@ header {
   border-radius: 5px;
   box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3), 0 0 40px rgba(0, 0, 0, 0.1) inset;
 }
-#anime .item div {
+#anime .item .itemName {
   background: rgba(0, 0, 0, 0.7);
   border-radius: 4px 4px 0 0;
   position: absolute;
@@ -242,17 +309,17 @@ header {
   -o-transition: all 0.3s ease;
   transition: all 0.3s ease;
 }
-#anime .item div p {
+#anime .item .itemName p {
   position: relative;
   font-size: 20px;
   padding: 5px;
   top: 100px;
   color: #ccc;
 }
-#anime .item div:hover {
+#anime .item .itemName:hover {
   opacity: 1;
 }
-#anime .item span {
+#anime .item .itemInfoBox {
   background: rgba(0, 0, 0, 0.7);
   border-radius: 0 0 4px 4px;
   position: absolute;
@@ -261,6 +328,65 @@ header {
   aspect-ratio: 80/8;
   bottom: 0;
   left: 0;
+  align-content: center;
+  font-size: 13px;
+}
+#anime .item .itemInfoBox .itemInfoSup {
+  overflow: hidden;
+  width: 13%;
+  align-content: center;
+}
+#anime .item .itemInfoBox .itemInfoSup .itemInfoBack {
+  background-color: #502987;
+  -webkit-transform: skew(154deg);
+  -moz-transform: skew(154deg);
+  -o-transform: skew(154deg);
+  transform: skew(154deg);
+  border-radius: 2px;
+  position: relative;
+  overflow: hidden;
+  height: 20px;
+  width: 100%;
+  text-align: center;
+  margin: 0;
+  left: -4px;
+  color: #ccc;
+}
+#anime .item .itemInfoBox .itemInfoSup .itemInfoBack .itemInfoEp {
+  -webkit-transform: skew(28deg);
+  -moz-transform: skew(28deg);
+  -o-transform: skew(28deg);
+  transform: skew(28deg);
+  width: 85%;
+  font-weight: 600;
+}
+#anime .item .itemInfoBox .itemInfoSup2 {
+  width: 13%;
+  align-content: center;
+}
+#anime .item .itemInfoBox .itemInfoSup2 .itemInfoBack {
+  background-color: #502987;
+  -webkit-transform: skew(154deg);
+  -moz-transform: skew(154deg);
+  -o-transform: skew(154deg);
+  transform: skew(154deg);
+  border-radius: 2px;
+  position: relative;
+  overflow: hidden;
+  height: 20px;
+  width: 100%;
+  text-align: center;
+  margin: 0;
+  left: -4px;
+  color: #ccc;
+}
+#anime .item .itemInfoBox .itemInfoSup2 .itemInfoBack .itemInfoEp {
+  -webkit-transform: skew(28deg);
+  -moz-transform: skew(28deg);
+  -o-transform: skew(28deg);
+  transform: skew(28deg);
+  width: 85%;
+  font-weight: 600;
 }
 #anime .extra-space .extra-fill {
   width: 42%;
@@ -290,6 +416,11 @@ header {
   background-color: #1c1c1c;
 }
 
+@media only screen and (max-width: 1530px) {
+  #anime .item .itemInfoBox .itemInfoSup, #anime .item .itemInfoBox .itemInfoSup2 {
+    width: 16%;
+  }
+}
 /*------------------ Movie ------------------*/
 #movie {
   /* add row space */
@@ -364,6 +495,12 @@ header {
 }
 #movie .extra-space .extra select:focus {
   background-color: #2e2e2e;
+}
+#movie .under-content .under-content-container {
+  background-color: transparent;
+}
+#movie .page-item img {
+  margin-top: -5px;
 }
 
 /*------------------ Settings ------------------*/
@@ -441,20 +578,19 @@ header {
 }
 .modal-content input,
 .modal-content select {
-  border-radius: 5px 0 0 5px;
+  border-radius: 5px;
   background-color: transparent;
   color: #ddd;
 }
 
 /*------------------ Item View ------------------*/
-.forece-padding {
+#ItemView .forece-padding {
   padding: 0 calc(var(--bs-gutter-x) * 0.5);
 }
-
-.itemView-edit-content {
+#ItemView .itemView-edit-content {
   position: absolute;
 }
-.itemView-edit-content .item-btn-edit {
+#ItemView .itemView-edit-content .item-btn-edit {
   border: none;
   background: none;
   background-color: #777;
@@ -464,14 +600,13 @@ header {
   -o-transition: all 0.4s ease-out;
   transition: all 0.4s ease-out;
 }
-.itemView-edit-content .item-btn-edit img {
+#ItemView .itemView-edit-content .item-btn-edit img {
   padding: 2px;
 }
-.itemView-edit-content .item-btn-edit:hover {
+#ItemView .itemView-edit-content .item-btn-edit:hover {
   opacity: 0.7;
 }
-
-.item-btn-delete {
+#ItemView .item-btn-delete {
   border: none;
   background: none;
   border-radius: 5px;
@@ -480,31 +615,296 @@ header {
   -o-transition: all 0.4s ease-out;
   transition: all 0.4s ease-out;
 }
-.item-btn-delete img {
+#ItemView .item-btn-delete img {
   padding: 2px;
 }
-
-.item-btn-delete:hover {
+#ItemView .item-btn-delete:hover {
   opacity: 0.7;
 }
-
-.itemFam {
+#ItemView .itemFam {
+  background-color: #1c1c1c;
+  border-radius: 5px;
+  padding: 0.5rem 0;
   color: #ccc !important;
   text-shadow: none;
 }
-
-.itemFam:hover {
+#ItemView .itemFam:hover {
   text-shadow: 0px 0px 5px #fff;
+  background-color: #0e0e0e;
 }
-
-.anime-info button {
+#ItemView .itemFam:hover img {
+  box-shadow: 0px 0px 5px #fff;
+}
+#ItemView .itemFam-aktiv {
+  background-color: #0e0e0e !important;
+  pointer-events: none;
+  cursor: default;
+}
+#ItemView .itemFam-aktiv:hover {
+  text-shadow: none !important;
+}
+#ItemView .itemFam-aktiv:hover img {
+  box-shadow: none !important;
+}
+#ItemView .anime-info button {
   padding: 0.2rem 0.75rem;
 }
-.anime-info button .rewatch-minus {
+#ItemView .anime-info button .rewatch-minus {
   position: relative;
   top: -3px;
 }
-.anime-info button .rewatch-plus {
+#ItemView .anime-info button .rewatch-plus {
   position: relative;
   top: -3px;
+}
+#ItemView .mini-info,
+#ItemView .anime-notes,
+#ItemView .movie-notes {
+  background-color: #1c1c1c;
+  border-radius: 5px;
+  color: #ccc;
+}
+#ItemView .mini-info .notes,
+#ItemView .anime-notes .notes,
+#ItemView .movie-notes .notes {
+  width: 80%;
+  border: none;
+  background: none;
+  border-radius: 5px;
+}
+#ItemView .mini-info .notes img,
+#ItemView .anime-notes .notes img,
+#ItemView .movie-notes .notes img {
+  width: 100%;
+}
+#ItemView .mini-info .notes img:hover,
+#ItemView .anime-notes .notes img:hover,
+#ItemView .movie-notes .notes img:hover {
+  background-color: #2e2e2e;
+  box-shadow: 0px 0px 10px #777;
+}
+#ItemView .mini-info .notes :focus-visible,
+#ItemView .anime-notes .notes :focus-visible,
+#ItemView .movie-notes .notes :focus-visible {
+  border: none;
+  outline: none;
+}
+#ItemView #createAnimeNoteForm img {
+  width: 30%;
+}
+#ItemView .anime-notes:hover,
+#ItemView .movie-notes:hover {
+  text-shadow: 0px 0px 5px #fff;
+}
+#ItemView .anime-notes:hover img,
+#ItemView .movie-notes:hover img {
+  box-shadow: 0px 0px 3px #fff;
+}
+#ItemView .note-elem button {
+  border: none;
+  background: none;
+}
+#ItemView .note-elem button:hover {
+  background-color: #2e2e2e;
+  border-radius: 5px;
+}
+#ItemView .note-L {
+  width: 30%;
+}
+#ItemView .note-L img {
+  width: 100%;
+}
+#ItemView .note-R {
+  width: 70%;
+  align-content: center;
+  margin: 0;
+}
+
+/*------------------ Search ------------------*/
+#Search .search-input {
+  background-color: #1c1c1c;
+  border-radius: 5px;
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  height: fit-content;
+}
+#Search .search-input input {
+  width: 85%;
+}
+#Search .filter-popup {
+  width: 40%;
+}
+#Search .filter-dropdown {
+  overflow: hidden;
+  opacity: 0;
+  transition: max-height 0.4s ease, opacity 0.3s ease, z-index 0.4s ease;
+  background-color: #1c1c1c;
+  border-radius: 5px;
+  width: fit-content;
+  position: absolute;
+  z-index: -1;
+}
+#Search .filter-dropdown .gernes {
+  border: 1px solid #777;
+  border-radius: 5px;
+}
+#Search .filter-dropdown .filter-plus {
+  text-align: center;
+  display: flex;
+  justify-content: space-around;
+}
+#Search .filter-dropdown select {
+  border: none;
+  border-radius: 5px;
+  background-color: #1c1c1c;
+  color: #ccc;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  cursor: pointer;
+  text-align: center;
+}
+#Search .filter-dropdown .parent-filter,
+#Search .filter-dropdown .country-filter,
+#Search .filter-dropdown .ww-filter,
+#Search .filter-dropdown .fsk-filter {
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  height: fit-content;
+}
+#Search .filter-dropdown .parent-filter label,
+#Search .filter-dropdown .country-filter label,
+#Search .filter-dropdown .ww-filter label,
+#Search .filter-dropdown .fsk-filter label {
+  margin: 0 !important;
+}
+#Search .filter-dropdown .form-check {
+  text-align: left;
+}
+#Search .filter-dropdown input {
+  cursor: pointer;
+}
+#Search .filter-dropdown .form-check-input {
+  border-color: #ccc;
+  background-color: transparent;
+}
+#Search #toggleFilter:checked ~ .filter-dropdown {
+  opacity: 1;
+  z-index: 9999;
+}
+
+#SearchContent .search-anime {
+  padding: 0 8px;
+}
+#SearchContent .search-anime .item {
+  position: relative;
+  display: inline-block;
+  margin: 8px;
+  width: 14%;
+  aspect-ratio: 80/120;
+}
+#SearchContent .search-anime .item img {
+  vertical-align: top;
+  position: absolute;
+  overflow: hidden;
+  border: 0 none;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  border-radius: 5px;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3), 0 0 40px rgba(0, 0, 0, 0.1) inset;
+}
+#SearchContent .search-anime .item div {
+  background: rgba(0, 0, 0, 0.7);
+  border-radius: 4px 4px 0 0;
+  position: absolute;
+  width: 100%;
+  aspect-ratio: 80/112;
+  top: 0;
+  left: 0;
+  opacity: 0;
+  text-align: center;
+  -webkit-transition: all 0.3s ease;
+  -moz-transition: all 0.3s ease;
+  -o-transition: all 0.3s ease;
+  transition: all 0.3s ease;
+}
+#SearchContent .search-anime .item div p {
+  position: relative;
+  font-size: 20px;
+  padding: 5px;
+  top: 100px;
+  color: #ccc;
+}
+#SearchContent .search-anime .item div:hover {
+  opacity: 1;
+}
+#SearchContent .search-anime .item span {
+  background: rgba(0, 0, 0, 0.7);
+  border-radius: 0 0 4px 4px;
+  position: absolute;
+  padding: 3px;
+  width: 100%;
+  aspect-ratio: 80/8;
+  bottom: 0;
+  left: 0;
+}
+#SearchContent .search-movie {
+  padding: 0 8px;
+}
+#SearchContent .search-movie .item {
+  position: relative;
+  display: inline-block;
+  margin: 8px;
+  width: 14%;
+  aspect-ratio: 80/120;
+}
+#SearchContent .search-movie .item img {
+  vertical-align: top;
+  position: absolute;
+  overflow: hidden;
+  border: 0 none;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  border-radius: 5px;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3), 0 0 40px rgba(0, 0, 0, 0.1) inset;
+}
+#SearchContent .search-movie .item div {
+  background: rgba(0, 0, 0, 0.7);
+  border-radius: 4px 4px 0 0;
+  position: absolute;
+  width: 100%;
+  aspect-ratio: 80/112;
+  top: 0;
+  left: 0;
+  opacity: 0;
+  text-align: center;
+  -webkit-transition: all 0.3s ease;
+  -moz-transition: all 0.3s ease;
+  -o-transition: all 0.3s ease;
+  transition: all 0.3s ease;
+}
+#SearchContent .search-movie .item div p {
+  position: relative;
+  font-size: 20px;
+  padding: 5px;
+  top: 100px;
+  color: #ccc;
+}
+#SearchContent .search-movie .item div:hover {
+  opacity: 1;
+}
+#SearchContent .search-movie .item span {
+  background: rgba(0, 0, 0, 0.7);
+  border-radius: 0 0 4px 4px;
+  position: absolute;
+  padding: 3px;
+  width: 100%;
+  aspect-ratio: 80/8;
+  bottom: 0;
+  left: 0;
 }

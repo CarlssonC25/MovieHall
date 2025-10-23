@@ -30,12 +30,12 @@
                     <div id="search" class="position-relative d-flex align-items-center">
                         <div class="d-flex align-items-center">
                             <input id="searchInput" class="ps-1" type="text" placeholder="Suche..." autocomplete="off" />
-                            <a id="searchButton" href="#">
+                            <a id="searchButton" asp-area="" asp-controller="Search" asp-action="Index">
                                 <img src="~/img/lupe.png" alt="Search" />
                             </a>
                         </div>
 
-                        <!-- Dropdown für Autocomplete -->
+                        @* Dropdown für Autocomplete *@
                         <ul id="searchResults" class="list-group position-absolute" style="display:none;">
                         </ul>
                     </div>
@@ -51,7 +51,7 @@
             </div>
         </nav>
     </header>
-    <main role="main" class="pb-3">
+    <main role="main">
         @RenderBody()
     </main>
 

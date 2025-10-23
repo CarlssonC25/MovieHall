@@ -1,0 +1,25 @@
+﻿@model MovieHall.ViewModels.AnimeNoteVM
+
+<form id="createAnimeNoteForm" enctype="multipart/form-data">
+    <div class="modal-header">
+        <h5 class="modal-title" id="createMovieModalLabel">Neue Anime Note</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Schließen"></button>
+    </div>
+    <div class="modal-body">
+
+        <div class="mb-3 text-center">
+            <img class="w-50" src="@Model.Img" />
+        </div>
+
+        <div class="mb-3">
+            <label for="Comment">Notize</label>
+            <textarea class="form-control" id="Comment" name="Comment" rows="3"></textarea>
+            <input type="hidden" name="AnimeId" value="@Model.AnimeId" />
+            <input type="hidden" name="Img" value="@Model.Img" />
+        </div>
+    </div>
+
+    <div class="modal-footer">
+        <button type="submit" class="btn btn-primary">Speichern</button>
+    </div>
+</form>

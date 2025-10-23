@@ -26,6 +26,23 @@ namespace MovieHall.Controllers
                 .Include(m => m.MovieWatchedWiths).ThenInclude(mw => mw.WatchedWith)
                 .Where(m => m.ParentId == null);
 
+            var DBnotes = await _context.MovieNotes
+                    .Include(n => n.Movie)
+                    .ToListAsync();
+
+            var notes = new List<MovieNoteVM>();
+
+            if (DBnotes.Any())
+            {
+                notes = DBnotes.Select(note => new MovieNoteVM
+                {
+                    Id = note.Id,
+                    Comment = note.Comment,
+                    MovieId = note.MovieId,
+                    Img = note.Movie.Img
+                }).ToList();
+            }
+
             // Filter anwenden
             if (!string.IsNullOrEmpty(filter) && filter != "All")
             {
@@ -64,8 +81,12 @@ namespace MovieHall.Controllers
                 Movies = movies,
                 CurrentPage = page,
                 TotalPages = totalPages,
-                CurrentFilter = filter
+                CurrentFilter = filter,
+                Notes = notes,
+                MovieSume = await _context.Movies.CountAsync(),
+
             };
+            ViewBag.Type = "Movie";
 
             if (Request.Headers["X-Requested-With"] == "XMLHttpRequest")
             {

@@ -26,6 +26,24 @@ namespace MovieHall.Controllers
                 .Include(m => m.AnimeWatchedWiths).ThenInclude(mw => mw.WatchedWith)
                 .Where(m => m.ParentId == null);
 
+            // notes
+            var DBnotes = await _context.AnimeNotes
+                    .Include(n => n.Anime)
+                    .ToListAsync();
+
+            var notes = new List<AnimeNoteVM>();
+
+            if (DBnotes.Any())
+            {
+                notes = DBnotes.Select(note => new AnimeNoteVM
+                {
+                    Id = note.Id,
+                    Comment = note.Comment,
+                    AnimeId = note.AnimeId,
+                    Img = note.Anime.Img
+                }).ToList();
+            }
+
             // Language-Filter
             if (!string.IsNullOrEmpty(Lfilter) && Lfilter != "ALL")
             {
@@ -39,11 +57,11 @@ namespace MovieHall.Controllers
                 }
             }
 
-            // Country-Filter                                                      TODO(DB tabel anime hinzufügen und in add/edit)
-            //if (!string.IsNullOrEmpty(Cfilter) && Cfilter != "ALL")
-            //{
-            //    query = query.Where(a => a.Country == Cfilter);
-            //}
+            // Country-Filter
+            if (!string.IsNullOrEmpty(Cfilter) && Cfilter != "ALL")
+            {
+                query = query.Where(a => a.Country == Cfilter);
+            }
 
             // Rank-Filter
             if (Rfilter != "ALL" && int.TryParse(Rfilter, out int rank))
@@ -51,24 +69,68 @@ namespace MovieHall.Controllers
                 query = query.Where(a => a.Top == rank);
             }
 
+            // Pagination
             int totalAnimes = await query.CountAsync();
             int totalPages = (int)Math.Ceiling(totalAnimes / (double)pageSize);
 
+            query = query
+                .OrderBy(a => a.Top)
+                .ThenByDescending(a => a.ReleaseDate);
+
             var animes = await query
-                .OrderByDescending(a => a.ReleaseDate)
                 .Skip((page - 1) * pageSize)
                 .Take(pageSize)
                 .ToListAsync();
 
+            //anime Infos
+            var animeInfos = new List<AnimeViewInfos>();
+
+            foreach (var parent in animes)
+            {
+                var children = await _context.Animes
+                    .Where(c => c.ParentId == parent.Id)
+                    .ToListAsync();
+
+                var allRelated = new List<Anime> { parent };
+                allRelated.AddRange(children);
+
+                int allEpisodes = allRelated.Sum(a => a.Episodes ?? 0);
+
+                int allSeasons = allRelated.Count;
+
+                int available = allRelated.Count(a => a.Buy > 0);
+
+                animeInfos.Add(new AnimeViewInfos
+                {
+                    AnimeId = parent.Id,
+                    AllEpisodes = allEpisodes,
+                    AllSeasons = allSeasons,
+                    Available = available
+                });
+            }
+
+            // retrun Model
+            var sum = await _context.Animes.CountAsync();
+            var eps = (int)await _context.Animes.SumAsync(a => a.Episodes);
+            var time = 20 * eps;
             var viewModel = new AnimeVM
             {
                 Animes = animes,
+                AnimeInfos = animeInfos,
                 CurrentPage = page,
                 TotalPages = totalPages,
                 CountryFilter = Cfilter,
                 LanguageFilter = Lfilter,
-                RankFilter = Rfilter
+                RankFilter = Rfilter,
+                Notes = notes,
+                AnimeTime = time / 60 + "H",
+
+                AnimeSum = sum,
+                AnimeEpSum = eps,
             };
+
+            ViewBag.Type = "Anime";
+
 
             if (Request.Headers["X-Requested-With"] == "XMLHttpRequest")
             {
@@ -98,6 +160,16 @@ namespace MovieHall.Controllers
             {
                 ViewBag.Genres = Genres;
                 ViewBag.WatchedWith = WatchedWith;
+                return PartialView("~/Views/Anime/_CreatePartial.cshtml", svAnime);
+            }
+
+            if (svAnime.SelectedGenreIds.Count == 0)
+            {
+                ModelState.AddModelError("AnimeGenres", "Mindestens ein Genre muss ausgewählt werden.");
+
+                ViewBag.Genres = Genres;
+                ViewBag.WatchedWith = WatchedWith;
+
                 return PartialView("~/Views/Anime/_CreatePartial.cshtml", svAnime);
             }
 
@@ -149,8 +221,8 @@ namespace MovieHall.Controllers
                 }
             }
 
-            foreach (var genreId in svAnime.SelectedGenreIds)
-                anime.AnimeGenres.Add(new AnimeGenre { GenreId = genreId });
+                foreach (var genreId in svAnime.SelectedGenreIds)
+                    anime.AnimeGenres.Add(new AnimeGenre { GenreId = genreId });
 
             foreach (var wId in svAnime.SelectedWatchedWithIds)
                 anime.AnimeWatchedWiths.Add(new AnimeWatchedWith { WatchedWithId = wId });
@@ -190,6 +262,7 @@ namespace MovieHall.Controllers
                 ImgPath = animeDb.Img,
                 Link = animeDb.Link,
                 Episodes = animeDb.Episodes,
+                WhatTimes = animeDb.WhatTimes,
                 ParentId = animeDb.ParentId,
                 Country = animeDb.Country,
                 Language = animeDb.Language?
@@ -212,7 +285,26 @@ namespace MovieHall.Controllers
                 .FirstOrDefaultAsync(m => m.Id == svAnime.Id);
 
             if (dbAnime == null)
+            {
                 return NotFound();
+            }
+
+            if (dbAnime.Top != svAnime.Top)
+            {
+                var dbAnimeChild = await _context.Animes
+                .Include(m => m.AnimeGenres)
+                .Include(m => m.AnimeWatchedWiths)
+                .Where(m => m.ParentId == svAnime.Id)
+                .ToListAsync();
+
+                if (dbAnimeChild != null)
+                {
+                    for (var i = 0; i < dbAnimeChild.Count; i++)
+                    {
+                        dbAnimeChild[i].Top = svAnime.Top;
+                    }
+                }
+            }
 
             // Update properties
             dbAnime.Name = svAnime.Name;

@@ -2,6 +2,17 @@
 @{
     var genres = ViewBag.Genres as List<MovieHall.Models.Genre>;
     var watched = ViewBag.WatchedWith as List<MovieHall.Models.WatchedWith>;
+
+    var FSKOptions = new Dictionary<int, string>
+    {
+        { 0, "0+" },
+        { 6, "6+" },
+        { 12, "12+" },
+        { 16, "16+" },
+        { 18, "18+" }
+    };
+
+    var selectedGenreIds = Model.MovieGenres?.Select(g => g.GenreId).ToList() ?? new List<int>();
 }
 
 <form id="createMovieForm" enctype="multipart/form-data">
@@ -40,11 +51,17 @@
         <div class="mb-3">
             <label for="fsk">FSK</label>
             <select class="form-control" id="fsk" name="FSK">
-                <option value="0">0+</option>
-                <option value="6">6+</option>
-                <option value="12">12+</option>
-                <option value="16">16+</option>
-                <option value="18">18+</option>
+                @foreach (var fsk in FSKOptions)
+                {
+                    if (Model.FSK == fsk.Key)
+                    {
+                        <option value="@fsk.Key" selected>@fsk.Value</option>
+                    }
+                    else
+                    {
+                        <option value="@fsk.Key">@fsk.Value</option>
+                    }
+                }
             </select>
         </div>
 
@@ -77,8 +94,9 @@
             {
                 if (g.Belonging_to.Contains("M") || g.Belonging_to.Contains("m"))
                 {
+                    var isChecked = selectedGenreIds.Contains(g.Id) ? "checked" : "";
                     <div class="form-check col-4">
-                        <input class="form-check-input" type="checkbox" name="SelectedGenreIds" value="@g.Id" id="genre_@g.Id" />
+                        <input class="form-check-input" type="checkbox" name="SelectedGenreIds" value="@g.Id" id="genre_@g.Id" @isChecked />
                         <label class="form-check-label" for="genre_@g.Id">@g.Name</label>
                     </div>
                 }

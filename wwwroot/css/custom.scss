@@ -208,6 +208,88 @@ header {
 }
 
 
+
+.under-content {
+    display: flex;
+    justify-content: center;
+
+    .under-content-container {
+        width: 90%;
+        border-radius: $base-border-radius;
+        display: flex;
+        justify-content: space-between;
+
+        .under-content-info {
+            background-color: $back-gray-bright;
+            border-radius: $base-border-radius;
+            padding: 5px;
+        }
+    }
+}
+
+#note {
+    overflow: hidden;
+    max-height: 0;
+    transition: max-height 0.5s ease, opacity 0.5s ease;
+    opacity: 0;
+
+    button {
+        background-color: transparent;
+        border: none;
+    }
+
+    .gallery-container {
+        overflow: hidden;
+        width: 100%;
+        position: relative;
+    }
+
+    .gallery-track {
+        display: flex;
+        transition: transform 0.4s ease;
+    }
+
+    .note-elem {
+        background-color: $back-gray-bright;
+        border-radius: $base-border-radius;
+        flex: 0 0 calc(25% - 1rem);
+        box-sizing: border-box;
+        transition: transform 0.2s;
+        min-width: 200px;
+
+        .note-L {
+            width: 30%;
+        }
+
+        .note-R {
+            width: 70%;
+            align-content: center;
+            text-align: center;
+        }
+
+        img {
+            padding: 0px;
+            border-radius: $base-border-radius;
+        }
+    }
+
+    .note-elem:hover {
+        img {
+            box-shadow: 0px 0px 10px $back-gray-lightlight;
+        }
+
+        .note-R {
+            text-shadow: 0px 0px 5px #fff;
+        }
+    }
+}
+
+#toggleNote:checked ~ #note {
+    max-height: 300px;
+    opacity: 1;
+}
+
+
 /*------------------ Anime ------------------*/
 #anime {
     .w-100 {
@@ -234,7 +316,7 @@ header {
             box-shadow: 0 1px 4px rgba(0, 0, 0, .3), 0 0 40px rgba(0, 0, 0, .1) inset;
         }
 
-        div {
+        .itemName {
             background: rgba(0, 0, 0, .7);
             border-radius: 4px 4px 0 0;
             position: absolute;
@@ -255,11 +337,11 @@ header {
             }
         }
 
-        div:hover {
+        .itemName:hover {
             opacity: 1;
         }
 
-        span {
+        .itemInfoBox {
             background: rgba(0, 0, 0, .7);
             border-radius: 0 0 4px 4px;
             position: absolute;
@@ -268,6 +350,62 @@ header {
             aspect-ratio: 80/8;
             bottom: 0;
             left: 0;
+            align-content: center;
+            font-size: 13px;
+
+            .itemInfoSup {
+                overflow: hidden;
+                width: 13%;
+                align-content: center;
+
+                .itemInfoBack {
+                    background-color: #502987;
+                    @include transform(skew(154deg));
+                    border-radius: 2px;
+                    position: relative;
+                    overflow: hidden;
+                    height: 20px;
+                    width: 100%;
+                    text-align: center;
+                    margin: 0;
+                    left: -4px;
+                    color: $text-col-dark;
+
+                    .itemInfoEp {
+                        @include transform(skew(28deg));
+                        width: 85%;
+                        font-weight: 600;
+                    }
+                }
+            }
+
+            .itemInfoSup2 {
+                width: 13%;
+                align-content: center;
+
+                .itemInfoBack {
+                    background-color: #502987;
+                    @include transform(skew(154deg));
+                    border-radius: 2px;
+                    position: relative;
+                    overflow: hidden;
+                    height: 20px;
+                    width: 100%;
+                    text-align: center;
+                    margin: 0;
+                    left: -4px;
+                    color: $text-col-dark;
+
+                    .itemInfoEp {
+                        @include transform(skew(28deg));
+                        width: 85%;
+                        font-weight: 600;
+                    }
+                }
+            }
+        }
+
+        @media only screen and (max-width: 1530px) {
         }
     }
 
@@ -308,6 +446,17 @@ header {
     }
 }
 
+@media only screen and (max-width: 1530px) {
+    #anime {
+        .item {
+            .itemInfoBox {
+                .itemInfoSup, .itemInfoSup2 {
+                    width: 16%;
+                }
+            }
+        }
+    }
+}
 
 /*------------------ Movie ------------------*/
 
@@ -397,6 +546,16 @@ header {
             }
         }
     }
+
+    .under-content .under-content-container {
+        background-color: transparent;
+    }
+
+    .page-item {
+        img {
+            margin-top: -5px;
+        }
+    }
 }
 
 
@@ -478,7 +637,7 @@ header {
 
     input,
     select {
-        border-radius: $base-border-radius 0 0 $base-border-radius;
+        border-radius: $base-border-radius;
         background-color: transparent;
         color: $text-col-bright;
     }
@@ -487,17 +646,35 @@ header {
 
 /*------------------ Item View ------------------*/
 
-.forece-padding {
-    padding: 0 calc(var(--bs-gutter-x) * .5);
-}
+#ItemView {
+    .forece-padding {
+        padding: 0 calc(var(--bs-gutter-x) * .5);
+    }
 
-.itemView-edit-content {
-    position: absolute;
+    .itemView-edit-content {
+        position: absolute;
 
-    .item-btn-edit {
+        .item-btn-edit {
+            border: none;
+            background: none;
+            background-color: $back-gray-lightlight;
+            border-radius: $base-border-radius;
+
+            @include transition($base-transition);
+
+            img {
+                padding: 2px;
+            }
+        }
+
+        .item-btn-edit:hover {
+            opacity: 0.7;
+        }
+    }
+
+    .item-btn-delete {
         border: none;
         background: none;
-        background-color: $back-gray-lightlight;
         border-radius: $base-border-radius;
 
         @include transition($base-transition);
@@ -507,47 +684,339 @@ header {
         }
     }
 
-    .item-btn-edit:hover {
+    .item-btn-delete:hover {
         opacity: 0.7;
     }
-}
 
-.item-btn-delete {
-    border: none;
-    background: none;
-    border-radius: $base-border-radius;
+    .itemFam {
+        background-color: $back-gray-bright;
+        border-radius: $base-border-radius;
+        padding: 0.5rem 0;
+        color: $text-col-dark !important;
+        text-shadow: none;
+    }
 
-    @include transition($base-transition);
+    .itemFam:hover {
+        text-shadow: 0px 0px 5px #fff;
+        background-color: $back-gray-normal;
 
-    img {
-        padding: 2px;
+        img {
+            box-shadow: 0px 0px 5px #fff;
+        }
+    }
+
+    .itemFam-aktiv {
+        background-color: $back-gray-normal !important;
+        pointer-events: none;
+        cursor: default;
+    }
+
+    .itemFam-aktiv:hover {
+        text-shadow: none !important;
+
+        img {
+            box-shadow: none !important;
+        }
+    }
+
+
+    .anime-info {
+        button {
+            padding: .2rem .75rem;
+
+            .rewatch-minus {
+                position: relative;
+                top: -3px;
+            }
+
+            .rewatch-plus {
+                position: relative;
+                top: -3px;
+            }
+        }
+    }
+
+    .mini-info,
+    .anime-notes,
+    .movie-notes {
+        background-color: $back-gray-bright;
+        border-radius: $base-border-radius;
+        color: $text-col-dark;
+
+        .notes {
+            width: 80%;
+            border: none;
+            background: none;
+            border-radius: $base-border-radius;
+
+            img {
+                width: 100%;
+            }
+
+            img:hover {
+                background-color: $back-gray-light;
+                box-shadow: 0px 0px 10px $back-gray-lightlight;
+            }
+
+            :focus-visible {
+                border: none;
+                outline: none;
+            }
+        }
+    }
+
+    #createAnimeNoteForm {
+        img {
+            width: 30%;
+        }
+    }
+
+    .anime-notes:hover,
+    .movie-notes:hover {
+        text-shadow: 0px 0px 5px #fff;
+
+        img {
+            box-shadow: 0px 0px 3px #fff;
+        }
+    }
+
+    .note-elem {
+        button {
+            border: none;
+            background: none;
+        }
+
+        button:hover {
+            background-color: $back-gray-light;
+            border-radius: $base-border-radius;
+        }
+    }
+
+    .note-L {
+        width: 30%;
+
+        img {
+            width: 100%;
+        }
+    }
+
+    .note-R {
+        width: 70%;
+        align-content: center;
+        margin: 0;
     }
 }
 
-.item-btn-delete:hover {
-    opacity: 0.7;
-}
 
-.itemFam {
-    color: $text-col-dark !important;
-    text-shadow: none;
-}
+/*------------------ Search ------------------*/
 
-.itemFam:hover {
-    text-shadow: 0px 0px 5px #fff;
-}
+#Search {
 
-.anime-info {
-    button {
-        padding: .2rem .75rem;
 
-        .rewatch-minus {
-            position: relative;
-            top: -3px;
+    .search-input {
+        background-color: $back-gray-bright;
+        border-radius: $base-border-radius;
+        width: 100%;
+        display: flex;
+        justify-content: space-between;
+        height: fit-content;
+
+        input {
+            width: 85%;
         }
-        .rewatch-plus {
+    }
+
+    .filter-popup {
+        width: 40%;
+    }
+
+    .filter-dropdown {
+        overflow: hidden;
+        opacity: 0;
+        transition: max-height 0.4s ease, opacity 0.3s ease, z-index 0.4s ease;
+        background-color: $back-gray-bright;
+        border-radius: $base-border-radius;
+        width: fit-content;
+        position: absolute;
+        z-index: -1;
+
+        .gernes {
+            border: 1px solid $back-gray-lightlight;
+            border-radius: $base-border-radius;
+        }
+
+        .filter-plus {
+            text-align: center;
+            display: flex;
+            justify-content: space-around;
+        }
+
+        select {
+            border: none;
+            border-radius: $base-border-radius;
+            background-color: $back-gray-bright;
+            color: $text-col-dark;
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            appearance: none;
+            cursor: pointer;
+            text-align: center;
+        }
+
+        .parent-filter,
+        .country-filter,
+        .ww-filter,
+        .fsk-filter {
+            border: 1px solid $text-col-dark;
+            border-radius: $base-border-radius;
+            height: fit-content;
+
+            label {
+                margin: 0 !important;
+            }
+        }
+
+        .form-check {
+            text-align: left;
+        }
+
+        input {
+            cursor: pointer;
+        }
+
+        .form-check-input {
+            border-color: #ccc;
+            background-color: transparent;
+        }
+    }
+
+    #toggleFilter:checked ~ .filter-dropdown {
+        opacity: 1;
+        z-index: 9999;
+    }
+}
+
+#SearchContent {
+
+    .search-anime {
+        padding: 0 8px;
+
+        .item {
             position: relative;
-            top: -3px;
+            display: inline-block;
+            margin: 8px;
+            width: 14%;
+            aspect-ratio: 80/120;
+
+            img {
+                vertical-align: top;
+                position: absolute;
+                overflow: hidden;
+                border: 0 none;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                border-radius: $base-border-radius;
+                box-shadow: 0 1px 4px rgba(0, 0, 0, .3), 0 0 40px rgba(0, 0, 0, .1) inset;
+            }
+
+            div {
+                background: rgba(0, 0, 0, .7);
+                border-radius: 4px 4px 0 0;
+                position: absolute;
+                width: 100%;
+                aspect-ratio: 80/112;
+                top: 0;
+                left: 0;
+                opacity: 0;
+                text-align: center;
+                @include transition(all .3s ease);
+
+                p {
+                    position: relative;
+                    font-size: 20px;
+                    padding: 5px;
+                    top: 100px;
+                    color: $text-col-dark;
+                }
+            }
+
+            div:hover {
+                opacity: 1;
+            }
+
+            span {
+                background: rgba(0, 0, 0, .7);
+                border-radius: 0 0 4px 4px;
+                position: absolute;
+                padding: 3px;
+                width: 100%;
+                aspect-ratio: 80/8;
+                bottom: 0;
+                left: 0;
+            }
+        }
+    }
+
+    .search-movie {
+        padding: 0 8px;
+
+        .item {
+            position: relative;
+            display: inline-block;
+            margin: 8px;
+            width: 14%;
+            aspect-ratio: 80/120;
+
+            img {
+                vertical-align: top;
+                position: absolute;
+                overflow: hidden;
+                border: 0 none;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                border-radius: $base-border-radius;
+                box-shadow: 0 1px 4px rgba(0, 0, 0, .3), 0 0 40px rgba(0, 0, 0, .1) inset;
+            }
+
+            div {
+                background: rgba(0, 0, 0, .7);
+                border-radius: 4px 4px 0 0;
+                position: absolute;
+                width: 100%;
+                aspect-ratio: 80/112;
+                top: 0;
+                left: 0;
+                opacity: 0;
+                text-align: center;
+                @include transition(all .3s ease);
+
+                p {
+                    position: relative;
+                    font-size: 20px;
+                    padding: 5px;
+                    top: 100px;
+                    color: $text-col-dark;
+                }
+            }
+
+            div:hover {
+                opacity: 1;
+            }
+
+            span {
+                background: rgba(0, 0, 0, .7);
+                border-radius: 0 0 4px 4px;
+                position: absolute;
+                padding: 3px;
+                width: 100%;
+                aspect-ratio: 80/8;
+                bottom: 0;
+                left: 0;
+            }
         }
     }
 }

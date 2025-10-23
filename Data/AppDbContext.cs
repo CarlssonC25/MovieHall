@@ -14,10 +14,12 @@ namespace MovieHall.Data
         public DbSet<Movie> Movies { get; set; }
         public DbSet<MovieGenre> MovieGenres { get; set; }
         public DbSet<MovieWatchedWith> MovieWatchedWiths { get; set; }
+        public DbSet<MovieNote> MovieNotes { get; set; }
 
         public DbSet<Anime> Animes { get; set; }
         public DbSet<AnimeGenre> AnimeGenres { get; set; }
         public DbSet<AnimeWatchedWith> AnimeWatchedWiths { get; set; }
+        public DbSet<AnimeNote> AnimeNotes { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

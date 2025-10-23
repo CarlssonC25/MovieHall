@@ -33,6 +33,18 @@
   background: #777;
 }
 
+img {
+  border-radius: 5px;
+}
+
+a {
+  color: #ccc;
+}
+
+a:hover {
+  color: #ccc;
+}
+
 input {
   -webkit-transition: all 0.4s ease-out;
   -moz-transition: all 0.4s ease-out;
@@ -52,6 +64,10 @@ input:focus {
 
 [type=checkbox] {
   cursor: pointer;
+}
+
+textarea {
+  color: #ccc !important;
 }
 
 .btn {
@@ -107,6 +123,14 @@ input:focus {
   border: none !important;
   outline: none !important;
   opacity: 0.5;
+}
+
+.rotate-90 {
+  transform: rotate(90deg);
+}
+
+.rotate-180 {
+  transform: rotate(180deg);
 }
 
 /*Elem color Style*/

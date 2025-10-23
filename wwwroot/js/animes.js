@@ -1,7 +1,8 @@
 ﻿$(document).ready(function () {
-    console.log("animes.js geladen");
+    console.log("animes.js loaded");
+
     // Create Modal öffnen
-    $("#openCreateAnimeModal").click(function () {
+    $(document).on("click", "#openCreateAnimeModal", function () {
         $.get("/Anime/CreateAnimePartial", function (data) {
             $("#animeModalContent").html(data);
             var modal = new bootstrap.Modal(document.getElementById('animeModal'));
@@ -65,7 +66,7 @@
                             }
                         } else {
                             console.log("Validation errors, rendering Edit PartialView");
-                            $("#animeModalContent").html(res); // auch hier anpassen
+                            $("#animeModalContent").html(res);
                         }
                     }
                 });
@@ -92,20 +93,75 @@
     });
 
 
+    // --------------------- Notes scroll ---------------------
+
+    const $track = $('.gallery-track');
+    const $scrollLeft = $('#scrollLeft');
+    const $scrollRight = $('#scrollRight');
+
+    if ($track.length === 0) return;
+
+    const $firstItem = $track.find('.note-elem').first();
+    const itemWidth = $firstItem.outerWidth(true) || 250;
+
+    let position = 0;
+
+    function updateButtons() {
+        const maxScroll = -($track[0].scrollWidth - $track.parent().outerWidth());
+
+        // Links
+        if (position >= 0) {
+            $scrollLeft.find('img').hide(); // Pfeil ausblenden
+            $scrollLeft.css('cursor', 'default');
+        } else {
+            $scrollLeft.find('img').show();
+            $scrollLeft.css('cursor', 'pointer');
+        }
+
+        // Rechts
+        if (position <= maxScroll) {
+            $scrollRight.find('img').hide(); // Pfeil ausblenden
+            $scrollRight.css('cursor', 'default');
+        } else {
+            $scrollRight.find('img').show();
+            $scrollRight.css('cursor', 'pointer');
+        }
+    }
+
+    // Initiales Update
+    updateButtons();
+
+    $scrollLeft.on('click', function () {
+        if (position >= 0) return; // Klick ignorieren, wenn nicht scrollbar
+        position += itemWidth * 4;
+        if (position > 0) position = 0;
+        $track.css('transform', `translateX(${position}px)`);
+        updateButtons();
+    });
+
+    $scrollRight.on('click', function () {
+        const maxScroll = -($track[0].scrollWidth - $track.parent().outerWidth());
+        if (position <= maxScroll) return; // Klick ignorieren, wenn nicht scrollbar
+        position -= itemWidth * 4;
+        if (position < maxScroll) position = maxScroll;
+        $track.css('transform', `translateX(${position}px)`);
+        updateButtons();
+    });
+
     // --------------------- Filter ---------------------
 
     // Language-Filter
     $(document).on("click", ".language", function () {
         $(".language").removeClass("aktiv-btn");
         $(this).addClass("aktiv-btn");
-        loadAnime(1);
+        loadAnimes(1);
     });
 
     // Country-Filter
     $(document).on("click", ".country", function () {
         $(".country").removeClass("aktiv-btn");
         $(this).addClass("aktiv-btn");
-        loadAnime(1);
+        loadAnimes(1);
     });
 
     // Rank-Filter
@@ -117,11 +173,11 @@
                     $(this).addClass("aktiv-btn");
                 }
             });
-            loadAnime(1);
+            loadAnimes(1);
         } else {
             $(".rank").removeClass("aktiv-btn");
             $(this).addClass("aktiv-btn");
-            loadAnime(1);
+            loadAnimes(1);
         }
     });
 
@@ -135,7 +191,7 @@
             return;
         }
 
-        loadAnimes(page); // eigene Funktion zum Laden
+        loadAnimes(page);
     });
 
 });

@@ -8,5 +8,8 @@ namespace MovieHall.ViewModels
         public int CurrentPage { get; set; }
         public int TotalPages { get; set; }
         public string? CurrentFilter { get; set; }
+
+        public int MovieSume { get; set; }
+        public List<MovieNoteVM>? Notes { get; set; }
     }
 }

@@ -2,9 +2,11 @@
     let $input = $("#searchInput");
     let $results = $("#searchResults");
 
-    let controller = $("body").data("controller"); // z.B. "Anime", "Movie", "ItemView"
-    let type = $("body").data("type");            // z.B. "Anime" oder "Movie" bei ItemView
+    let controller = $("body").data("controller"); // controller prüfen "Anime", "Movie", "ItemView"
+    let type = $("body").data("type");            // "Anime" oder "Movie" bei ItemView
 
+
+    // Autocomplete
     $input.on("keyup", function () {
         let query = $input.val().trim();
         if (query.length < 2) {
@@ -42,5 +44,23 @@
 
             $results.show();
         });
+    });
+
+    // Such-Button
+    $("#searchButton").on("click", function (e) {
+        e.preventDefault();
+
+        let query = encodeURIComponent($input.val().trim());
+        let dataType = $("body").data("type"); 
+
+        // Weiterleitung zur Suchseite
+        window.location.href = `/Search/Index?query=${query}&type=${dataType}`;
+    });
+
+    $input.on("keypress", function (e) {
+        if (e.which === 13) { // Enter-Taste
+            e.preventDefault();
+            $("#searchButton").click();
+        }
     });
 });

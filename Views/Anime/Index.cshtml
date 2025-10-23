@@ -5,9 +5,8 @@
 
 
 
-<button class="btn btn-primary mb-3" id="openCreateAnimeModal">Neuer Anime</button>
 
-<section id="anime" class="my-5">
+<section id="anime" class="mt-4">
     <div class="container-fluid">
         <div class="d-flex justify-content-center">
             <div class="body-HD-size">
@@ -16,12 +15,71 @@
                 <div id="animeContainer">
                     @await Html.PartialAsync("~/Views/Anime/_AnimeListPartial.cshtml", Model)
                 </div>
-                
+
+                <div class="under-content px-4">
+                    <div class="under-content-container p-2">
+                        <div class="d-flex">
+                            <div class="under-content-info">
+                                <b>Alle Animes:</b> @Model.AnimeSum
+                            </div>
+                            <div class="under-content-info ms-3">
+                                <b>Alle Episoden:</b> @Model.AnimeEpSum
+                            </div>
+                            <div class="under-content-info ms-3">
+                                <b>Anime Zeit:</b> @Model.AnimeTime
+                            </div>
+                        </div>
+
+                        <label for="toggleNote" class="btn btn-primary">Notes</label>
+                    </div>
+                </div>
+
+                <div class="under-content px-4">
+                    <div class="under-content-container">
+                        <input type="checkbox" id="toggleNote" hidden>
+                        <div id="note" class="container-fluid">
+                            <div class="row pt-2">
+                                <div class="col-1 align-content-center text-center">
+                                    <button id="scrollLeft">
+                                        <img class="rotate-180" src="~/img/big_arrow.png" />
+                                    </button>
+                                </div>
+                                <div class="col-10">
+                                    <div class="gallery-container">
+                                        <div class="gallery-track">
+                                            @if (Model.Notes != null)
+                                            {
+                                                @foreach (var note in Model.Notes)
+                                                {
+
+                                                    <a class="note-elem w-25 d-flex p-2 mx-2" asp-area="" asp-controller="ItemView" asp-action="Index" asp-route-id="@note.AnimeId" asp-route-type="Anime">
+                                                        <div class="note-L">
+                                                            <img class="w-100" src="~/img/Anime_imgs/@note.Img" />
+                                                        </div>
+                                                        <div class="note-R ps-2">
+                                                            @note.Comment
+                                                        </div>
+                                                    </a>
+                                                }
+                                            }
+                                        </div>
+                                    </div>
+
+                                </div>
+                                <div class="col-1 align-content-center text-center">
+                                    <button id="scrollRight">
+                                        <img src="~/img/big_arrow.png" />
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
             </div>
         </div>
     </div>
 </section>
-
 
 
 @*------------------------------ Anime (Create | Edit | Delete)------------------------------*@
