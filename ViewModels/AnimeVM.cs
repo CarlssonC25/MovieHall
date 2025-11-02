@@ -15,6 +15,7 @@ namespace MovieHall.ViewModels
         public int AnimeSum { get; set; }
         public int AnimeEpSum { get; set; }
         public string AnimeTime { get; set; }
+        public string WatchTime { get; set; }
 
         public List<AnimeNoteVM>? Notes { get; set; }
     }

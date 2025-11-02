@@ -1,35 +1,6 @@
 ﻿@model MovieHall.SaveModel.SaveAnime
-
+@using MovieHall.Helpers
 @{
-    @*Top/Rank*@ 
-    var topOptions = new Dictionary<int, string>
-    {
-        { 1, "Top 1" },
-        { 2, "Top 2" },
-        { 3, "Top 3" },
-        { 4, "Top 4" },
-        { 5, "Top 5" },
-        { 6, "Top 6" },
-        { 7, "Top 7" },
-        { 8, "Top 8" },
-        { 9, "Top 9" },
-        { 10, "Top 10" }
-    };
-
-    @*Buy*@ 
-    var buyOptions = new Dictionary<int, string>
-    {
-        { 0, "Noch nicht" },
-        { 1, "DVD" },
-        { 2, "Blu-ray" },
-        { 3, "3D" }
-    };
-
-    @*Language*@ 
-    var isCheckedEng = Model.Language.Contains("Englisch") ? "checked" : "";
-    var isCheckedJap = Model.Language.Contains("Japanisch") ? "checked" : "";
-    var isCheckedGer = Model.Language.Contains("Deutsch") ? "checked" : "";
-
     @*Genre*@ 
     var selectedGenreIds = Model.AnimeGenres?.Select(g => g.GenreId).ToList() ?? new List<int>();
     var genres = ViewBag.Genres as List<MovieHall.Models.Genre>;
@@ -37,15 +8,6 @@
     @*WatchedWith*@ 
     var selectedWatchedIds = Model.AnimeWatchedWiths?.Select(w => w.WatchedWithId).ToList() ?? new List<int>();
     var watchedWiths = ViewBag.WatchedWiths as List<MovieHall.Models.WatchedWith>;
-
-    @*Country*@ 
-    var countryOptions = new Dictionary<string, string>
-    {
-        { "", "Land Wählen..." },
-        { "Japan", "Japan" },
-        { "China", "China" },
-        { "Korea", "Korea" }
-    };
 }
 
 
@@ -58,22 +20,24 @@
     <div class="modal-body">
         <input type="hidden" asp-for="Id" />
         <input type="hidden" asp-for="WhatTimes" />
+        <input type="hidden" asp-for="ParentId" />
 
         <div class="mb-3">
-            <label asp-for="Name">Name</label>
+            <label asp-for="Name"><b>Name</b></label>
             <input asp-for="Name" class="form-control" />
-            <input asp-for="ParentId" type="hidden" />
+            <span asp-validation-for="Name" class="text-danger"></span>
         </div>
 
         <div class="mb-3">
-            <label asp-for="Orginal_Name">Orginal Name</label>
+            <label asp-for="Orginal_Name"><b>Orginal Name</b></label>
             <input asp-for="Orginal_Name" class="form-control" />
+            <span asp-validation-for="Orginal_Name" class="text-danger"></span>
         </div>
 
         <div class="mb-3">
-            <label asp-for="Top">Rank</label>
+            <label asp-for="Top"><b>Rank</b></label>
             <select asp-for="Top" class="form-control">
-                @foreach (var top in topOptions)
+                @foreach (var top in OptionHelper.TopOptions)
                 {
                     if (Model.Top == top.Key)
                     {
@@ -85,12 +49,13 @@
                     }
                 }
             </select>
+            <span asp-validation-for="Top" class="text-danger"></span>
         </div>
 
         <div class="mb-3">
-            <label asp-for="Buy">Kaufstatus</label>
+            <label asp-for="Buy"><b>Kaufstatus</b></label>
             <select asp-for="Buy" class="form-control">
-                @foreach (var option in buyOptions)
+                @foreach (var option in OptionHelper.BuyOptions)
                 {
                     if (Model.Buy == option.Key)
                     {
@@ -105,7 +70,7 @@
         </div>
 
         <div class="mb-3">
-            <label asp-for="Img">Bild</label>
+            <label asp-for="Img"><b>Bild</b></label>
             <input asp-for="Img" class="form-control" accept="image/*" type="file" />
 
             <input type="hidden" asp-for="ImgPath" />
@@ -115,41 +80,76 @@
                     <img src="~/img/Anime_imgs/@Model.ImgPath" alt="Aktuelles Bild" style="max-height: 150px; max-width: 100%;" />
                 </div>
             }
+            <span asp-validation-for="Img" class="text-danger"></span>
         </div>
 
         <div class="mb-3">
-            <label asp-for="ReleaseDate">Veröffentlichungsdatum</label>
-            <input asp-for="ReleaseDate" type="date" class="form-control" />
+            <label><b>Veröffentlichungsdatum</b></label>
+            <div class="d-flex">
+                <select asp-for="ReleaseMonth" class="form-control w-50 me-1" name="ReleaseMonth">
+                    <option value="">Monat wählen...</option>
+                    @foreach (var month in OptionHelper.MonthsOptions)
+                    {
+                        if (month.Key == Model.ReleaseMonth)
+                        {
+                            <option value="@month.Key" selected>@month.Value</option>
+
+                        } else
+                        {
+                            <option value="@month.Key">@month.Value</option>                            
+                        }
+                    }
+                </select>
+
+                <select asp-for="ReleaseYear" class="form-control w-50 ms-1" name="ReleaseYear">
+                    <option value="">Jahr wählen...</option>
+                    @for (int year = OptionHelper.CurrentYear; year >= OptionHelper.StartYear; year--)
+                    {
+                        if (year == Model.ReleaseYear)
+                        {
+                            <option value="@year" selected>@year</option>
+                            
+                        } else
+                        {
+                            <option value="@year">@year</option>
+                        }
+                    }
+                </select>         
+            </div>
+            <div class="d-flex">                
+                <span asp-validation-for="ReleaseMonth" class="text-danger me-1 w-50"></span>
+                
+                <span asp-validation-for="ReleaseYear" class="text-danger ms-1 w-50"></span>   
+            </div>
         </div>
 
         <div class="mb-3">
-            <label asp-for="Link">Link</label>
+            <label asp-for="Link"><b>Link</b></label>
             <input asp-for="Link" class="form-control" />
+            <span asp-validation-for="Link" class="text-danger"></span>
         </div>
 
         <div class="mb-3">
-            <label asp-for="Episodes">Episodes</label>
+            <label asp-for="Episodes"><b>Episodes</b></label>
             <input asp-for="Episodes" class="form-control" />
+            <span asp-validation-for="Episodes" class="text-danger"></span>
         </div>
 
         <div class="checkbox-popup mb-3 row">
-            <label class="ps-0">Sprache</label>
-            <div class="form-check col-4">
-                <input class="form-check-input" type="checkbox" name="Language" value="Englisch" id="langEng" @isCheckedEng />
-                <label class="form-check-label" for="langEng">Englisch</label>
-            </div>
-            <div class="form-check col-4">
-                <input class="form-check-input" type="checkbox" name="Language" value="Japanisch" id="langJap" @isCheckedJap />
-                <label class="form-check-label" for="langJap">Japanisch</label>
-            </div>
-            <div class="form-check col-4">
-                <input class="form-check-input" type="checkbox" name="Language" value="Deutsch" id="langGer" @isCheckedGer />
-                <label class="form-check-label" for="langGer">Deutsch</label>
-            </div>
+            <label class="ps-0"><b>Sprache</b></label>
+            @foreach (var lang in OptionHelper.LanguageOptions)
+            {
+                var isChecked = (Model.Language ?? new List<string>()).Contains(lang) ? "checked" : "";
+                <div class="form-check col-4">
+                    <input class="form-check-input" type="checkbox" name="Language" value="@lang" id="@lang" @isChecked />
+                    <label class="form-check-label" for="@lang">@lang</label>
+                </div>
+            }
+            <span asp-validation-for="Language" class="text-danger p-0"></span>
         </div>
 
         <div class="checkbox-popup mb-3 row">
-            <label class="ps-0">Genres</label>
+            <label class="ps-0"><b>Genres</b></label>
             @foreach (var g in genres)
             {
                 if (g.Belonging_to.Contains("A") || g.Belonging_to.Contains("a"))
@@ -161,12 +161,11 @@
                     </div>
                 }
             }
+            <span asp-validation-for="SelectedGenreIds" class="text-danger p-0"></span>
         </div>
 
         <div class="checkbox-popup mb-3 row">
-            <label class="ps-0">Mit wem gesehen</label>
-            @{
-            }
+            <label class="ps-0"><b>Mit wem gesehen</b></label>
             @foreach (var w in watchedWiths)
             {
                 var isChecked = selectedWatchedIds.Contains(w.Id) ? "checked" : "";
@@ -178,14 +177,14 @@
         </div>
 
         <div class="mb-3">
-            <label asp-for="Description">Beschreibung</label>
+            <label asp-for="Description"><b>Beschreibung</b></label>
             <textarea asp-for="Description" class="form-control"></textarea>
         </div>
 
         <div class="mb-3">
-            <label asp-for="Country">Land</label>
+            <label asp-for="Country"><b>Land</b></label>
             <select asp-for="Country" class="form-control">
-                @foreach (var option in countryOptions)
+                @foreach (var option in OptionHelper.CountryOptions)
                 {
                     if (Model.Country == option.Key)
                     {
@@ -197,6 +196,7 @@
                     }
                 }
             </select>
+            <span asp-validation-for="Country" class="text-danger"></span>
         </div>
     </div>
 

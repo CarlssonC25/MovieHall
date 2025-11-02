@@ -1,16 +1,8 @@
 ﻿@model MovieHall.SaveModel.SaveMovie
+@using MovieHall.Helpers
 @{
     var genres = ViewBag.Genres as List<MovieHall.Models.Genre>;
     var watched = ViewBag.WatchedWith as List<MovieHall.Models.WatchedWith>;
-
-    var FSKOptions = new Dictionary<int, string>
-    {
-        { 0, "0+" },
-        { 6, "6+" },
-        { 12, "12+" },
-        { 16, "16+" },
-        { 18, "18+" }
-    };
 
     var selectedGenreIds = Model.MovieGenres?.Select(g => g.GenreId).ToList() ?? new List<int>();
 }
@@ -21,37 +13,41 @@
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Schließen"></button>
     </div>
     <div class="modal-body">
+            <input type="hidden" name="ParentId" value="@Model.ParentId" />
 
         <div class="mb-3">
-            <label for="movieName">Name</label>
-            <input class="form-control" id="movieName" name="Name" required />
-            <input type="hidden" name="ParentId" value="@Model.ParentId" />
+            <label for="movieName"><b>Name</b></label>
+            <input class="form-control" id="movieName" name="Name" />
+            <span asp-validation-for="Name" class="text-danger"></span>
         </div>
 
         <div class="mb-3">
-            <label for="buy">Kaufmedium</label>
+            <label for="buy"><b>Kaufmedium</b></label>
             <select class="form-control" id="buy" name="Buy">
-                <option value="0">Noch nicht</option>
-                <option value="1">DVD</option>
-                <option value="2">Blu-ray</option>
-                <option value="3">3D</option>
+                @foreach (var option in OptionHelper.BuyOptions)
+                {
+                    if (Model.Buy == option.Key)
+                    {
+                        <option value="@option.Key" selected>@option.Value</option>
+                    }
+                    else
+                    {
+                        <option value="@option.Key">@option.Value</option>
+                    }
+                }
             </select>
         </div>
 
         <div class="mb-3">
-            <label for="description">Beschreibung</label>
-            <textarea class="form-control" id="description" name="Description" rows="3"></textarea>
-        </div>
-
-        <div class="mb-3">
-            <label for="imageFile">Bild (wird gespeichert in /img/Movie_imgs)</label>
+            <label for="imageFile"><b>Bild</b> (wird gespeichert in /img/Movie_imgs)</label>
             <input type="file" name="Img" id="imageFile" class="form-control" accept="image/*" />
+            <span asp-validation-for="Img" class="text-danger"></span>
         </div>
 
         <div class="mb-3">
-            <label for="fsk">FSK</label>
+            <label for="fsk"><b>FSK</b></label>
             <select class="form-control" id="fsk" name="FSK">
-                @foreach (var fsk in FSKOptions)
+                @foreach (var fsk in OptionHelper.FSKOptions)
                 {
                     if (Model.FSK == fsk.Key)
                     {
@@ -63,33 +59,58 @@
                     }
                 }
             </select>
+            <span asp-validation-for="FSK" class="text-danger"></span>
         </div>
 
         <div class="form-check mb-3">
             <input type="checkbox" name="Favorit" class="form-check-input" id="favorit" value="true" />
-            <label class="form-check-label" for="favorit">Favorit</label>
+            <label class="form-check-label" for="favorit"><b>Favorit</b></label>
         </div>
 
         <div class="mb-3">
-            <label for="releaseDate">Veröffentlichungsdatum</label>
-            <input type="date" name="ReleaseDate" id="releaseDate" class="form-control" />
+            <label><b>Veröffentlichungsdatum</b></label>
+            <select asp-for="ReleaseYear" class="form-control" name="ReleaseYear">
+                <option value="">Jahr wählen...</option>
+                @for (int year = OptionHelper.CurrentYear; year >= OptionHelper.StartYear; year--)
+                {
+                    if (year == Model.ReleaseYear)
+                    {
+                        <option value="@year" selected>@year</option>
+                            
+                    } else
+                    {
+                        <option value="@year">@year</option>
+                    }
+                }
+            </select>  
+            <span asp-validation-for="ReleaseYear" class="text-danger"></span>  
         </div>
 
         <div class="mb-3">
-            <label for="link">Trailer-Link</label>
+            <label for="link"><b>Link</b></label>
             <input type="url" name="Link" id="link" class="form-control" />
         </div>
 
         <div class="mb-3">
-            <label for="language">Sprache</label>
+            <label for="language"><b>Sprache</b></label>
             <select class="form-control" name="Language" id="language">
-                <option value="de">Deutsch</option>
-                <option value="en">Englisch</option>
+                @foreach (var option in OptionHelper.MovielangOptions)
+                {
+                    if (Model.Language == option.Key)
+                    {
+                        <option value="@option.Key" selected>@option.Value</option>
+                    }
+                    else
+                    {
+                        <option value="@option.Key">@option.Value</option>
+                    }
+                }
             </select>
+            <span asp-validation-for="Language" class="text-danger"></span>
         </div>
 
         <div class="checkbox-popup mb-3 row">
-            <label class="ps-0">Genres</label>
+            <label class="ps-0"><b>Genres</b></label>
             @foreach (var g in genres)
             {
                 if (g.Belonging_to.Contains("M") || g.Belonging_to.Contains("m"))
@@ -101,10 +122,11 @@
                     </div>
                 }
             }
+            <span asp-validation-for="SelectedGenreIds" class="text-danger"></span>
         </div>
 
         <div class="checkbox-popup mb-3 row">
-            <label class="ps-0">Mit wem geschaut</label>
+            <label class="ps-0"><b>Mit wem geschaut</b></label>
             @foreach (var w in watched)
             {
                 <div class="form-check col-4">
@@ -112,6 +134,11 @@
                     <label class="form-check-label" for="watched_@w.Id">@w.Name</label>
                 </div>
             }
+        </div>
+        
+        <div class="mb-3">
+            <label for="description"><b>Beschreibung</b></label>
+            <textarea class="form-control" id="description" name="Description" rows="3"></textarea>
         </div>
     </div>
 

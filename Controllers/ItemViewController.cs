@@ -5,6 +5,7 @@ using MovieHall.Models;
 using MovieHall.SaveModel;
 using MovieHall.ViewModels;
 using System.Text.RegularExpressions;
+using static Azure.Core.HttpHeader;
 
 namespace MovieHall.Controllers
 {
@@ -229,7 +230,7 @@ namespace MovieHall.Controllers
                 Favorit = svMovie.Favorit,
                 FSK = svMovie.FSK,
                 Language = svMovie.Language,
-                ReleaseDate = svMovie.ReleaseDate,
+                ReleaseDate = svMovie.ReleaseDate ?? new DateTime((int)svMovie.ReleaseYear, 1, 1),
                 Link = svMovie.Link,
                 ParentId = svMovie.ParentId,
 
@@ -328,7 +329,7 @@ namespace MovieHall.Controllers
                 Top = svAnime.Top,
                 Buy = svAnime.Buy,
                 Description = svAnime.Description,
-                ReleaseDate = svAnime.ReleaseDate,
+                ReleaseDate = svAnime.ReleaseDate ?? new DateTime((int)svAnime.ReleaseYear, (int)svAnime.ReleaseMonth, 1),
                 Link = svAnime.Link,
                 Episodes = svAnime.Episodes,
                 Language = string.Join(", ", svAnime.Language.ToArray()),

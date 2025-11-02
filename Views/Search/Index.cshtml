@@ -147,7 +147,7 @@
 
                                 <div class="parent-filter mx-2 p-1">
                                     <label class="form-check-label" for="parent-filter"><b>Nur Erste:</b></label>
-                                    <input id="parent-filter" class="form-check-input" type="checkbox" asp-for="FilterParents" checked/>
+                                    <input id="parent-filter" class="form-check-input" type="checkbox" asp-for="FilterParents"/>
                                 </div>
 
                             </div>                        
@@ -171,12 +171,106 @@
                     {
                         <a class="item" asp-area="" asp-controller="ItemView" asp-action="Index" asp-route-id="@anime.Id" asp-route-type="Anime">
                             <img src="~/img/Anime_imgs/@anime.Img" alt="@anime.Name" />
-                            <div>
+                            <div class="itemName">
                                 <p>@anime.Name</p>
                             </div>
-                            <span>
-                                <i class="fa fa-good" data-toggle="tooltip" title="HD Quality"></i>
-                            </span>
+
+                            @if(Model.FilterParents) 
+                            {
+                                var info = Model.ItemInfos.FirstOrDefault(i => i.ItemId == anime.Id);
+                                var averageEp = info.AllEpisodes / info.AllSeasons;
+                                var playButton = "";
+                                @if (info.Available == 0)
+                                {
+                                    playButton = "play-buttonR.png";
+                                }
+                                else if (info.Available < info.AllSeasons && info.Available != 0)
+                                {
+                                    playButton = "play-button.png";
+                                }
+                                else if (info.Available == info.AllSeasons)
+                                {
+                                    playButton = "play-buttonG.png";
+                                }
+
+                                <span class="p-0 px-1 itemInfoBox d-flex">
+                                    <div class="itemInfoSupBox itemInfoLeft">
+                                        <div class="itemInfoSup itemInfoHide">
+                                            <div class="itemInfoBack">
+                                                <div class="itemInfoText ps-1">
+                                                    S @info.AllSeasons
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="itemInfoSup ms-1">
+                                            <div class="itemInfoBack">
+                                                <div class="itemInfoText ps-1">
+                                                    Ep @averageEp
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="itemInfoSupBox itemInfoRight">
+                                        <div class="itemInfoSup">
+                                            <div class="itemInfoBack2">
+                                                <div class="itemInfoText ps-1">
+                                                    S @info.Available
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="itemInfoSup itemInfoHide ms-1">
+                                            <div class="itemInfoBack2">
+                                                <div class="itemInfoText ps-1">
+                                                    <img class="" src="~/img/@playButton" />
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </span>
+
+                            } else
+                            {
+                                var info = Model.ItemInfos.FirstOrDefault(i => i.ItemId == anime.Id);
+                                var playButton = "";
+                                @if (info.Available == 0)
+                                {
+                                    playButton = "play-buttonR.png";
+                                }
+                                else if (info.Available > 0)
+                                {
+                                    playButton = "play-buttonG.png";
+                                }
+
+                                <span class="p-0 px-1 itemInfoBox d-flex">
+                                    <div class="itemInfoSupBox itemInfoLeft">
+                                        <div class="itemInfoSup itemInfoHide">
+                                            <div class="itemInfoBack">
+                                                <div class="itemInfoText ps-1">
+                                                    S @info.AllSeasons
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="itemInfoSup ms-1">
+                                            <div class="itemInfoBack">
+                                                <div class="itemInfoText ps-1">
+                                                    Ep @anime.Episodes
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="itemInfoSupBox itemInfoRight justify-content-end">
+                                        <div class="itemInfoSup itemInfoHide ms-1">
+                                            <div class="itemInfoBack2">
+                                                <div class="itemInfoText ps-1">
+                                                    <img class="" src="~/img/@playButton" />
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </span>
+                            }
                         </a>
                     }
                 </div>
@@ -187,13 +281,94 @@
                     @foreach (var movie in Model.Movies)
                     {
                         <a class="item" asp-area="" asp-controller="ItemView" asp-action="Index" asp-route-id="@movie.Id" asp-route-type="Movie">
+
                             <img src="~/img/Movie_imgs/@movie.Img" alt="@movie.Name" />
-                            <div>
+                            <div class="itemName">
                                 <p>@movie.Name</p>
                             </div>
-                            <span>
-                                <i class="fa fa-good" data-toggle="tooltip" title="HD Quality"></i>
-                            </span>
+
+                            @if(Model.FilterParents) 
+                            {
+                                var info = Model.ItemInfos.FirstOrDefault(i => i.ItemId == movie.Id);
+                                var averageEp = info.AllEpisodes / info.AllSeasons;
+                                var playButton = "";
+                                @if (info.Available == 0)
+                                {
+                                    playButton = "play-buttonR.png";
+                                }
+                                else if (info.Available < info.AllSeasons && info.Available != 0)
+                                {
+                                    playButton = "play-button.png";
+                                }
+                                else if (info.Available == info.AllSeasons)
+                                {
+                                    playButton = "play-buttonG.png";
+                                }
+
+                                <span class="p-0 px-1 itemInfoBox d-flex">
+                                    <div class="itemInfoSupBox itemInfoLeft">
+                                        <div class="itemInfoSup itemInfoHide">
+                                            <div class="itemInfoBack">
+                                                <div class="itemInfoText ps-1">
+                                                    S @info.AllSeasons
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="itemInfoSupBox itemInfoRight">
+                                        <div class="itemInfoSup">
+                                            <div class="itemInfoBack2">
+                                                <div class="itemInfoText ps-1">
+                                                    S @info.Available
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="itemInfoSup itemInfoHide ms-1">
+                                            <div class="itemInfoBack2">
+                                                <div class="itemInfoText ps-1">
+                                                    <img class="" src="~/img/@playButton" />
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </span>
+
+                            } else
+                            {
+                                var info = Model.ItemInfos.FirstOrDefault(i => i.ItemId == movie.Id);
+                                var playButton = "";
+                                @if (info.Available == 0)
+                                {
+                                    playButton = "play-buttonR.png";
+                                }
+                                else if (info.Available > 0)
+                                {
+                                    playButton = "play-buttonG.png";
+                                }
+
+                                <span class="p-0 px-1 itemInfoBox d-flex">
+                                    <div class="itemInfoSupBox itemInfoLeft">
+                                        <div class="itemInfoSup itemInfoHide">
+                                            <div class="itemInfoBack">
+                                                <div class="itemInfoText ps-1">
+                                                    S @info.AllSeasons
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="itemInfoSupBox itemInfoRight justify-content-end">
+                                        <div class="itemInfoSup itemInfoHide ms-1">
+                                            <div class="itemInfoBack2">
+                                                <div class="itemInfoText ps-1">
+                                                    <img class="" src="~/img/@playButton" />
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </span>
+                            }
                         </a>
                     }
                 </div>

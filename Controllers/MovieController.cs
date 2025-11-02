@@ -5,6 +5,7 @@ using MovieHall.Models;
 using MovieHall.SaveModel;
 using MovieHall.ViewModels;
 using System.Text.RegularExpressions;
+using static Azure.Core.HttpHeader;
 
 namespace MovieHall.Controllers
 {
@@ -76,9 +77,34 @@ namespace MovieHall.Controllers
                 .Take(pageSize)
                 .ToListAsync();
 
+            //movie Infos
+            var movieInfos = new List<MovieViewInfos>();
+
+            foreach (var parent in movies)
+            {
+                var children = await _context.Movies
+                    .Where(c => c.ParentId == parent.Id)
+                    .ToListAsync();
+
+                var allRelated = new List<Movie> { parent };
+                allRelated.AddRange(children);
+
+                int allSeasons = allRelated.Count;
+
+                int available = allRelated.Count(a => a.Buy > 0);
+
+                movieInfos.Add(new MovieViewInfos
+                {
+                    MovieId = parent.Id,
+                    AllSeasons = allSeasons,
+                    Available = available
+                });
+            }
+
             var viewModel = new MovieVM
             {
                 Movies = movies,
+                MovieInfos = movieInfos,
                 CurrentPage = page,
                 TotalPages = totalPages,
                 CurrentFilter = filter,
@@ -127,7 +153,7 @@ namespace MovieHall.Controllers
                 Favorit = svMovie.Favorit,
                 FSK = svMovie.FSK,
                 Language = svMovie.Language,
-                ReleaseDate = svMovie.ReleaseDate,
+                ReleaseDate = svMovie.ReleaseDate ?? new DateTime((int)svMovie.ReleaseYear, 1, 1),
                 Link = svMovie.Link,
 
                 Parent = svMovie.Parent,
@@ -163,9 +189,17 @@ namespace MovieHall.Controllers
                     await svMovie.Img.CopyToAsync(stream);
                 }
             }
+            else
+            {
+                ModelState.AddModelError(nameof(svMovie.Img), "Bild ist ein Pflichtfeld");
+
+                ViewBag.Genres = Genres;
+                ViewBag.WatchedWith = WatchedWith;
+                return PartialView("~/Views/Movie/_CreatePartial.cshtml", svMovie);
+            }
 
             foreach (var genreId in svMovie.SelectedGenreIds)
-                movie.MovieGenres.Add(new MovieGenre { GenreId = genreId });
+                    movie.MovieGenres.Add(new MovieGenre { GenreId = genreId });
 
             foreach (var wId in svMovie.SelectedWatchedWithIds)
                 movie.MovieWatchedWiths.Add(new MovieWatchedWith { WatchedWithId = wId });
@@ -203,6 +237,7 @@ namespace MovieHall.Controllers
                 FSK = movieDb.FSK,
                 Favorit = movieDb.Favorit,
                 ReleaseDate = movieDb.ReleaseDate,
+                ReleaseYear = movieDb.ReleaseDate.Year,
                 Link = movieDb.Link,
                 Language = movieDb.Language,
                 ParentId = movieDb.ParentId,
@@ -233,7 +268,7 @@ namespace MovieHall.Controllers
             dbMovie.FSK = svMovie.FSK;
             dbMovie.Buy = svMovie.Buy;
             dbMovie.Favorit = svMovie.Favorit;
-            dbMovie.ReleaseDate = svMovie.ReleaseDate;
+            dbMovie.ReleaseDate = svMovie.ReleaseDate ?? new DateTime((int)svMovie.ReleaseYear, 1, 1);
             dbMovie.ParentId = svMovie.ParentId;
 
             if (svMovie.Img != null && (svMovie.Img.ContentType == "image/jpeg" || svMovie.Img.ContentType == "image/png"))

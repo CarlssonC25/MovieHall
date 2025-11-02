@@ -3,9 +3,6 @@
     ViewData["Title"] = "Anime";
 }
 
-
-
-
 <section id="anime" class="mt-4">
     <div class="container-fluid">
         <div class="d-flex justify-content-center">
@@ -27,6 +24,9 @@
                             </div>
                             <div class="under-content-info ms-3">
                                 <b>Anime Zeit:</b> @Model.AnimeTime
+                            </div>
+                            <div class="under-content-info ms-3">
+                                <b>Geguckte Zeit:</b> @Model.WatchTime
                             </div>
                         </div>
 
@@ -115,7 +115,6 @@
         </div>
     </div>
 </div>
-
 
 @section Scripts {
     <script src="~/js/animes.js"></script>

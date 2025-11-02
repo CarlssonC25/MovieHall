@@ -30,6 +30,9 @@ a {
 textarea {
     background-color: #1c1c1c !important;
 }
+.text-danger {
+    color: $col-pur-bright !important;
+}
 
 
 /*------------------ Body ------------------*/
@@ -303,7 +306,7 @@ header {
         width: 14%;
         aspect-ratio: 80/120;
 
-        img {
+        > img {
             vertical-align: top;
             position: absolute;
             overflow: hidden;
@@ -352,60 +355,81 @@ header {
             left: 0;
             align-content: center;
             font-size: 13px;
+            justify-content: space-between;
+            overflow: hidden;
+
+
+            .itemInfoHide {
+                overflow: hidden;
+            }
+
+            .itemInfoLeft,
+            .itemInfoSupBox {
+                width: 37%;
+                display: flex;
+            }
+
+            .itemInfoLeft {
+                filter: drop-shadow(-1px 0px 1px $col-pur-normal);
+            }
+
+            .itemInfoRight {
+                filter: drop-shadow(1px 0px 1px $back-gray-lightlight);
+            }
 
             .itemInfoSup {
-                overflow: hidden;
-                width: 13%;
+                width: 50%;
                 align-content: center;
 
                 .itemInfoBack {
-                    background-color: #502987;
+                    background-color: $col-pur-darkdark;
                     @include transform(skew(154deg));
                     border-radius: 2px;
                     position: relative;
-                    overflow: hidden;
                     height: 20px;
                     width: 100%;
                     text-align: center;
                     margin: 0;
                     left: -4px;
                     color: $text-col-dark;
+                    filter: drop-shadow(0px 0px 1px $col-pur-normal);
 
-                    .itemInfoEp {
+                    .itemInfoText {
                         @include transform(skew(28deg));
                         width: 85%;
                         font-weight: 600;
+
+                        img {
+                            vertical-align: text-bottom;
+                        }
                     }
                 }
-            }
 
-            .itemInfoSup2 {
-                width: 13%;
-                align-content: center;
 
-                .itemInfoBack {
-                    background-color: #502987;
+                .itemInfoBack2 {
+                    background-color: $back-gray-light;
                     @include transform(skew(154deg));
                     border-radius: 2px;
                     position: relative;
-                    overflow: hidden;
                     height: 20px;
                     width: 100%;
                     text-align: center;
                     margin: 0;
-                    left: -4px;
+                    left: 4px;
                     color: $text-col-dark;
+                    filter: drop-shadow(0px 0px 1px $back-gray-lightlight);
 
-                    .itemInfoEp {
+                    .itemInfoText {
                         @include transform(skew(28deg));
                         width: 85%;
                         font-weight: 600;
                     }
+
+                    img {
+                        vertical-align: text-bottom;
+                    }
                 }
             }
-        }
-
-        @media only screen and (max-width: 1530px) {
         }
     }
 
@@ -445,13 +469,31 @@ header {
         }
     }
 }
-
-@media only screen and (max-width: 1530px) {
+@media only screen and (max-width: 1860px) {
     #anime {
         .item {
             .itemInfoBox {
-                .itemInfoSup, .itemInfoSup2 {
-                    width: 16%;
+                .itemInfoLeft {
+                    width: 40% !important;
+
+                    > div:nth-child(1) {
+                        width: 45% !important;
+                    }
+
+                    > div:nth-child(2) {
+                        width: 55% !important;
+                    }
+                }
+            }
+        }
+    }
+}
+@media only screen and (max-width: 1544px) {
+    #anime {
+        .item {
+            .itemInfoBox {
+                .itemInfoLeft {
+                    width: 46% !important;
                 }
             }
         }
@@ -473,7 +515,7 @@ header {
         width: 14%;
         aspect-ratio: 80/120;
 
-        img {
+        > img {
             vertical-align: top;
             position: absolute;
             overflow: hidden;
@@ -486,7 +528,7 @@ header {
             box-shadow: 0 1px 4px rgba(0, 0, 0, .3), 0 0 40px rgba(0, 0, 0, .1) inset;
         }
 
-        div {
+        .itemName {
             background: rgba(0, 0, 0, .7);
             border-radius: 4px 4px 0 0;
             position: absolute;
@@ -507,11 +549,11 @@ header {
             }
         }
 
-        div:hover {
+        .itemName:hover {
             opacity: 1;
         }
 
-        span {
+        .itemInfoBox {
             background: rgba(0, 0, 0, .7);
             border-radius: 0 0 4px 4px;
             position: absolute;
@@ -520,6 +562,83 @@ header {
             aspect-ratio: 80/8;
             bottom: 0;
             left: 0;
+            align-content: center;
+            font-size: 13px;
+            justify-content: space-between;
+            overflow: hidden;
+
+
+            .itemInfoHide {
+                overflow: hidden;
+            }
+
+            .itemInfoLeft,
+            .itemInfoSupBox {
+                width: 35%;
+                display: flex;
+            }
+
+            .itemInfoLeft {
+                filter: drop-shadow(-1px 0px 1px $col-pur-normal);
+            }
+
+            .itemInfoRight {
+                filter: drop-shadow(1px 0px 1px $back-gray-lightlight);
+            }
+
+            .itemInfoSup {
+                width: 50%;
+                align-content: center;
+
+                .itemInfoBack {
+                    background-color: $col-pur-darkdark;
+                    @include transform(skew(154deg));
+                    border-radius: 2px;
+                    position: relative;
+                    height: 20px;
+                    width: 100%;
+                    text-align: center;
+                    margin: 0;
+                    left: -4px;
+                    color: $text-col-dark;
+                    filter: drop-shadow(0px 0px 1px $col-pur-normal);
+
+                    .itemInfoText {
+                        @include transform(skew(28deg));
+                        width: 85%;
+                        font-weight: 600;
+
+                        img {
+                            vertical-align: text-bottom;
+                        }
+                    }
+                }
+
+
+                .itemInfoBack2 {
+                    background-color: $back-gray-light;
+                    @include transform(skew(154deg));
+                    border-radius: 2px;
+                    position: relative;
+                    height: 20px;
+                    width: 100%;
+                    text-align: center;
+                    margin: 0;
+                    left: 4px;
+                    color: $text-col-dark;
+                    filter: drop-shadow(0px 0px 1px $back-gray-lightlight);
+
+                    .itemInfoText {
+                        @include transform(skew(28deg));
+                        width: 85%;
+                        font-weight: 600;
+                    }
+
+                    img {
+                        vertical-align: text-bottom;
+                    }
+                }
+            }
         }
     }
     /* add row space */
@@ -558,6 +677,49 @@ header {
     }
 }
 
+@media only screen and (max-width: 1860px) {
+    #movie {
+        .item {
+            .itemInfoBox {
+                .itemInfoLeft {
+                    width: 40% !important;
+
+                    > div:nth-child(1) {
+                        width: 45% !important;
+                    }
+
+                    > div:nth-child(2) {
+                        width: 55% !important;
+                    }
+                }
+            }
+        }
+    }
+}
+
+@media only screen and (max-width: 1544px) {
+    #movie {
+        .item {
+            .itemInfoBox {
+                .itemInfoLeft {
+                    width: 45% !important;
+                }
+            }
+        }
+    }
+}
+
+@media only screen and (max-width: 1350px) {
+    #movie {
+        .item {
+            .itemInfoBox {
+                .itemInfoSup{
+                    display: none;
+                }
+            }
+        }
+    }
+}
 
 /*------------------ Settings ------------------*/
 
@@ -908,7 +1070,7 @@ header {
             width: 14%;
             aspect-ratio: 80/120;
 
-            img {
+            > img {
                 vertical-align: top;
                 position: absolute;
                 overflow: hidden;
@@ -921,7 +1083,7 @@ header {
                 box-shadow: 0 1px 4px rgba(0, 0, 0, .3), 0 0 40px rgba(0, 0, 0, .1) inset;
             }
 
-            div {
+            .itemName {
                 background: rgba(0, 0, 0, .7);
                 border-radius: 4px 4px 0 0;
                 position: absolute;
@@ -942,11 +1104,11 @@ header {
                 }
             }
 
-            div:hover {
+            .itemName:hover {
                 opacity: 1;
             }
 
-            span {
+            .itemInfoBox {
                 background: rgba(0, 0, 0, .7);
                 border-radius: 0 0 4px 4px;
                 position: absolute;
@@ -955,6 +1117,83 @@ header {
                 aspect-ratio: 80/8;
                 bottom: 0;
                 left: 0;
+                align-content: center;
+                font-size: 13px;
+                justify-content: space-between;
+                overflow: hidden;
+
+
+                .itemInfoHide {
+                    overflow: hidden;
+                }
+
+                .itemInfoLeft,
+                .itemInfoSupBox {
+                    width: 35%;
+                    display: flex;
+                }
+
+                .itemInfoLeft {
+                    filter: drop-shadow(-1px 0px 1px $col-pur-normal);
+                }
+
+                .itemInfoRight {
+                    filter: drop-shadow(1px 0px 1px $back-gray-lightlight);
+                }
+
+                .itemInfoSup {
+                    width: 50%;
+                    align-content: center;
+
+                    .itemInfoBack {
+                        background-color: $col-pur-darkdark;
+                        @include transform(skew(154deg));
+                        border-radius: 2px;
+                        position: relative;
+                        height: 20px;
+                        width: 100%;
+                        text-align: center;
+                        margin: 0;
+                        left: -4px;
+                        color: $text-col-dark;
+                        filter: drop-shadow(0px 0px 1px $col-pur-normal);
+
+                        .itemInfoText {
+                            @include transform(skew(28deg));
+                            width: 85%;
+                            font-weight: 600;
+
+                            img {
+                                vertical-align: text-bottom;
+                            }
+                        }
+                    }
+
+
+                    .itemInfoBack2 {
+                        background-color: $back-gray-light;
+                        @include transform(skew(154deg));
+                        border-radius: 2px;
+                        position: relative;
+                        height: 20px;
+                        width: 100%;
+                        text-align: center;
+                        margin: 0;
+                        left: 4px;
+                        color: $text-col-dark;
+                        filter: drop-shadow(0px 0px 1px $back-gray-lightlight);
+
+                        .itemInfoText {
+                            @include transform(skew(28deg));
+                            width: 85%;
+                            font-weight: 600;
+                        }
+
+                        img {
+                            vertical-align: text-bottom;
+                        }
+                    }
+                }
             }
         }
     }
@@ -969,7 +1208,7 @@ header {
             width: 14%;
             aspect-ratio: 80/120;
 
-            img {
+            > img {
                 vertical-align: top;
                 position: absolute;
                 overflow: hidden;
@@ -982,7 +1221,7 @@ header {
                 box-shadow: 0 1px 4px rgba(0, 0, 0, .3), 0 0 40px rgba(0, 0, 0, .1) inset;
             }
 
-            div {
+            .itemName {
                 background: rgba(0, 0, 0, .7);
                 border-radius: 4px 4px 0 0;
                 position: absolute;
@@ -1003,11 +1242,11 @@ header {
                 }
             }
 
-            div:hover {
+            .itemName:hover {
                 opacity: 1;
             }
 
-            span {
+            .itemInfoBox {
                 background: rgba(0, 0, 0, .7);
                 border-radius: 0 0 4px 4px;
                 position: absolute;
@@ -1016,6 +1255,128 @@ header {
                 aspect-ratio: 80/8;
                 bottom: 0;
                 left: 0;
+                align-content: center;
+                font-size: 13px;
+                justify-content: space-between;
+                overflow: hidden;
+
+
+                .itemInfoHide {
+                    overflow: hidden;
+                }
+
+                .itemInfoLeft,
+                .itemInfoSupBox {
+                    width: 35%;
+                    display: flex;
+                }
+
+                .itemInfoLeft {
+                    filter: drop-shadow(-1px 0px 1px $col-pur-normal);
+                }
+
+                .itemInfoRight {
+                    filter: drop-shadow(1px 0px 1px $back-gray-lightlight);
+                }
+
+                .itemInfoSup {
+                    width: 50%;
+                    align-content: center;
+
+                    .itemInfoBack {
+                        background-color: $col-pur-darkdark;
+                        @include transform(skew(154deg));
+                        border-radius: 2px;
+                        position: relative;
+                        height: 20px;
+                        width: 100%;
+                        text-align: center;
+                        margin: 0;
+                        left: -4px;
+                        color: $text-col-dark;
+                        filter: drop-shadow(0px 0px 1px $col-pur-normal);
+
+                        .itemInfoText {
+                            @include transform(skew(28deg));
+                            width: 85%;
+                            font-weight: 600;
+
+                            img {
+                                vertical-align: text-bottom;
+                            }
+                        }
+                    }
+
+
+                    .itemInfoBack2 {
+                        background-color: $back-gray-light;
+                        @include transform(skew(154deg));
+                        border-radius: 2px;
+                        position: relative;
+                        height: 20px;
+                        width: 100%;
+                        text-align: center;
+                        margin: 0;
+                        left: 4px;
+                        color: $text-col-dark;
+                        filter: drop-shadow(0px 0px 1px $back-gray-lightlight);
+
+                        .itemInfoText {
+                            @include transform(skew(28deg));
+                            width: 85%;
+                            font-weight: 600;
+                        }
+
+                        img {
+                            vertical-align: text-bottom;
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+
+@media only screen and (max-width: 1860px) {
+    #SearchContent {
+        .item {
+            .itemInfoBox {
+                .itemInfoLeft {
+                    width: 40% !important;
+
+                    > div:nth-child(1) {
+                        width: 45% !important;
+                    }
+
+                    > div:nth-child(2) {
+                        width: 55% !important;
+                    }
+                }
+            }
+        }
+    }
+}
+
+@media only screen and (max-width: 1544px) {
+    #SearchContent {
+        .item {
+            .itemInfoBox {
+                .itemInfoLeft {
+                    width: 45% !important;
+                }
+            }
+        }
+    }
+}
+
+@media only screen and (max-width: 1380px) {
+    #SearchContent {
+        .item {
+            .itemInfoBox {
+                .itemInfoSup {
+                    display: none;
+                }
             }
         }
     }

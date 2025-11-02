@@ -12,7 +12,6 @@
                 e.preventDefault();
                 var formData = new FormData(this);
 
-
                 $.ajax(
                     {
                     type: "POST",

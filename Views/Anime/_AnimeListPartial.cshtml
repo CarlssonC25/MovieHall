@@ -1,5 +1,5 @@
 ﻿@model MovieHall.ViewModels.AnimeVM
-
+@using MovieHall.Helpers
 
 <div id="movieList" class="w-100">
 
@@ -7,29 +7,20 @@
         <div class="extra-fill">
             <div>
                 <div class="mb-1">
-                    <button type="button" class="btn btn-primary language @(Model.LanguageFilter == "ALL" ? "aktiv-btn" : "")" data-filter="ALL">
-                        ALL
-                    </button>
-                    <button type="button" class="btn btn-primary language @(Model.LanguageFilter == "DUB" ? "aktiv-btn" : "")" data-filter="DUB">
-                        DUB
-                    </button>
-                    <button type="button" class="btn btn-primary language @(Model.LanguageFilter == "SUB" ? "aktiv-btn" : "")" data-filter="SUB">
-                        SUB
-                    </button>
+                    @foreach (var dubOption in OptionHelper.ViewDubOptions)
+                    {
+                        <button type="button" class="btn btn-primary language @(Model.LanguageFilter == dubOption ? "aktiv-btn" : "")" data-filter="@dubOption">
+                            @dubOption
+                        </button>
+                    }
                 </div>
                 <div>
-                    <button type="button" class="btn btn-primary country @(Model.CountryFilter == "ALL" ? "aktiv-btn" : "")" data-filter="ALL">
-                        ALL
-                    </button>
-                    <button type="button" class="btn btn-primary country @(Model.CountryFilter == "JAPAN" ? "aktiv-btn" : "")" data-filter="JAPAN">
-                        JAPAN
-                    </button>
-                    <button type="button" class="btn btn-primary country @(Model.CountryFilter == "CHINA" ? "aktiv-btn" : "")" data-filter="CHINA">
-                        CHINA
-                    </button>
-                    <button type="button" class="btn btn-primary country @(Model.CountryFilter == "KOREA" ? "aktiv-btn" : "")" data-filter="KOREA">
-                        KOREA
-                    </button>
+                    @foreach (var langOption in OptionHelper.ViewLangOptions)
+                    {
+                        <button type="button" class="btn btn-primary country @(Model.CountryFilter == langOption ? "aktiv-btn" : "")" data-filter="@langOption">
+                            @langOption
+                        </button>
+                    }
                 </div>
             </div>
         </div>
@@ -69,25 +60,60 @@
             </div>
         </div>
     </div>
-
+    
     <div class="w-100 text-center">        
         @foreach (var anime in Model.Animes)
         {
             var info = Model.AnimeInfos.FirstOrDefault(i => i.AnimeId == anime.Id);
+            var averageEp = info.AllEpisodes / info.AllSeasons;
+            var playButton = "";
+            @if (info.Available == 0)
+            {
+                playButton = "play-buttonR.png";
+            }
+            else if (info.Available < info.AllSeasons && info.Available != 0)
+            {
+                playButton = "play-button.png";
+            }
+            else if (info.Available == info.AllSeasons)
+            {
+                playButton = "play-buttonG.png";
+            }
             <a class="item" asp-area="" asp-controller="ItemView" asp-action="Index" asp-route-id="@anime.Id" asp-route-type="Anime">
                 <img src="~/img/Anime_imgs/@anime.Img" alt="@anime.Name" />
                 <div class="itemName">
                     <p>@anime.Name</p>
                 </div>
                 <span class="p-0 px-1 itemInfoBox d-flex">
-                    <div class="itemInfoSup">
-                        <div class="itemInfoBack">
-                            <div class="itemInfoEp ps-1">S @info.AllSeasons</div>
+                    <div class="itemInfoSupBox itemInfoLeft">
+                        <div class="itemInfoSup itemInfoHide">
+                            <div class="itemInfoBack">
+                                <div class="itemInfoText ps-1">S @info.AllSeasons</div>
+                            </div>
+                        </div>
+                        <div class="itemInfoSup ms-1">
+                            <div class="itemInfoBack">
+                                <div class="itemInfoText ps-1">
+                                    Ep @averageEp
+                                </div>
+                            </div>
                         </div>
                     </div>
-                    <div class="itemInfoSup2 ms-1">
-                        <div class="itemInfoBack">
-                            <div class="itemInfoEp ps-1">S @info.AllSeasons</div>
+
+                    <div class="itemInfoSupBox itemInfoRight">
+                        <div class="itemInfoSup">
+                            <div class="itemInfoBack2">
+                                <div class="itemInfoText ps-1">
+                                    S @info.Available
+                                </div>
+                            </div>
+                        </div>
+                        <div class="itemInfoSup itemInfoHide ms-1">
+                            <div class="itemInfoBack2">
+                                <div class="itemInfoText ps-1">
+                                    <img class="" src="~/img/@playButton" />
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </span>

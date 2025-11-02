@@ -1,5 +1,5 @@
 ﻿@model MovieHall.SaveModel.SaveMovie
-
+@using MovieHall.Helpers
 
 <form id="editMovieForm" enctype="multipart/form-data" method="post">
     <div class="modal-header">
@@ -9,47 +9,33 @@
 
     <div class="modal-body">
         <input type="hidden" asp-for="Id" />
+        <input type="hidden" asp-for="ParentId" />
 
         <div class="mb-3">
-            <label asp-for="Name">Name</label>
+            <label asp-for="Name"><b>Name</b></label>
             <input asp-for="Name" class="form-control" />
-            <input asp-for="ParentId" type="hidden" />
+            <span asp-validation-for="Name" class="text-danger"></span>
         </div>
 
         <div class="mb-3">
-            <label asp-for="Buy">Kaufstatus</label>
+            <label asp-for="Buy"><b>Kaufstatus</b></label>
             <select asp-for="Buy" class="form-control">
-                @{
-                    var buyOptions = new Dictionary<int, string>
-                                {
-                                { 0, "Noch nicht" },
-                                { 1, "DVD" },
-                                { 2, "Blu-ray" },
-                                { 3, "3D" }
-                                };
-                    foreach (var option in buyOptions)
+                @foreach (var option in OptionHelper.BuyOptions)
+                {
+                    if (Model.Buy == option.Key)
                     {
-                        if (Model.Buy == option.Key)
-                        {
-                            <option value="@option.Key" selected>@option.Value</option>
-                        }
-                        else
-                        {
-                            <option value="@option.Key">@option.Value</option>
-                        }
+                        <option value="@option.Key" selected>@option.Value</option>
+                    }
+                    else
+                    {
+                        <option value="@option.Key">@option.Value</option>
                     }
                 }
             </select>
         </div>
 
-
         <div class="mb-3">
-            <label asp-for="Description">Beschreibung</label>
-            <textarea asp-for="Description" class="form-control"></textarea>
-        </div>
-
-        <div class="mb-3">
-            <label asp-for="Img">Bild</label>
+            <label asp-for="Img"><b>Bild</b></label>
             <input asp-for="Img" class="form-control" accept="image/*" type="file" />
 
             <input type="hidden" asp-for="ImgPath" />
@@ -59,76 +45,76 @@
                     <img src="~/img/Movie_imgs/@Model.ImgPath" alt="Aktuelles Bild" style="max-height: 150px; max-width: 100%;" />
                 </div>
             }
+            <span asp-validation-for="Img" class="text-danger"></span>
         </div>
 
         <div class="mb-3">
-            <label asp-for="FSK">FSK</label>
+            <label asp-for="FSK"><b>FSK</b></label>
             <select asp-for="FSK" class="form-control">
-                @{
-                    var fskOptions = new Dictionary<int, string>
-                                {
-                                { 0, "0+" },
-                                { 6, "6+" },
-                                { 12, "12+" },
-                                { 16, "16+" },
-                                { 18, "18+" }
-                                };
-                    foreach (var option in fskOptions)
+                @foreach (var option in OptionHelper.FSKOptions)
+                {
+                    if (Model.FSK == option.Key)
                     {
-                        if (Model.FSK == option.Key)
-                        {
-                            <option value="@option.Key" selected>@option.Value</option>
-                        }
-                        else
-                        {
-                            <option value="@option.Key">@option.Value</option>
-                        }
+                        <option value="@option.Key" selected>@option.Value</option>
+                    }
+                    else
+                    {
+                        <option value="@option.Key">@option.Value</option>
                     }
                 }
             </select>
+            <span asp-validation-for="FSK" class="text-danger"></span>
         </div>
 
         <div class="mb-3">
             <input type="checkbox" asp-for="Favorit" class="form-check-input" />
-            <label class="form-check-label" asp-for="Favorit">Favorit</label>
+            <label class="form-check-label" asp-for="Favorit"><b>Favorit</b></label>
         </div>
 
         <div class="mb-3">
-            <label asp-for="ReleaseDate">Veröffentlichungsdatum</label>
-            <input asp-for="ReleaseDate" type="date" class="form-control" />
+            <label><b>Veröffentlichungsdatum</b></label>
+            <select asp-for="ReleaseYear" class="form-control" name="ReleaseYear">
+                <option value="">Jahr wählen...</option>
+                @for (int year = OptionHelper.CurrentYear; year >= OptionHelper.StartYear; year--)
+                {
+                    if (year == Model.ReleaseYear)
+                    {
+                        <option value="@year" selected>@year</option>
+                            
+                    } else
+                    {
+                        <option value="@year">@year</option>
+                    }
+                }
+            </select>  
+            <span asp-validation-for="ReleaseYear" class="text-danger"></span>  
         </div>
 
         <div class="mb-3">
-            <label asp-for="Link">Link</label>
+            <label asp-for="Link"><b>Link</b></label>
             <input asp-for="Link" class="form-control" />
         </div>
 
         <div class="mb-3">
-            <label asp-for="Language">Sprache</label>
+            <label asp-for="Language"><b>Sprache</b></label>
             <select asp-for="Language" class="form-control">
-                @{
-                    var langOptions = new Dictionary<string, string>
-                                {
-                                { "de", "Deutsch" },
-                                { "en", "Englisch" }
-                                };
-                    foreach (var option in langOptions)
+                @foreach (var option in OptionHelper.MovielangOptions)
+                {
+                    if (Model.Language == option.Key)
                     {
-                        if (Model.Language == option.Key)
-                        {
-                            <option value="@option.Key" selected>@option.Value</option>
-                        }
-                        else
-                        {
-                            <option value="@option.Key">@option.Value</option>
-                        }
+                        <option value="@option.Key" selected>@option.Value</option>
+                    }
+                    else
+                    {
+                        <option value="@option.Key">@option.Value</option>
                     }
                 }
             </select>
+            <span asp-validation-for="Language" class="text-danger"></span>
         </div>
 
         <div class="checkbox-popup mb-3 row">
-            <label class="ps-0">Genres</label>
+            <label class="ps-0"><b>Genres</b></label>
             @{
                 var selectedGenreIds = Model.MovieGenres?.Select(g => g.GenreId).ToList() ?? new List<int>();
                 var genres = ViewBag.Genres as List<MovieHall.Models.Genre>;
@@ -145,10 +131,11 @@
                     </div>
                 }
             }
+            <span asp-validation-for="SelectedGenreIds" class="text-danger"></span>
         </div>
 
         <div class="checkbox-popup mb-3 row">
-            <label class="ps-0">Mit wem gesehen</label>
+            <label class="ps-0"><b>Mit wem gesehen</b></label>
             @{
                 var selectedWatchedIds = Model.MovieWatchedWiths?.Select(w => w.WatchedWithId).ToList() ?? new List<int>();
                 var watchedWiths = ViewBag.WatchedWiths as List<MovieHall.Models.WatchedWith>;
@@ -161,7 +148,13 @@
                     <label class="form-check-label" for="watched_@w.Id">@w.Name</label>
                 </div>
             }
-        </div>        
+        </div>  
+                
+
+        <div class="mb-3">
+            <label asp-for="Description"><b>Beschreibung</b></label>
+            <textarea asp-for="Description" class="form-control"></textarea>
+        </div>
     </div>
 
     <div class="modal-footer">

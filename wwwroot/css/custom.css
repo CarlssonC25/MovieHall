@@ -38,6 +38,10 @@ textarea {
   background-color: #1c1c1c !important;
 }
 
+.text-danger {
+  color: #a885da !important;
+}
+
 /*------------------ Body ------------------*/
 body {
   height: 100vh;
@@ -282,7 +286,7 @@ header {
   width: 14%;
   aspect-ratio: 80/120;
 }
-#anime .item img {
+#anime .item > img {
   vertical-align: top;
   position: absolute;
   overflow: hidden;
@@ -330,10 +334,25 @@ header {
   left: 0;
   align-content: center;
   font-size: 13px;
+  justify-content: space-between;
+  overflow: hidden;
+}
+#anime .item .itemInfoBox .itemInfoHide {
+  overflow: hidden;
+}
+#anime .item .itemInfoBox .itemInfoLeft,
+#anime .item .itemInfoBox .itemInfoSupBox {
+  width: 37%;
+  display: flex;
+}
+#anime .item .itemInfoBox .itemInfoLeft {
+  filter: drop-shadow(-1px 0px 1px #8c5ece);
+}
+#anime .item .itemInfoBox .itemInfoRight {
+  filter: drop-shadow(1px 0px 1px #777);
 }
 #anime .item .itemInfoBox .itemInfoSup {
-  overflow: hidden;
-  width: 13%;
+  width: 50%;
   align-content: center;
 }
 #anime .item .itemInfoBox .itemInfoSup .itemInfoBack {
@@ -344,15 +363,15 @@ header {
   transform: skew(154deg);
   border-radius: 2px;
   position: relative;
-  overflow: hidden;
   height: 20px;
   width: 100%;
   text-align: center;
   margin: 0;
   left: -4px;
   color: #ccc;
+  filter: drop-shadow(0px 0px 1px #8c5ece);
 }
-#anime .item .itemInfoBox .itemInfoSup .itemInfoBack .itemInfoEp {
+#anime .item .itemInfoBox .itemInfoSup .itemInfoBack .itemInfoText {
   -webkit-transform: skew(28deg);
   -moz-transform: skew(28deg);
   -o-transform: skew(28deg);
@@ -360,33 +379,35 @@ header {
   width: 85%;
   font-weight: 600;
 }
-#anime .item .itemInfoBox .itemInfoSup2 {
-  width: 13%;
-  align-content: center;
+#anime .item .itemInfoBox .itemInfoSup .itemInfoBack .itemInfoText img {
+  vertical-align: text-bottom;
 }
-#anime .item .itemInfoBox .itemInfoSup2 .itemInfoBack {
-  background-color: #502987;
+#anime .item .itemInfoBox .itemInfoSup .itemInfoBack2 {
+  background-color: #2e2e2e;
   -webkit-transform: skew(154deg);
   -moz-transform: skew(154deg);
   -o-transform: skew(154deg);
   transform: skew(154deg);
   border-radius: 2px;
   position: relative;
-  overflow: hidden;
   height: 20px;
   width: 100%;
   text-align: center;
   margin: 0;
-  left: -4px;
+  left: 4px;
   color: #ccc;
+  filter: drop-shadow(0px 0px 1px #777);
 }
-#anime .item .itemInfoBox .itemInfoSup2 .itemInfoBack .itemInfoEp {
+#anime .item .itemInfoBox .itemInfoSup .itemInfoBack2 .itemInfoText {
   -webkit-transform: skew(28deg);
   -moz-transform: skew(28deg);
   -o-transform: skew(28deg);
   transform: skew(28deg);
   width: 85%;
   font-weight: 600;
+}
+#anime .item .itemInfoBox .itemInfoSup .itemInfoBack2 img {
+  vertical-align: text-bottom;
 }
 #anime .extra-space .extra-fill {
   width: 42%;
@@ -416,9 +437,20 @@ header {
   background-color: #1c1c1c;
 }
 
-@media only screen and (max-width: 1530px) {
-  #anime .item .itemInfoBox .itemInfoSup, #anime .item .itemInfoBox .itemInfoSup2 {
-    width: 16%;
+@media only screen and (max-width: 1860px) {
+  #anime .item .itemInfoBox .itemInfoLeft {
+    width: 40% !important;
+  }
+  #anime .item .itemInfoBox .itemInfoLeft > div:nth-child(1) {
+    width: 45% !important;
+  }
+  #anime .item .itemInfoBox .itemInfoLeft > div:nth-child(2) {
+    width: 55% !important;
+  }
+}
+@media only screen and (max-width: 1544px) {
+  #anime .item .itemInfoBox .itemInfoLeft {
+    width: 46% !important;
   }
 }
 /*------------------ Movie ------------------*/
@@ -435,7 +467,7 @@ header {
   width: 14%;
   aspect-ratio: 80/120;
 }
-#movie .item img {
+#movie .item > img {
   vertical-align: top;
   position: absolute;
   overflow: hidden;
@@ -447,7 +479,7 @@ header {
   border-radius: 5px;
   box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3), 0 0 40px rgba(0, 0, 0, 0.1) inset;
 }
-#movie .item div {
+#movie .item .itemName {
   background: rgba(0, 0, 0, 0.7);
   border-radius: 4px 4px 0 0;
   position: absolute;
@@ -462,17 +494,17 @@ header {
   -o-transition: all 0.3s ease;
   transition: all 0.3s ease;
 }
-#movie .item div p {
+#movie .item .itemName p {
   position: relative;
   font-size: 20px;
   padding: 5px;
   top: 100px;
   color: #ccc;
 }
-#movie .item div:hover {
+#movie .item .itemName:hover {
   opacity: 1;
 }
-#movie .item span {
+#movie .item .itemInfoBox {
   background: rgba(0, 0, 0, 0.7);
   border-radius: 0 0 4px 4px;
   position: absolute;
@@ -481,6 +513,82 @@ header {
   aspect-ratio: 80/8;
   bottom: 0;
   left: 0;
+  align-content: center;
+  font-size: 13px;
+  justify-content: space-between;
+  overflow: hidden;
+}
+#movie .item .itemInfoBox .itemInfoHide {
+  overflow: hidden;
+}
+#movie .item .itemInfoBox .itemInfoLeft,
+#movie .item .itemInfoBox .itemInfoSupBox {
+  width: 35%;
+  display: flex;
+}
+#movie .item .itemInfoBox .itemInfoLeft {
+  filter: drop-shadow(-1px 0px 1px #8c5ece);
+}
+#movie .item .itemInfoBox .itemInfoRight {
+  filter: drop-shadow(1px 0px 1px #777);
+}
+#movie .item .itemInfoBox .itemInfoSup {
+  width: 50%;
+  align-content: center;
+}
+#movie .item .itemInfoBox .itemInfoSup .itemInfoBack {
+  background-color: #502987;
+  -webkit-transform: skew(154deg);
+  -moz-transform: skew(154deg);
+  -o-transform: skew(154deg);
+  transform: skew(154deg);
+  border-radius: 2px;
+  position: relative;
+  height: 20px;
+  width: 100%;
+  text-align: center;
+  margin: 0;
+  left: -4px;
+  color: #ccc;
+  filter: drop-shadow(0px 0px 1px #8c5ece);
+}
+#movie .item .itemInfoBox .itemInfoSup .itemInfoBack .itemInfoText {
+  -webkit-transform: skew(28deg);
+  -moz-transform: skew(28deg);
+  -o-transform: skew(28deg);
+  transform: skew(28deg);
+  width: 85%;
+  font-weight: 600;
+}
+#movie .item .itemInfoBox .itemInfoSup .itemInfoBack .itemInfoText img {
+  vertical-align: text-bottom;
+}
+#movie .item .itemInfoBox .itemInfoSup .itemInfoBack2 {
+  background-color: #2e2e2e;
+  -webkit-transform: skew(154deg);
+  -moz-transform: skew(154deg);
+  -o-transform: skew(154deg);
+  transform: skew(154deg);
+  border-radius: 2px;
+  position: relative;
+  height: 20px;
+  width: 100%;
+  text-align: center;
+  margin: 0;
+  left: 4px;
+  color: #ccc;
+  filter: drop-shadow(0px 0px 1px #777);
+}
+#movie .item .itemInfoBox .itemInfoSup .itemInfoBack2 .itemInfoText {
+  -webkit-transform: skew(28deg);
+  -moz-transform: skew(28deg);
+  -o-transform: skew(28deg);
+  transform: skew(28deg);
+  width: 85%;
+  font-weight: 600;
+}
+#movie .item .itemInfoBox .itemInfoSup .itemInfoBack2 img {
+  vertical-align: text-bottom;
 }
 #movie .extra-space .extra select {
   width: 100px;
@@ -503,6 +611,27 @@ header {
   margin-top: -5px;
 }
 
+@media only screen and (max-width: 1860px) {
+  #movie .item .itemInfoBox .itemInfoLeft {
+    width: 40% !important;
+  }
+  #movie .item .itemInfoBox .itemInfoLeft > div:nth-child(1) {
+    width: 45% !important;
+  }
+  #movie .item .itemInfoBox .itemInfoLeft > div:nth-child(2) {
+    width: 55% !important;
+  }
+}
+@media only screen and (max-width: 1544px) {
+  #movie .item .itemInfoBox .itemInfoLeft {
+    width: 45% !important;
+  }
+}
+@media only screen and (max-width: 1350px) {
+  #movie .item .itemInfoBox .itemInfoSup {
+    display: none;
+  }
+}
 /*------------------ Settings ------------------*/
 #genre table,
 #setting table,
@@ -804,7 +933,7 @@ header {
   width: 14%;
   aspect-ratio: 80/120;
 }
-#SearchContent .search-anime .item img {
+#SearchContent .search-anime .item > img {
   vertical-align: top;
   position: absolute;
   overflow: hidden;
@@ -816,7 +945,7 @@ header {
   border-radius: 5px;
   box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3), 0 0 40px rgba(0, 0, 0, 0.1) inset;
 }
-#SearchContent .search-anime .item div {
+#SearchContent .search-anime .item .itemName {
   background: rgba(0, 0, 0, 0.7);
   border-radius: 4px 4px 0 0;
   position: absolute;
@@ -831,17 +960,17 @@ header {
   -o-transition: all 0.3s ease;
   transition: all 0.3s ease;
 }
-#SearchContent .search-anime .item div p {
+#SearchContent .search-anime .item .itemName p {
   position: relative;
   font-size: 20px;
   padding: 5px;
   top: 100px;
   color: #ccc;
 }
-#SearchContent .search-anime .item div:hover {
+#SearchContent .search-anime .item .itemName:hover {
   opacity: 1;
 }
-#SearchContent .search-anime .item span {
+#SearchContent .search-anime .item .itemInfoBox {
   background: rgba(0, 0, 0, 0.7);
   border-radius: 0 0 4px 4px;
   position: absolute;
@@ -850,6 +979,82 @@ header {
   aspect-ratio: 80/8;
   bottom: 0;
   left: 0;
+  align-content: center;
+  font-size: 13px;
+  justify-content: space-between;
+  overflow: hidden;
+}
+#SearchContent .search-anime .item .itemInfoBox .itemInfoHide {
+  overflow: hidden;
+}
+#SearchContent .search-anime .item .itemInfoBox .itemInfoLeft,
+#SearchContent .search-anime .item .itemInfoBox .itemInfoSupBox {
+  width: 35%;
+  display: flex;
+}
+#SearchContent .search-anime .item .itemInfoBox .itemInfoLeft {
+  filter: drop-shadow(-1px 0px 1px #8c5ece);
+}
+#SearchContent .search-anime .item .itemInfoBox .itemInfoRight {
+  filter: drop-shadow(1px 0px 1px #777);
+}
+#SearchContent .search-anime .item .itemInfoBox .itemInfoSup {
+  width: 50%;
+  align-content: center;
+}
+#SearchContent .search-anime .item .itemInfoBox .itemInfoSup .itemInfoBack {
+  background-color: #502987;
+  -webkit-transform: skew(154deg);
+  -moz-transform: skew(154deg);
+  -o-transform: skew(154deg);
+  transform: skew(154deg);
+  border-radius: 2px;
+  position: relative;
+  height: 20px;
+  width: 100%;
+  text-align: center;
+  margin: 0;
+  left: -4px;
+  color: #ccc;
+  filter: drop-shadow(0px 0px 1px #8c5ece);
+}
+#SearchContent .search-anime .item .itemInfoBox .itemInfoSup .itemInfoBack .itemInfoText {
+  -webkit-transform: skew(28deg);
+  -moz-transform: skew(28deg);
+  -o-transform: skew(28deg);
+  transform: skew(28deg);
+  width: 85%;
+  font-weight: 600;
+}
+#SearchContent .search-anime .item .itemInfoBox .itemInfoSup .itemInfoBack .itemInfoText img {
+  vertical-align: text-bottom;
+}
+#SearchContent .search-anime .item .itemInfoBox .itemInfoSup .itemInfoBack2 {
+  background-color: #2e2e2e;
+  -webkit-transform: skew(154deg);
+  -moz-transform: skew(154deg);
+  -o-transform: skew(154deg);
+  transform: skew(154deg);
+  border-radius: 2px;
+  position: relative;
+  height: 20px;
+  width: 100%;
+  text-align: center;
+  margin: 0;
+  left: 4px;
+  color: #ccc;
+  filter: drop-shadow(0px 0px 1px #777);
+}
+#SearchContent .search-anime .item .itemInfoBox .itemInfoSup .itemInfoBack2 .itemInfoText {
+  -webkit-transform: skew(28deg);
+  -moz-transform: skew(28deg);
+  -o-transform: skew(28deg);
+  transform: skew(28deg);
+  width: 85%;
+  font-weight: 600;
+}
+#SearchContent .search-anime .item .itemInfoBox .itemInfoSup .itemInfoBack2 img {
+  vertical-align: text-bottom;
 }
 #SearchContent .search-movie {
   padding: 0 8px;
@@ -861,7 +1066,7 @@ header {
   width: 14%;
   aspect-ratio: 80/120;
 }
-#SearchContent .search-movie .item img {
+#SearchContent .search-movie .item > img {
   vertical-align: top;
   position: absolute;
   overflow: hidden;
@@ -873,7 +1078,7 @@ header {
   border-radius: 5px;
   box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3), 0 0 40px rgba(0, 0, 0, 0.1) inset;
 }
-#SearchContent .search-movie .item div {
+#SearchContent .search-movie .item .itemName {
   background: rgba(0, 0, 0, 0.7);
   border-radius: 4px 4px 0 0;
   position: absolute;
@@ -888,17 +1093,17 @@ header {
   -o-transition: all 0.3s ease;
   transition: all 0.3s ease;
 }
-#SearchContent .search-movie .item div p {
+#SearchContent .search-movie .item .itemName p {
   position: relative;
   font-size: 20px;
   padding: 5px;
   top: 100px;
   color: #ccc;
 }
-#SearchContent .search-movie .item div:hover {
+#SearchContent .search-movie .item .itemName:hover {
   opacity: 1;
 }
-#SearchContent .search-movie .item span {
+#SearchContent .search-movie .item .itemInfoBox {
   background: rgba(0, 0, 0, 0.7);
   border-radius: 0 0 4px 4px;
   position: absolute;
@@ -907,4 +1112,102 @@ header {
   aspect-ratio: 80/8;
   bottom: 0;
   left: 0;
+  align-content: center;
+  font-size: 13px;
+  justify-content: space-between;
+  overflow: hidden;
+}
+#SearchContent .search-movie .item .itemInfoBox .itemInfoHide {
+  overflow: hidden;
+}
+#SearchContent .search-movie .item .itemInfoBox .itemInfoLeft,
+#SearchContent .search-movie .item .itemInfoBox .itemInfoSupBox {
+  width: 35%;
+  display: flex;
+}
+#SearchContent .search-movie .item .itemInfoBox .itemInfoLeft {
+  filter: drop-shadow(-1px 0px 1px #8c5ece);
+}
+#SearchContent .search-movie .item .itemInfoBox .itemInfoRight {
+  filter: drop-shadow(1px 0px 1px #777);
+}
+#SearchContent .search-movie .item .itemInfoBox .itemInfoSup {
+  width: 50%;
+  align-content: center;
+}
+#SearchContent .search-movie .item .itemInfoBox .itemInfoSup .itemInfoBack {
+  background-color: #502987;
+  -webkit-transform: skew(154deg);
+  -moz-transform: skew(154deg);
+  -o-transform: skew(154deg);
+  transform: skew(154deg);
+  border-radius: 2px;
+  position: relative;
+  height: 20px;
+  width: 100%;
+  text-align: center;
+  margin: 0;
+  left: -4px;
+  color: #ccc;
+  filter: drop-shadow(0px 0px 1px #8c5ece);
+}
+#SearchContent .search-movie .item .itemInfoBox .itemInfoSup .itemInfoBack .itemInfoText {
+  -webkit-transform: skew(28deg);
+  -moz-transform: skew(28deg);
+  -o-transform: skew(28deg);
+  transform: skew(28deg);
+  width: 85%;
+  font-weight: 600;
+}
+#SearchContent .search-movie .item .itemInfoBox .itemInfoSup .itemInfoBack .itemInfoText img {
+  vertical-align: text-bottom;
+}
+#SearchContent .search-movie .item .itemInfoBox .itemInfoSup .itemInfoBack2 {
+  background-color: #2e2e2e;
+  -webkit-transform: skew(154deg);
+  -moz-transform: skew(154deg);
+  -o-transform: skew(154deg);
+  transform: skew(154deg);
+  border-radius: 2px;
+  position: relative;
+  height: 20px;
+  width: 100%;
+  text-align: center;
+  margin: 0;
+  left: 4px;
+  color: #ccc;
+  filter: drop-shadow(0px 0px 1px #777);
+}
+#SearchContent .search-movie .item .itemInfoBox .itemInfoSup .itemInfoBack2 .itemInfoText {
+  -webkit-transform: skew(28deg);
+  -moz-transform: skew(28deg);
+  -o-transform: skew(28deg);
+  transform: skew(28deg);
+  width: 85%;
+  font-weight: 600;
+}
+#SearchContent .search-movie .item .itemInfoBox .itemInfoSup .itemInfoBack2 img {
+  vertical-align: text-bottom;
+}
+
+@media only screen and (max-width: 1860px) {
+  #SearchContent .item .itemInfoBox .itemInfoLeft {
+    width: 40% !important;
+  }
+  #SearchContent .item .itemInfoBox .itemInfoLeft > div:nth-child(1) {
+    width: 45% !important;
+  }
+  #SearchContent .item .itemInfoBox .itemInfoLeft > div:nth-child(2) {
+    width: 55% !important;
+  }
+}
+@media only screen and (max-width: 1544px) {
+  #SearchContent .item .itemInfoBox .itemInfoLeft {
+    width: 45% !important;
+  }
+}
+@media only screen and (max-width: 1380px) {
+  #SearchContent .item .itemInfoBox .itemInfoSup {
+    display: none;
+  }
 }

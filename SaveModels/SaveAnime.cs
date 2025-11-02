@@ -7,23 +7,38 @@ namespace MovieHall.SaveModel
     public class SaveAnime
     {
         public int Id { get; set; }
-
-        [Required]
         public int Top { get; set; }
 
-        [Required]
+        [Required(ErrorMessage = "Name ist ein Pflichtfeld.")]
         public string Name { get; set; }
+
+        [Required(ErrorMessage = "Orginal Name ist ein Pflichtfeld.")]
         public string? Orginal_Name { get; set; }
         public string? Description { get; set; }
         public int Buy { get; set; }
         public IFormFile? Img { get; set; }
         public string? ImgPath { get; set; }
+
+        [Required(ErrorMessage = "Link ist ein Pflichtfeld.")]
         public string? Link { get; set; }
-        public DateTime ReleaseDate { get; set; }
+        public DateTime? ReleaseDate { get; set; }
+
+        [Required(ErrorMessage = "Jahr ist ein Pflichtfeld.")]
+        public int? ReleaseYear { get; set; }
+
+        [Required(ErrorMessage = "Monat ist ein Pflichtfeld.")]
+        public int? ReleaseMonth { get; set; }
+
+        [Required(ErrorMessage = "Episoden ist ein Pflichtfeld.")]
         public int? Episodes { get; set; }
-        public List<string> Language { get; set; } = new List<string>();
+
+        [Required(ErrorMessage = "Sprache ist ein Pflichtfeld.")]
+        public List<string> Language { get; set; }
         public int WhatTimes { get; set; }
+
+        [Required(ErrorMessage = "Land ist ein Pflichtfeld.")]
         public string? Country { get; set; }
+
 
         // Fortsetzung (Verweis auf einen anderen Movie)
         public int? ParentId { get; set; }
@@ -31,7 +46,8 @@ namespace MovieHall.SaveModel
         public Anime? Parent { get; set; }
 
         // Viele-zu-viele
-        public List<int> SelectedGenreIds { get; set; } = new();
+        [Required(ErrorMessage = "Genres ist ein Pflichtfeld.")]
+        public List<int> SelectedGenreIds { get; set; }
         public List<int> SelectedWatchedWithIds { get; set; } = new();
 
         // Viele-zu-viele

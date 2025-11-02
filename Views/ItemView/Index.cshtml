@@ -146,12 +146,12 @@
                                 <b>Besitz:</b> @buyOptions[Model.Buy] <br />
                                 <b>Sprache:</b> @Model.Language <br />
                                 @if (Model.Favorit != null)
-                                {                                    
+                                {
                                     <b>Veröffentlicht:</b> @Model.ReleaseDate.ToString("yyyy") <br />
                                 }
                                 @if (Model.Country != null)
                                 {
-                                    <b>Veröffentlicht:</b> @Model.ReleaseDate.ToString("MM'-'yyyy") <br />
+                                    <b>Veröffentlicht:</b> @Model.ReleaseDate.ToString("MM'.'yyyy") <br />
                                     <b>Land:</b> @Model.Country
                                 }
                             </p>
@@ -219,7 +219,7 @@
 
                         <div class="mini-info d-flex justify-content-between px-4 py-2 mb-3">
                             <div class="text-center">
-                                <b>Anime Folgen</b> <br />
+                                <b>Anime Staffeln</b> <br />
                                 @itemFolgen <br />
                                 <b>Anime Episoden</b> <br />
                                 @itemEpisoden

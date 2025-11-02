@@ -112,7 +112,7 @@ namespace MovieHall.Controllers
             // retrun Model
             var sum = await _context.Animes.CountAsync();
             var eps = (int)await _context.Animes.SumAsync(a => a.Episodes);
-            var time = 20 * eps;
+            var totalEpisodes = await _context.Animes.Where(a => a.Episodes.HasValue).SumAsync(a => a.Episodes.Value * a.WhatTimes);
             var viewModel = new AnimeVM
             {
                 Animes = animes,
@@ -123,7 +123,8 @@ namespace MovieHall.Controllers
                 LanguageFilter = Lfilter,
                 RankFilter = Rfilter,
                 Notes = notes,
-                AnimeTime = time / 60 + "H",
+                AnimeTime = (eps * 20) / 60 + "H",
+                WatchTime = (totalEpisodes * 20) / 60 + "H",
 
                 AnimeSum = sum,
                 AnimeEpSum = eps,
@@ -163,16 +164,6 @@ namespace MovieHall.Controllers
                 return PartialView("~/Views/Anime/_CreatePartial.cshtml", svAnime);
             }
 
-            if (svAnime.SelectedGenreIds.Count == 0)
-            {
-                ModelState.AddModelError("AnimeGenres", "Mindestens ein Genre muss ausgewählt werden.");
-
-                ViewBag.Genres = Genres;
-                ViewBag.WatchedWith = WatchedWith;
-
-                return PartialView("~/Views/Anime/_CreatePartial.cshtml", svAnime);
-            }
-
             var anime = new Anime
             {
                 Name = svAnime.Name,
@@ -180,7 +171,7 @@ namespace MovieHall.Controllers
                 Top = svAnime.Top,
                 Buy = svAnime.Buy,
                 Description = svAnime.Description,
-                ReleaseDate = svAnime.ReleaseDate,
+                ReleaseDate = svAnime.ReleaseDate ?? new DateTime((int)svAnime.ReleaseYear, (int)svAnime.ReleaseMonth, 1),
                 Link = svAnime.Link,
                 Episodes = svAnime.Episodes,
                 Language = string.Join(", ", svAnime.Language.ToArray()),
@@ -219,10 +210,18 @@ namespace MovieHall.Controllers
                 {
                     await svAnime.Img.CopyToAsync(stream);
                 }
+            } else
+            {
+                ModelState.AddModelError(nameof(svAnime.Img), "Bild ist ein Pflichtfeld");
+
+                ViewBag.Genres = Genres;
+                ViewBag.WatchedWith = WatchedWith;
+
+                return PartialView("~/Views/Anime/_CreatePartial.cshtml", svAnime);
             }
 
-                foreach (var genreId in svAnime.SelectedGenreIds)
-                    anime.AnimeGenres.Add(new AnimeGenre { GenreId = genreId });
+            foreach (var genreId in svAnime.SelectedGenreIds)
+                anime.AnimeGenres.Add(new AnimeGenre { GenreId = genreId });
 
             foreach (var wId in svAnime.SelectedWatchedWithIds)
                 anime.AnimeWatchedWiths.Add(new AnimeWatchedWith { WatchedWithId = wId });
@@ -258,7 +257,8 @@ namespace MovieHall.Controllers
                 Top = animeDb.Top,
                 Buy = animeDb.Buy,
                 Description = animeDb.Description,
-                ReleaseDate = animeDb.ReleaseDate,
+                ReleaseYear = animeDb.ReleaseDate.Year, 
+                ReleaseMonth = animeDb.ReleaseDate.Month,
                 ImgPath = animeDb.Img,
                 Link = animeDb.Link,
                 Episodes = animeDb.Episodes,
@@ -315,7 +315,7 @@ namespace MovieHall.Controllers
             dbAnime.Top = svAnime.Top;
             dbAnime.Episodes = svAnime.Episodes;
             dbAnime.Buy = svAnime.Buy;
-            dbAnime.ReleaseDate = svAnime.ReleaseDate;
+            dbAnime.ReleaseDate = svAnime.ReleaseDate ?? new DateTime((int)svAnime.ReleaseYear, (int)svAnime.ReleaseMonth, 1);
             dbAnime.ParentId = svAnime.ParentId;
             dbAnime.WhatTimes = svAnime.WhatTimes;
             dbAnime.Country = svAnime.Country;

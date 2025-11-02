@@ -12,18 +12,20 @@ namespace MovieHall.ViewModels
         public int? FilterDate { get; set; }
         public bool FilterParents { get; set; }
 
+        public IEnumerable<SearchViewInfos> ItemInfos { get; set; } = Enumerable.Empty<SearchViewInfos>();
+
         //only view
         public List<Genre> Genres { get; set; }
 
         // Anime
         public string? FilterContry { get; set; }
         public string? FilterWatchWitch { get; set; }
-        public List<Anime>? Animes { get; set; }
+        public IEnumerable<Anime>? Animes { get; set; }
 
 
         // Movie
         public int? FilterFSK { get; set; }
-        public List<Movie>? Movies { get; set; }
+        public IEnumerable<Movie>? Movies { get; set; }
 
 
     }

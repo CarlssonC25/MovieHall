@@ -1,17 +1,56 @@
 ﻿@model MovieHall.ViewModels.MovieVM
+@using MovieHall.Helpers
 
 <div id="movieList" class="w-100">
 
     <div class="w-100 text-center">
         @foreach (var movie in Model.Movies)
         {
+            var info = Model.MovieInfos.FirstOrDefault(i => i.MovieId == movie.Id);
+            var playButton = "";
+            @if (info.Available == 0)
+            {
+                playButton = "play-buttonR.png";
+            }
+            else if (info.Available < info.AllSeasons && info.Available != 0)
+            {
+                playButton = "play-button.png";
+            }
+            else if (info.Available == info.AllSeasons)
+            {
+                playButton = "play-buttonG.png";
+            }
             <a class="item" asp-area="" asp-controller="ItemView" asp-action="Index" asp-route-id="@movie.Id" asp-route-type="Movie">
                 <img src="~/img/Movie_imgs/@movie.Img" alt="@movie.Name" />
-                <div>
+                <div class="itemName">
                     <p>@movie.Name</p>
                 </div>
-                <span>
-                    <i class="fa fa-good" data-toggle="tooltip" title="HD Quality"></i>
+                <span class="p-0 px-1 itemInfoBox d-flex">
+                    <div class="itemInfoSupBox itemInfoLeft">
+                        <div class="itemInfoSup itemInfoHide">
+                            <div class="itemInfoBack">
+                                <div class="itemInfoText ps-1">S @info.AllSeasons</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="itemInfoSupBox itemInfoRight">
+                        <div class="itemInfoSup">
+                            <div class="itemInfoBack2">
+                                <div class="itemInfoText ps-1">
+                                    S @info.Available
+                                </div>
+                            </div>
+                        </div>
+                        <div class="itemInfoSup itemInfoHide ms-1">
+                            <div class="itemInfoBack2">
+                                <div class="itemInfoText ps-1">
+                                    <img class="" src="~/img/@playButton" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
                 </span>
             </a>
         }
@@ -22,13 +61,10 @@
         </div>
         <div class="extra">
             <select class="form-control" id="FSK-search" name="spezial-search">
-                <option value="All" selected="@(Model.CurrentFilter == "All")">Alle</option>
-                <option value="0" selected="@(Model.CurrentFilter == "0")">0+</option>
-                <option value="6" selected="@(Model.CurrentFilter == "6")">6+</option>
-                <option value="12" selected="@(Model.CurrentFilter == "12")">12+</option>
-                <option value="16" selected="@(Model.CurrentFilter == "16")">16+</option>
-                <option value="18" selected="@(Model.CurrentFilter == "18")">18+</option>
-                <option value="Favorit" selected="@(Model.CurrentFilter == "Favorit")">Favorit</option>
+                @foreach (var fskOtrion in OptionHelper.ViewFSKOptions)
+                {
+                    <option value="@fskOtrion" selected="@(Model.CurrentFilter == fskOtrion)">@fskOtrion</option>
+                }
             </select>
         </div>
     </div>

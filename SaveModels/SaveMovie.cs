@@ -8,17 +8,24 @@ namespace MovieHall.SaveModel
     {
         public int Id { get; set; }
 
-        [Required]
+        [Required(ErrorMessage = "Name ist ein Pflichtfeld.")]
         public string Name { get; set; }
 
         public int Buy { get; set; }
         public string? Description { get; set; }
         public IFormFile? Img { get; set; }
         public string? ImgPath { get; set; }
+
+        [Required(ErrorMessage = "FSK ist ein Pflichtfeld.")]
         public int FSK { get; set; }
         public bool Favorit { get; set; }
-        public DateTime ReleaseDate { get; set; }
+        public DateTime? ReleaseDate { get; set; }
+
+        [Required(ErrorMessage = "Name ist ein Pflichtfeld.")]
+        public int? ReleaseYear { get; set; }
         public string? Link { get; set; }
+
+        [Required(ErrorMessage = "Sprache ist ein Pflichtfeld.")]
         public string Language { get; set; }
 
 
@@ -29,7 +36,8 @@ namespace MovieHall.SaveModel
 
 
         // Viele-zu-viele
-        public List<int> SelectedGenreIds { get; set; } = new();
+        [Required(ErrorMessage = "Genre ist ein Pflichtfeld.")]
+        public List<int> SelectedGenreIds { get; set; }
         public List<int> SelectedWatchedWithIds { get; set; } = new();
 
 

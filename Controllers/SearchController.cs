@@ -1,7 +1,9 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using MovieHall.Data;
+using MovieHall.Models;
 using MovieHall.ViewModels;
+using System.Xml.Linq;
 
 namespace MovieHall.Controllers
 {
@@ -19,7 +21,9 @@ namespace MovieHall.Controllers
             {
                 Type = type,
                 Genres = await _context.Genre.OrderBy(g => g.Name).ToListAsync(),
-                SearchString = query
+                SearchString = query,
+
+                FilterParents = true                
             };
 
             if (type == "Anime")
@@ -44,6 +48,35 @@ namespace MovieHall.Controllers
                 .Where(m => m.ParentId == null).OrderByDescending(m => m.ReleaseDate)
                 .ToListAsync();
 
+                //anime Infos
+                var animeInfos = new List<SearchViewInfos>();
+
+                foreach (var parent in search.Animes)
+                {
+                    var children = await _context.Animes
+                        .Where(c => c.ParentId == parent.Id)
+                        .ToListAsync();
+
+                    var allRelated = new List<Anime> { parent };
+                    allRelated.AddRange(children);
+
+                    int allEpisodes = allRelated.Sum(a => a.Episodes ?? 0);
+
+                    int allSeasons = allRelated.Count;
+
+                    int available = allRelated.Count(a => a.Buy > 0);
+
+                    animeInfos.Add(new SearchViewInfos
+                    {
+                        ItemId = parent.Id,
+                        AllEpisodes = allEpisodes,
+                        AllSeasons = allSeasons,
+                        Available = available
+                    });
+                }
+
+                search.ItemInfos = animeInfos;
+
             } else if (type == "Movie")
             {
                 var yearOptions = await _context.Movies
@@ -60,6 +93,32 @@ namespace MovieHall.Controllers
                 .Include(m => m.MovieWatchedWiths).ThenInclude(mw => mw.WatchedWith)
                 .Where(m => m.ParentId == null).OrderByDescending(m => m.ReleaseDate)
                 .ToListAsync();
+
+                //movie Infos
+                var movieInfos = new List<SearchViewInfos>();
+
+                foreach (var parent in search.Movies)
+                {
+                    var children = await _context.Movies
+                        .Where(c => c.ParentId == parent.Id)
+                        .ToListAsync();
+
+                    var allRelated = new List<Movie> { parent };
+                    allRelated.AddRange(children);
+
+                    int allSeasons = allRelated.Count;
+
+                    int available = allRelated.Count(a => a.Buy > 0);
+
+                    movieInfos.Add(new SearchViewInfos
+                    {
+                        ItemId = parent.Id,
+                        AllSeasons = allSeasons,
+                        Available = available
+                    });
+                }
+
+                search.ItemInfos = movieInfos;
             }
 
             return View(search);
@@ -125,6 +184,76 @@ namespace MovieHall.Controllers
                     .OrderByDescending(a => a.ReleaseDate)
                     .ToListAsync();
 
+
+                //anime Infos
+                if (filter.FilterParents)
+                {
+                    var animeInfos = new List<SearchViewInfos>();
+
+                    foreach (var parent in search.Animes)
+                    {
+                        var children = await _context.Animes
+                            .Where(c => c.ParentId == parent.Id)
+                            .ToListAsync();
+
+                        var allRelated = new List<Anime> { parent };
+                        allRelated.AddRange(children);
+
+                        int allEpisodes = allRelated.Sum(a => a.Episodes ?? 0);
+
+                        int allSeasons = allRelated.Count();
+
+                        int available = allRelated.Count(a => a.Buy > 0);
+
+                        animeInfos.Add(new SearchViewInfos
+                        {
+                            ItemId = parent.Id,
+                            AllEpisodes = allEpisodes,
+                            AllSeasons = allSeasons,
+                            Available = available
+                        });
+                    }
+
+                    search.ItemInfos = animeInfos;
+                }
+                else
+                {
+                    var animeInfos = new List<SearchViewInfos>();
+
+                    foreach (var anime in search.Animes)
+                    {
+                        var children = new List<Anime>();
+
+
+                        if (anime.ParentId != null)
+                        {
+                            children = await _context.Animes
+                            .Where(c => c.ParentId == anime.ParentId)
+                            .ToListAsync();
+                        }
+                        else
+                        {
+                            children = await _context.Animes
+                            .Where(c => c.ParentId == anime.Id)
+                            .ToListAsync();
+                        }
+
+                        var allRelated = new List<Anime> { anime };
+                        allRelated.AddRange(children);
+
+                        int available = anime.Buy;
+                        int allSeasons = allRelated.Count();
+
+                        animeInfos.Add(new SearchViewInfos
+                        {
+                            ItemId = anime.Id,
+                            Available = available,
+                            AllSeasons = allSeasons
+                        });
+                    }
+
+                    search.ItemInfos = animeInfos;
+                }
             }
             else if (filter.Type == "Movie")
             {
@@ -165,8 +294,76 @@ namespace MovieHall.Controllers
                 search.Movies = await query
                     .OrderByDescending(a => a.ReleaseDate)
                     .ToListAsync();
-            }
 
+
+                //movie Infos
+                if (filter.FilterParents)
+                {
+                    var movieInfos = new List<SearchViewInfos>();
+
+                    foreach (var parent in search.Movies)
+                    {
+                        var children = await _context.Movies
+                            .Where(c => c.ParentId == parent.Id)
+                            .ToListAsync();
+
+                        var allRelated = new List<Movie> { parent };
+                        allRelated.AddRange(children);
+
+                        int allSeasons = allRelated.Count();
+
+                        int available = allRelated.Count(a => a.Buy > 0);
+
+                        movieInfos.Add(new SearchViewInfos
+                        {
+                            ItemId = parent.Id,
+                            AllSeasons = allSeasons,
+                            Available = available
+                        });
+                    }
+
+                    search.ItemInfos = movieInfos;
+                }
+                else
+                {
+                    var movieInfos = new List<SearchViewInfos>();
+
+                    foreach (var movie in search.Movies)
+                    {
+                        var children = new List<Movie>();
+
+                        if (movie.ParentId != null)
+                        {
+                            children = await _context.Movies
+                            .Where(c => c.ParentId == movie.ParentId)
+                            .ToListAsync();
+                        }
+                        else
+                        {
+                            children = await _context.Movies
+                            .Where(c => c.ParentId == movie.Id)
+                            .ToListAsync();
+                        }
+
+                        var allRelated = new List<Movie> { movie };
+                        allRelated.AddRange(children);
+
+                        int allSeasons = allRelated.Count();
+
+
+                        int available = movie.Buy;
+
+                        movieInfos.Add(new SearchViewInfos
+                        {
+                            ItemId = movie.Id,
+                            AllSeasons = allSeasons,
+                            Available = available,
+                        });
+                    }
+
+                    search.ItemInfos = movieInfos;
+                }
+            }
 
             return View(search);
         }
