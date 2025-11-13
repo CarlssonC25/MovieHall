@@ -23,8 +23,9 @@
     background: $back-gray-lightlight;
 }
 
-img {
+img, svg {
     border-radius: $base-border-radius;
+    vertical-align: baseline;
 }
 
 a {

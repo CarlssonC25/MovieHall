@@ -12,8 +12,8 @@ using MovieHall.Data;
 namespace MovieHall.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20250921174743_AddCountryToAnime")]
-    partial class AddCountryToAnime
+    [Migration("20251112025032_InitialCreate")]
+    partial class InitialCreate
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -95,6 +95,28 @@ namespace MovieHall.Migrations
                     b.HasIndex("GenreId");
 
                     b.ToTable("AnimeGenres");
+                });
+
+            modelBuilder.Entity("MovieHall.Models.AnimeNote", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("AnimeId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Comment")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("AnimeId");
+
+                    b.ToTable("AnimeNotes");
                 });
 
             modelBuilder.Entity("MovieHall.Models.AnimeWatchedWith", b =>
@@ -196,6 +218,28 @@ namespace MovieHall.Migrations
                     b.ToTable("MovieGenres");
                 });
 
+            modelBuilder.Entity("MovieHall.Models.MovieNote", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Comment")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("MovieId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("MovieId");
+
+                    b.ToTable("MovieNotes");
+                });
+
             modelBuilder.Entity("MovieHall.Models.MovieWatchedWith", b =>
                 {
                     b.Property<int>("MovieId")
@@ -277,6 +321,17 @@ namespace MovieHall.Migrations
                     b.Navigation("Genre");
                 });
 
+            modelBuilder.Entity("MovieHall.Models.AnimeNote", b =>
+                {
+                    b.HasOne("MovieHall.Models.Anime", "Anime")
+                        .WithMany()
+                        .HasForeignKey("AnimeId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Anime");
+                });
+
             modelBuilder.Entity("MovieHall.Models.AnimeWatchedWith", b =>
                 {
                     b.HasOne("MovieHall.Models.Anime", "Anime")
@@ -320,6 +375,17 @@ namespace MovieHall.Migrations
                         .IsRequired();
 
                     b.Navigation("Genre");
+
+                    b.Navigation("Movie");
+                });
+
+            modelBuilder.Entity("MovieHall.Models.MovieNote", b =>
+                {
+                    b.HasOne("MovieHall.Models.Movie", "Movie")
+                        .WithMany()
+                        .HasForeignKey("MovieId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("Movie");
                 });

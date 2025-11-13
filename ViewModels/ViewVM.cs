@@ -1,4 +1,5 @@
 ﻿using MovieHall.Models;
+using MovieHall.SaveModels;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -31,6 +32,7 @@ namespace MovieHall.ViewModels
         public int? AnimeEpSum { get; set; }
 
 
+        public List<SaveCustomLink>? CustomLinks { get; set; }
         public List<AnimeNoteVM>? AnimeNotes { get; set; }
 
         // Parent (Verweis auf Parent Anime)

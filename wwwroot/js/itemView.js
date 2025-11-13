@@ -13,32 +13,42 @@
             var modal = new bootstrap.Modal(document.getElementById('animeModal'));
             modal.show();
 
-            $("#createAnimeForm").on("submit", function (e) {
-                e.preventDefault();
-                var formData = new FormData(this);
-
-                $.ajax({
-                    type: "POST",
-                    url: "/ItemView/CreateAnimeChildPartial",
-                    data: formData,
-                    processData: false,
-                    contentType: false,
-                    success: function (res, status, xhr) {
-                        const contentType = xhr.getResponseHeader("content-type");
-
-                        if (contentType && contentType.indexOf("application/json") !== -1) {
-                            if (res.success) {
-                                modal.hide();
-                                location.reload();
-                            }
-                        } else {
-                            $("#animeModalContent").html(res);
-                        }
-                    }
-                });
-            });
+            bindCreateAnimeChildForm(modal, parentId); // ✅ Handler binden
         });
     });
+    function bindCreateAnimeChildForm(modal, parentId) {
+        $("#createAnimeForm").on("submit", function (e) {
+            e.preventDefault();
+
+            var formData = new FormData(this);
+
+            $.ajax({
+                type: "POST",
+                url: "/ItemView/CreateAnimeChildPartial",
+                data: formData,
+                processData: false,
+                contentType: false,
+                success: function (res, status, xhr) {
+                    const contentType = xhr.getResponseHeader("content-type");
+
+                    if (contentType && contentType.indexOf("application/json") !== -1) {
+                        // ✅ Erfolg → Modal schließen + Seite neu laden
+                        if (res.success) {
+                            modal.hide();
+                            location.reload();
+                        }
+                    } else {
+                        // ❌ Validation Errors → PartialView neu laden
+                        console.log("Validation errors, rendering PartialView");
+                        $("#animeModalContent").html(res);
+
+                        // 🔁 Neuen Handler wieder binden
+                        bindCreateAnimeChildForm(modal, parentId);
+                    }
+                }
+            });
+        });
+    }
 
     // --- Edit Anime ---
     $(".edit-anime-link").click(function () {
@@ -211,32 +221,42 @@
             var modal = new bootstrap.Modal(document.getElementById('movieModal'));
             modal.show();
 
-            $("#createMovieForm").on("submit", function (e) {
-                e.preventDefault();
-                var formData = new FormData(this);
-
-                $.ajax({
-                    type: "POST",
-                    url: "/ItemView/CreateMovieChildPartial",
-                    data: formData,
-                    processData: false,
-                    contentType: false,
-                    success: function (res, status, xhr) {
-                        const contentType = xhr.getResponseHeader("content-type");
-
-                        if (contentType && contentType.indexOf("application/json") !== -1) {
-                            if (res.success) {
-                                modal.hide();
-                                location.reload();
-                            }
-                        } else {
-                            $("#movieModalContent").html(res);
-                        }
-                    }
-                });
-            });
+            bindCreateMovieChildForm(modal, parentId); // ✅ Submit-Handler binden
         });
     });
+    function bindCreateMovieChildForm(modal, parentId) {
+        $("#createMovieForm").on("submit", function (e) {
+            e.preventDefault();
+
+            var formData = new FormData(this);
+
+            $.ajax({
+                type: "POST",
+                url: "/ItemView/CreateMovieChildPartial",
+                data: formData,
+                processData: false,
+                contentType: false,
+                success: function (res, status, xhr) {
+                    const contentType = xhr.getResponseHeader("content-type");
+
+                    if (contentType && contentType.indexOf("application/json") !== -1) {
+                        // ✅ Erfolg → Modal schließen + Seite neu laden
+                        if (res.success) {
+                            modal.hide();
+                            location.reload();
+                        }
+                    } else {
+                        // ❌ Validation Errors → PartialView neu laden
+                        console.log("Validation errors, rendering PartialView");
+                        $("#movieModalContent").html(res);
+
+                        // 🔁 Handler neu binden, da das Form neu gerendert wurde
+                        bindCreateMovieChildForm(modal, parentId);
+                    }
+                }
+            });
+        });
+    }
 
     // --- Edit Movie ---
     $(".edit-movie-link").click(function () {
@@ -377,5 +397,26 @@
                 window.location.href = "/Movie/Index";
             }
         });
+    });
+});
+
+// ------------------------------------- CopyTitle -------------------------------------
+$(document).ready(function () {
+    $("#copyTitle").on("click", function () {
+        var textToCopy = $(this).text().trim();
+
+        navigator.clipboard.writeText(textToCopy)
+            .then(function () {
+                // Optional: Kurze visuelle Rückmeldung
+                const originalText = $("#copyTitle").text();
+                $("#copyTitle").text(originalText + " ©");
+                setTimeout(function () {
+                    $("#copyTitle").text(originalText);
+                }, 400);
+            })
+            .catch(function (err) {
+                console.error("Fehler beim Kopieren:", err);
+                alert("Konnte nicht in die Zwischenablage kopieren.");
+            });
     });
 });

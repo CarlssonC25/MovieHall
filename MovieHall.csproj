@@ -15,9 +15,12 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="Migrations\" />
     <Folder Include="wwwroot\img\Anime_imgs\" />
     <Folder Include="wwwroot\img\Movie_imgs\" />
+    <Folder Include="wwwroot\img\Settings_imgs\" />
     <Folder Include="wwwroot\img\Settings\" />
+    <Folder Include="wwwroot\temp\" />
   </ItemGroup>
 
   <ItemGroup>

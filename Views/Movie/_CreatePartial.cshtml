@@ -4,7 +4,16 @@
     var genres = ViewBag.Genres as List<MovieHall.Models.Genre>;
     var watched = ViewBag.WatchedWith as List<MovieHall.Models.WatchedWith>;
 
-    var selectedGenreIds = Model.MovieGenres?.Select(g => g.GenreId).ToList() ?? new List<int>();
+    var selectedGenreIds = new List<int>();
+
+    if (Model.MovieGenres.Count() != 0)
+    {
+        selectedGenreIds = Model.MovieGenres?.Select(g => g.GenreId).ToList();
+
+    } else if(Model.SelectedGenreIds != null)
+    {
+        selectedGenreIds = Model.SelectedGenreIds;
+    }
 }
 
 <form id="createMovieForm" enctype="multipart/form-data">
@@ -17,7 +26,7 @@
 
         <div class="mb-3">
             <label for="movieName"><b>Name</b></label>
-            <input class="form-control" id="movieName" name="Name" />
+            <input class="form-control" id="movieName" value="@Model.Name" name="Name" />
             <span asp-validation-for="Name" class="text-danger"></span>
         </div>
 
@@ -39,6 +48,8 @@
         </div>
 
         <div class="mb-3">
+            <input type="hidden" name="TempImgPath" value="@Model.TempImgPath" />
+
             <label for="imageFile"><b>Bild</b> (wird gespeichert in /img/Movie_imgs)</label>
             <input type="file" name="Img" id="imageFile" class="form-control" accept="image/*" />
             <span asp-validation-for="Img" class="text-danger"></span>
@@ -63,7 +74,7 @@
         </div>
 
         <div class="form-check mb-3">
-            <input type="checkbox" name="Favorit" class="form-check-input" id="favorit" value="true" />
+            <input type="checkbox" name="Favorit" class="form-check-input" id="favorit" value="@Model.Favorit" />
             <label class="form-check-label" for="favorit"><b>Favorit</b></label>
         </div>
 
@@ -88,24 +99,19 @@
 
         <div class="mb-3">
             <label for="link"><b>Link</b></label>
-            <input type="url" name="Link" id="link" class="form-control" />
+            <input type="url" name="Link" id="link" class="form-control" value="@Model.Link" />
         </div>
 
-        <div class="mb-3">
-            <label for="language"><b>Sprache</b></label>
-            <select class="form-control" name="Language" id="language">
-                @foreach (var option in OptionHelper.MovielangOptions)
-                {
-                    if (Model.Language == option.Key)
-                    {
-                        <option value="@option.Key" selected>@option.Value</option>
-                    }
-                    else
-                    {
-                        <option value="@option.Key">@option.Value</option>
-                    }
-                }
-            </select>
+        <div class="checkbox-popup mb-3 row">
+            <label class="ps-0"><b>Sprache</b></label>
+            @foreach (var lang in OptionHelper.MovielangOptions)
+            {
+                var isChecked = (Model.Language ?? new List<string>()).Contains(lang) ? "checked" : "";
+                <div class="form-check col-4">
+                    <input class="form-check-input" type="checkbox" name="Language" value="@lang" id="@lang" @isChecked/>
+                    <label class="form-check-label" for="@lang">@lang</label>
+                </div>                
+            }
             <span asp-validation-for="Language" class="text-danger"></span>
         </div>
 

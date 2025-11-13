@@ -13,9 +13,14 @@
 /* --- Base Styles --- */
 /*------------------ All ------------------*/
 .body-HD-size {
-  width: 1920px !important;
+  width: 90%;
 }
 
+@media only screen and (max-width: 1920px) {
+  .body-HD-size {
+    min-width: 1920px !important;
+  }
+}
 .form-control {
   border-color: #ccc;
 }
@@ -635,19 +640,22 @@ header {
 /*------------------ Settings ------------------*/
 #genre table,
 #setting table,
-#WatchedWith table {
+#WatchedWith table,
+#CustomLink table {
   width: 100%;
   table-layout: fixed;
 }
 #genre .tbl-header,
 #setting .tbl-header,
-#WatchedWith .tbl-header {
+#WatchedWith .tbl-header,
+#CustomLink .tbl-header {
   background-color: #2e2e2e;
   border-radius: 5px 5px 0 0;
 }
 #genre .tbl-content,
 #setting .tbl-content,
-#WatchedWith .tbl-content {
+#WatchedWith .tbl-content,
+#CustomLink .tbl-content {
   border: 1px solid #2e2e2e;
   border-radius: 0 0 5px 5px;
   max-height: 300px;
@@ -656,7 +664,8 @@ header {
 }
 #genre th,
 #setting th,
-#WatchedWith th {
+#WatchedWith th,
+#CustomLink th {
   color: #ddd;
   padding: 10px;
   font-weight: bold;
@@ -665,7 +674,8 @@ header {
 }
 #genre td,
 #setting td,
-#WatchedWith td {
+#WatchedWith td,
+#CustomLink td {
   border-bottom: solid 1px #2e2e2e;
   color: #ddd;
   padding: 15px;
@@ -674,7 +684,8 @@ header {
 }
 #genre tr:nth-child(even),
 #setting tr:nth-child(even),
-#WatchedWith tr:nth-child(even) {
+#WatchedWith tr:nth-child(even),
+#CustomLink tr:nth-child(even) {
   background-color: #010101;
 }
 
@@ -716,39 +727,34 @@ header {
 #ItemView .forece-padding {
   padding: 0 calc(var(--bs-gutter-x) * 0.5);
 }
+#ItemView .item-btn-ex {
+  padding: 2px;
+  width: 26px;
+  height: 26px;
+  border: none;
+  border-radius: 5px;
+  background-color: transparent;
+  -webkit-transition: all 0.4s ease-out;
+  -moz-transition: all 0.4s ease-out;
+  -o-transition: all 0.4s ease-out;
+  transition: all 0.4s ease-out;
+}
+#ItemView .item-btn-ex img {
+  width: 100%;
+  height: 100%;
+  background-color: transparent;
+}
+#ItemView .item-btn-ex:hover {
+  opacity: 0.6;
+}
+#ItemView .item-btn-exp {
+  background-color: #777 !important;
+}
+#ItemView .link-btn {
+  background-color: #2e2e2e !important;
+}
 #ItemView .itemView-edit-content {
   position: absolute;
-}
-#ItemView .itemView-edit-content .item-btn-edit {
-  border: none;
-  background: none;
-  background-color: #777;
-  border-radius: 5px;
-  -webkit-transition: all 0.4s ease-out;
-  -moz-transition: all 0.4s ease-out;
-  -o-transition: all 0.4s ease-out;
-  transition: all 0.4s ease-out;
-}
-#ItemView .itemView-edit-content .item-btn-edit img {
-  padding: 2px;
-}
-#ItemView .itemView-edit-content .item-btn-edit:hover {
-  opacity: 0.7;
-}
-#ItemView .item-btn-delete {
-  border: none;
-  background: none;
-  border-radius: 5px;
-  -webkit-transition: all 0.4s ease-out;
-  -moz-transition: all 0.4s ease-out;
-  -o-transition: all 0.4s ease-out;
-  transition: all 0.4s ease-out;
-}
-#ItemView .item-btn-delete img {
-  padding: 2px;
-}
-#ItemView .item-btn-delete:hover {
-  opacity: 0.7;
 }
 #ItemView .itemFam {
   background-color: #1c1c1c;
@@ -756,6 +762,10 @@ header {
   padding: 0.5rem 0;
   color: #ccc !important;
   text-shadow: none;
+  -webkit-transition: all 0.4s ease-out;
+  -moz-transition: all 0.4s ease-out;
+  -o-transition: all 0.4s ease-out;
+  transition: all 0.4s ease-out;
 }
 #ItemView .itemFam:hover {
   text-shadow: 0px 0px 5px #fff;
@@ -774,6 +784,16 @@ header {
 }
 #ItemView .itemFam-aktiv:hover img {
   box-shadow: none !important;
+}
+#ItemView .link-btn {
+  border-radius: 5px;
+  display: block;
+  width: 30px;
+  height: 30px;
+  padding: 5px;
+}
+#ItemView #copyTitle {
+  cursor: pointer;
 }
 #ItemView .anime-info button {
   padding: 0.2rem 0.75rem;

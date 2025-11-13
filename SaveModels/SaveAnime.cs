@@ -18,6 +18,7 @@ namespace MovieHall.SaveModel
         public int Buy { get; set; }
         public IFormFile? Img { get; set; }
         public string? ImgPath { get; set; }
+        public string? TempImgPath { get; set; }
 
         [Required(ErrorMessage = "Link ist ein Pflichtfeld.")]
         public string? Link { get; set; }

@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using MovieHall.Data;
 using MovieHall.Models;
 using MovieHall.SaveModel;
+using MovieHall.SaveModels;
 using MovieHall.ViewModels;
 using System.Text.RegularExpressions;
 using static Azure.Core.HttpHeader;
@@ -64,6 +65,30 @@ namespace MovieHall.Controllers
                         Img = note.Anime.Img
                     }).ToList();
                 }
+
+
+                var RawCustomLinks = await _context.Settings.Where(s => s.SettingName.Contains("Link")).ToListAsync();
+                var CustomLinks = new List<SaveCustomLink>();
+                foreach (var link in RawCustomLinks)
+                {
+                    var LinkNameImg = link.SettingName.Split("|");
+                    var LinkSpace = link.Comment.Split("|");
+                    if (LinkSpace[1].Contains("A"))
+                    {
+                        CustomLinks.Add(new SaveCustomLink()
+                        {
+                            Id = link.Id,
+                            Name = LinkNameImg[1],
+                            ImgLink = LinkNameImg[2],
+                            Link = LinkSpace[0],
+                            Belonging_to = LinkSpace[1],
+                            Space = LinkSpace[2]
+                        });
+
+                    }
+                }
+                CustomLinks.Reverse();
+                aniMov.CustomLinks = CustomLinks;
 
                 aniMov.Id = ID;
                 aniMov.Name = item.Name;
@@ -136,6 +161,29 @@ namespace MovieHall.Controllers
                         Img = note.Movie.Img
                     }).ToList();
                 }
+
+                var RawCustomLinks = await _context.Settings.Where(s => s.SettingName.Contains("Link")).ToListAsync();
+                var CustomLinks = new List<SaveCustomLink>();
+                foreach (var link in RawCustomLinks)
+                {
+                    var LinkNameImg = link.SettingName.Split("|");
+                    var LinkSpace = link.Comment.Split("|");
+                    if (LinkSpace[1].Contains("M"))
+                    {
+                        CustomLinks.Add(new SaveCustomLink()
+                        {
+                            Id = link.Id,
+                            Name = LinkNameImg[1],
+                            ImgLink = LinkNameImg[2],
+                            Link = LinkSpace[0],
+                            Belonging_to = LinkSpace[1],
+                            Space = LinkSpace[2]
+                        });
+
+                    }
+                }
+                CustomLinks.Reverse();
+                aniMov.CustomLinks = CustomLinks;
 
                 aniMov.Id = ID;
                 aniMov.Name = item.Name;
@@ -229,7 +277,7 @@ namespace MovieHall.Controllers
                 Description = svMovie.Description,
                 Favorit = svMovie.Favorit,
                 FSK = svMovie.FSK,
-                Language = svMovie.Language,
+                Language = string.Join(", ", svMovie.Language.ToArray()),
                 ReleaseDate = svMovie.ReleaseDate ?? new DateTime((int)svMovie.ReleaseYear, 1, 1),
                 Link = svMovie.Link,
                 ParentId = svMovie.ParentId,

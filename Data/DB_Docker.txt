@@ -1,17 +1,20 @@
-docker run -e "ACCEPT_EULA=Y" -e "SA_PASSWORD=Dein_Str0ngesP@ssword" -p 1433:1433 --name MovieHallDB -d mcr.microsoft.com/mssql/server:2022-latest
+docker run -e "ACCEPT_EULA=Y" -e "SA_PASSWORD=Str0ng!Passw0rd123" -p 1433:1433 --name MovieHallDB -d mcr.microsoft.com/mssql/server:2022-latest
 
 Server: localhost,1433
 Benutzer: sa
-Passwort: Dein_Str0ngesP@ssword
+Passwort: Str0ng!Passw0rd123
 
 
 
 
 
 ----------------------TEST----------------------
+Docker:
+docker run -e "ACCEPT_EULA=Y" -e "SA_PASSWORD=Str0ng!Passw0rd123" -p 1433:1433 --name sqlserver-test -d mcr.microsoft.com/mssql/server:2022-latest
 
-docker run -e "ACCEPT_EULA=Y" -e "SA_PASSWORD=Dein_Str0ngesP@ssword" -p 1433:1433 --name sqlserver-test -d mcr.microsoft.com/mssql/server:2022-latest
+Visual studio Nuget konsole:
+dotnet ef database update
 
 Server: localhost,1433
 Benutzer: sa
-Passwort: Dein_Str0ngesP@ssword
+Passwort: Str0ng!Passw0rd123

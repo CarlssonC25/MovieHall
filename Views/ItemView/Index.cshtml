@@ -81,48 +81,46 @@
                     <div class="w-100 text-center">
                         @if (Model.Favorit == true)
                         {
-                            <h1>@Model.Name *</h1>
+                            <h1 id="copyTitle">@Model.Name *</h1>
                         } else
                         {
-                            <h1>@Model.Name</h1>
+                            <h1 id="copyTitle">@Model.Name</h1>
                         }
                     </div>
 
                     <div class="w-100 my-4">
-                        <a href="@Model.Link" target="_blank">
+                        <a href="@Model.Link" target="_blank" class="d-flex">
                             <img class="w-100" src="/img/itemVideoBack.png" />
                         </a>
                     </div>
 
                     <div class="row forece-padding">
+
                         @* TODO ParentId, link und Id *@
-                        <div class="col-3">
+                        <div class="col-3 p-0">
                             <div class="w-100 text-center">
                                 <img class="w-100" src="@Model.Img" />
                             </div>
                         </div>
 
-                        <div class="col-9">
-                            @if (Model.ParentAnime != null)
-                            {
-                                <div class="w-100 d-flex justify-content-end">
-                                    <div class="itemView-edit-content">
-                                        <button class="p-0 m-0 item-btn-edit edit-anime-link" data-id="@Model.Id">
-                                            <img src="/img/wrench.png" />
-                                        </button>
-                                    </div>  
+                        <div class="col-9 p-0 ps-3">                            
+                            <div class="w-100 d-flex justify-content-end">
+                                <div class="itemView-edit-content d-flex">
+                                    
+                                    @if(Model.CustomLinks != null && Model.CustomLinks.Count() > 0)
+                                    {
+                                        foreach (var link in Model.CustomLinks)
+                                        {
+                                            var name = Model.Name.Replace(" ", link.Space);
+                                            var hrefLink = link.Link.Replace("[Name]", name);
+                                            <a href="@hrefLink" target="_blank" class="item-btn-ex link-btn mx-1">
+                                                <img class="w-100" src="~/img/Settings_imgs/@link.ImgLink"/>
+                                            </a>
+                                        }
+                                    }
+
                                 </div>
-                            }
-                            @if (Model.ParentMovie != null)
-                            {
-                                <div class="w-100 d-flex justify-content-end">
-                                    <div class="itemView-edit-content">
-                                        <button class="p-0 m-0 item-btn-edit edit-movie-link" data-id="@Model.Id">
-                                            <img src="/img/wrench.png" />
-                                        </button>
-                                    </div>
-                                </div>
-                            }
+                            </div>
 
                             @if (Model.Orginal_Name != null)
                             {
@@ -134,6 +132,17 @@
                                     <button class="btn btn-primary rewatch" data-id="@Model.Id" data-rewatch="-1"><span class="rewatch-minus">-</span></button>
                                     <span id="rewatch-count-@Model.Id">@Model.WhatTimes</span>
                                     <button class="btn btn-primary rewatch" data-id="@Model.Id" data-rewatch="1"><span class="rewatch-plus">+</span></button>
+                                </p>
+                            }
+
+                            @if (Model.AnimeWatchedWiths != null)
+                            {
+                                <p>
+                                    <b>Geguckt Mit:</b> 
+                                    @foreach(var u in Model.AnimeWatchedWiths)
+                                    {
+                                        @u.WatchedWith.Name;
+                                    }
                                 </p>
                             }
 
@@ -183,29 +192,36 @@
                                     <b>Bescheibung:</b> @Model.Description
                                 </p>
                             }
-
-                            @if (Model.ParentAnime != null)
-                            {
-                                    
-                                <div class="w-100 d-flex justify-content-end">
-                                    <div class="itemView-edit-content">
-                                        <button class="p-0 m-0 item-btn-delete delete-anime-link" data-id="@Model.Id" data-name="@Model.Name" data-parent-id="@Model.ParentId">
-                                            <img src="/img/delete.png" />
-                                        </button>
-                                    </div>
-                                </div>
-                            }
-                            @if (Model.ParentMovie != null)
-                            {
-                                    
-                                <div class="w-100 d-flex justify-content-end">
-                                    <div class="itemView-edit-content">
-                                        <button class="p-0 m-0 item-btn-delete delete-movie-link" data-id="@Model.Id" data-name="@Model.Name" data-parent-id="@Model.ParentId">
-                                            <img src="/img/delete.png" />
-                                        </button>
-                                    </div>
-                                </div>
-                            }
+                            
+                            
+                            <div class="w-100 d-flex justify-content-between">
+                                @if (Model.ParentAnime != null)
+                                {
+                                    <button class="item-btn-ex item-btn-exp edit-anime-link" data-id="@Model.Id">
+                                        <img src="/img/wrench.png" />
+                                    </button>
+                                }
+                                @if (Model.ParentMovie != null)
+                                {
+                                    <button class="item-btn-ex item-btn-exp edit-movie-link" data-id="@Model.Id">
+                                        <img src="/img/wrench.png" />
+                                    </button>
+                                }
+                                
+                                @if (Model.ParentAnime != null)
+                                {                                    
+                                    <button class="item-btn-ex delete-anime-link mx-2" data-id="@Model.Id" data-name="@Model.Name" data-parent-id="@Model.ParentId">
+                                        <img src="/img/delete.png" />
+                                    </button>
+                                }
+                                @if (Model.ParentMovie != null)
+                                {
+                                    <button class="item-btn-ex delete-movie-link mx-2" data-id="@Model.Id" data-name="@Model.Name" data-parent-id="@Model.ParentId">
+                                        <img src="/img/delete.png" />
+                                    </button>
+                                }
+                            </div>
+                            
                         </div>
                     </div>
                 </div>

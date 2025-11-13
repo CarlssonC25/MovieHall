@@ -1,0 +1,36 @@
+﻿@model MovieHall.SaveModels.SaveCustomLink
+<form id="createCustomLinkForm" enctype="multipart/form-data" method="post">
+    <input asp-for="Id" type="hidden" />
+
+    <div class="modal-body">
+        <div class="mb-3">
+            <label asp-for="Name" class="form-label"><b>Link Name</b></label>
+            <input asp-for="Name" class="form-control" />
+        </div>
+        <div>
+            <label asp-for="Link" class="form-label"><b>Link</b></label>
+            <input asp-for="Link" class="form-control" />
+            <small>
+                [Name] für name des Aniems
+            </small>
+        </div>
+        <br />
+        <div class="mb-3">
+            <label asp-for="Space" class="form-label"><b>Ersatz</b> für die lerzeichen im Namen</label>
+            <input asp-for="Space" class="form-control" />
+        </div>
+        <div class="mb-3">
+            <label asp-for="Belonging_to" class="form-label"><b>Angzeigt bei</b></label>
+            <select asp-for="Belonging_to" class="form-control" asp-items='new SelectList(new[] { "A", "M", "AM" })'>
+                <option value="">-- Bitte wählen --</option>
+            </select>
+        </div>
+        <div class="mb-3">
+            <label for="imageFile"><b>Icon</b> (32x32 png/jpg)</label>
+            <input name="Img" type="file" id="imageFile" class="form-control" accept="image/*" />
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button type="submit" class="btn btn-primary">Speichern</button>
+    </div>
+</form>

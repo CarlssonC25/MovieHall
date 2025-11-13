@@ -1,4 +1,5 @@
 ﻿using MovieHall.Models;
+using MovieHall.SaveModels;
 
 namespace MovieHall.ViewModels
 {

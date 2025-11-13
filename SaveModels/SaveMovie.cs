@@ -15,6 +15,7 @@ namespace MovieHall.SaveModel
         public string? Description { get; set; }
         public IFormFile? Img { get; set; }
         public string? ImgPath { get; set; }
+        public string? TempImgPath { get; set; }
 
         [Required(ErrorMessage = "FSK ist ein Pflichtfeld.")]
         public int FSK { get; set; }
@@ -26,7 +27,7 @@ namespace MovieHall.SaveModel
         public string? Link { get; set; }
 
         [Required(ErrorMessage = "Sprache ist ein Pflichtfeld.")]
-        public string Language { get; set; }
+        public List<string> Language { get; set; }
 
 
         // Fortsetzung (Verweis auf einen anderen Movie)

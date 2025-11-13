@@ -88,10 +88,10 @@
             { 18, "18+" }
         };
 
-        public static Dictionary<string, string> MovielangOptions => new()
+        public static List<string> MovielangOptions => new()
         {
-            { "de", "Deutsch" },
-            { "en", "Englisch" }
+            { "Deutsch"},
+            { "Englisch"}
         };
 
         // ---------------------- Both ----------------------

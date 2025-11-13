@@ -161,6 +161,17 @@ namespace MovieHall.Controllers
             {
                 ViewBag.Genres = Genres;
                 ViewBag.WatchedWith = WatchedWith;
+
+                if (svAnime.Img != null)
+                {
+                    string tempPath = Path.Combine("wwwroot/temp", svAnime.Img.FileName);
+                    using (var stream = new FileStream(tempPath, FileMode.Create))
+                    {
+                        await svAnime.Img.CopyToAsync(stream);
+                    }
+                    svAnime.TempImgPath = "/temp/" + svAnime.Img.FileName;
+                }
+
                 return PartialView("~/Views/Anime/_CreatePartial.cshtml", svAnime);
             }
 
@@ -181,6 +192,7 @@ namespace MovieHall.Controllers
                 Parent = svAnime.Parent,
             };
 
+            // IMG 
             if (svAnime.Img != null && (svAnime.Img.ContentType == "image/jpeg" || svAnime.Img.ContentType == "image/png"))
             {
                 string uploadsFolder = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/img/Anime_imgs");
@@ -188,7 +200,7 @@ namespace MovieHall.Controllers
 
                 string fileName = "";
                 var fileNameUnique = false;
-                while (fileNameUnique == false)
+                while (!fileNameUnique)
                 {
                     Random rnd = new Random();
                     string cleanName = Regex.Replace(svAnime.Name, @"[^a-zA-Z0-9]", "");
@@ -209,6 +221,45 @@ namespace MovieHall.Controllers
                 using (var stream = new FileStream(filePath, FileMode.Create))
                 {
                     await svAnime.Img.CopyToAsync(stream);
+                }
+            } else if (svAnime.TempImgPath != null) 
+            {
+                var tempFullPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", svAnime.TempImgPath.TrimStart('/'));
+                if (System.IO.File.Exists(tempFullPath))
+                {
+                    string uploadsFolder = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/img/Anime_imgs");
+                    Directory.CreateDirectory(uploadsFolder);
+
+                    // === Gleiche Namenslogik wie oben ===
+                    string fileName = "";
+                    var fileNameUnique = false;
+                    while (!fileNameUnique)
+                    {
+                        Random rnd = new Random();
+                        string cleanName = Regex.Replace(svAnime.Name, @"[^a-zA-Z0-9]", "");
+                        string extension = Path.GetExtension(tempFullPath);
+                        fileName = $"{cleanName}{rnd.Next(1, 100)}{extension}";
+
+                        var animeImg = await _context.Animes.FirstOrDefaultAsync(s => s.Img == fileName);
+                        if (animeImg == null)
+                        {
+                            fileNameUnique = true;
+                        }
+                    }
+
+                    string destPath = Path.Combine(uploadsFolder, fileName);
+
+                    // Verschiebe aus Temp-Ordner in endgültigen Ordner
+                    System.IO.File.Move(tempFullPath, destPath);
+
+                    anime.Img = fileName;
+                }
+                else
+                {
+                    ModelState.AddModelError(nameof(svAnime.Img), "Temporäres Bild nicht gefunden. Bitte erneut auswählen.");
+                    ViewBag.Genres = Genres;
+                    ViewBag.WatchedWith = WatchedWith;
+                    return PartialView("~/Views/Anime/_CreatePartial.cshtml", svAnime);
                 }
             } else
             {

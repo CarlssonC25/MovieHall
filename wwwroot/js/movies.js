@@ -1,4 +1,4 @@
-﻿// Filter Hilfsfunktion für AJAX-Load
+﻿// Filter Hilfsfunktion
 function loadMovies(page) {
     let filter = $("#FSK-search").val();
 
@@ -16,8 +16,44 @@ function loadMovies(page) {
     });
 }
 
+
+function bindCreateMovieForm(modal) {
+    $("#createMovieForm").on("submit", function (e) {
+        e.preventDefault();
+
+        var formData = new FormData(this);
+
+        $.ajax({
+            type: "POST",
+            url: "/Movie/CreateMoviePartial",
+            data: formData,
+            processData: false,
+            contentType: false,
+            success: function (res, status, xhr) {
+                const contentType = xhr.getResponseHeader("content-type");
+
+                if (contentType && contentType.indexOf("application/json") !== -1) {
+                    // ✅ Erfolg → Modal schließen + Seite neu laden
+                    if (res.success) {
+                        modal.hide();
+                        location.reload();
+                    }
+                } else {
+                    // ❌ Validation Error → PartialView neu einsetzen
+                    console.log("Validation errors, rendering PartialView");
+                    $("#movieModalContent").html(res);
+
+                    // 🔁 WICHTIG: neuen Submit-Handler binden
+                    bindCreateMovieForm(modal);
+                }
+            }
+        });
+    });
+}
+
 $(document).ready(function () {
     console.log("movies.js loaded");
+
     // Create Modal öffnen
     $("#openCreateMovieModal").click(function () {
         $.get("/Movie/CreateMoviePartial", function (data) {
@@ -25,33 +61,7 @@ $(document).ready(function () {
             var modal = new bootstrap.Modal(document.getElementById('movieModal'));
             modal.show();
 
-            $("#createMovieForm").on("submit", function (e) {
-                e.preventDefault();
-                var formData = new FormData(this);
-
-
-                $.ajax(
-                    {
-                    type: "POST",
-                    url: "/Movie/CreateMoviePartial",
-                    data: formData,
-                    processData: false,
-                    contentType: false,
-                    success: function (res, status, xhr) {
-                        const contentType = xhr.getResponseHeader("content-type");
-
-                        if (contentType && contentType.indexOf("application/json") !== -1) {
-                            if (res.success) {
-                                modal.hide();
-                                location.reload();
-                            }
-                        } else { // HTML → Validation Errors
-                            console.log("Validation errors, rendering PartialView");
-                            $("#movieModalContent").html(res);
-                        }
-                    }
-                });
-            });
+            bindCreateMovieForm(modal);
         });
     });
 

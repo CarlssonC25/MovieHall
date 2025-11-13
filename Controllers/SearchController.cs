@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using MovieHall.Data;
 using MovieHall.Models;
+using MovieHall.SaveModels;
 using MovieHall.ViewModels;
 using System.Xml.Linq;
 
@@ -375,7 +376,7 @@ namespace MovieHall.Controllers
                 return Json(new { results = new object[0] });
 
             var results = _context.Animes
-                .Where(a => EF.Functions.Like(a.Name, $"%{query}%"))
+                .Where(a => EF.Functions.Like(a.Name, $"%{query}%") || EF.Functions.Like(a.Orginal_Name, $"%{query}%"))
                 .Select(a => new { id = a.Id, name = a.Name, img = a.Img })
                 .Take(3)
                 .ToList();

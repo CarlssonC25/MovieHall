@@ -3,7 +3,17 @@
 @{
     @*Genre*@
     var genres = ViewBag.Genres as List<MovieHall.Models.Genre>;
-    var selectedGenreIds = Model.AnimeGenres?.Select(g => g.GenreId).ToList() ?? new List<int>();
+
+    var selectedGenreIds = new List<int>();
+
+    if (Model.AnimeGenres.Count() != 0)
+    {
+        selectedGenreIds = Model.AnimeGenres?.Select(g => g.GenreId).ToList();
+
+    } else if(Model.SelectedGenreIds != null)
+    {
+        selectedGenreIds = Model.SelectedGenreIds;
+    }
 
     @*WatchedWith*@
     var watched = ViewBag.WatchedWith as List<MovieHall.Models.WatchedWith>;
@@ -14,7 +24,9 @@
         <h5 class="modal-title" id="createAnimeModalLabel">Neuen Film hinzufügen</h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Schließen"></button>
     </div>
-    <div class="modal-body">
+    <div class="modal-body">        
+        <input type="hidden" name="ParentId" value="@Model.ParentId" />
+        <input type="hidden" name="WhatTimes" value="1" />
 
         <div asp-validation-summary="ModelOnly" class="text-danger"></div>
 
@@ -22,8 +34,6 @@
             <label for="animeName"><b>Name</b></label>
             <input class="form-control" id="animeName" value="@Model.Name" name="Name" />
             <span asp-validation-for="Name" class="text-danger"></span>
-            <input type="hidden" name="ParentId" value="@Model.ParentId" />
-            <input type="hidden" name="WhatTimes" value="1" />
         </div>
 
         <div class="mb-3">
@@ -68,6 +78,8 @@
         </div>
 
         <div class="mb-3">
+            <input type="hidden" name="TempImgPath" value="@Model.TempImgPath" />
+
             <label for="imageFile"><b>Bild</b> (wird gespeichert in /img/Anime_imgs)</label>
             <input type="file" name="Img" id="imageFile" class="form-control" accept="image/*" />
             <span asp-validation-for="Img" class="text-danger"></span>

@@ -5,6 +5,7 @@ using MovieHall.Models;
 using MovieHall.SaveModel;
 using MovieHall.ViewModels;
 using System.Text.RegularExpressions;
+using System.Xml.Linq;
 using static Azure.Core.HttpHeader;
 
 namespace MovieHall.Controllers
@@ -142,6 +143,17 @@ namespace MovieHall.Controllers
             {
                 ViewBag.Genres = Genres;
                 ViewBag.WatchedWith = WatchedWith;
+
+                if (svMovie.Img != null)
+                {
+                    string tempPath = Path.Combine("wwwroot/temp", svMovie.Img.FileName);
+                    using (var stream = new FileStream(tempPath, FileMode.Create))
+                    {
+                        await svMovie.Img.CopyToAsync(stream);
+                    }
+                    svMovie.TempImgPath = "/temp/" + svMovie.Img.FileName;
+                }
+
                 return PartialView("~/Views/Movie/_CreatePartial.cshtml", svMovie);
             }
 
@@ -152,13 +164,14 @@ namespace MovieHall.Controllers
                 Description = svMovie.Description,
                 Favorit = svMovie.Favorit,
                 FSK = svMovie.FSK,
-                Language = svMovie.Language,
+                Language = string.Join(", ", svMovie.Language.ToArray()),
                 ReleaseDate = svMovie.ReleaseDate ?? new DateTime((int)svMovie.ReleaseYear, 1, 1),
                 Link = svMovie.Link,
 
                 Parent = svMovie.Parent,
             };
 
+            // IMG 
             if (svMovie.Img != null && (svMovie.Img.ContentType == "image/jpeg" || svMovie.Img.ContentType == "image/png"))
             {
                 string uploadsFolder = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/img/Movie_imgs");
@@ -189,12 +202,52 @@ namespace MovieHall.Controllers
                     await svMovie.Img.CopyToAsync(stream);
                 }
             }
-            else
+            else if (svMovie.TempImgPath != null)
+            {
+                var tempFullPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", svMovie.TempImgPath.TrimStart('/'));
+                if (System.IO.File.Exists(tempFullPath))
+                {
+                    string uploadsFolder = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/img/Movie_imgs");
+                    Directory.CreateDirectory(uploadsFolder);
+
+                    // === Gleiche Namenslogik wie oben ===
+                    string fileName = "";
+                    var fileNameUnique = false;
+                    while (!fileNameUnique)
+                    {
+                        Random rnd = new Random();
+                        string cleanName = Regex.Replace(svMovie.Name, @"[^a-zA-Z0-9]", "");
+                        string extension = Path.GetExtension(tempFullPath);
+                        fileName = $"{cleanName}{rnd.Next(1, 100)}{extension}";
+
+                        var movieImg = await _context.Movies.FirstOrDefaultAsync(s => s.Img == fileName);
+                        if (movieImg == null)
+                        {
+                            fileNameUnique = true;
+                        }
+                    }
+
+                    string destPath = Path.Combine(uploadsFolder, fileName);
+
+                    // Verschiebe aus Temp-Ordner in endgültigen Ordner
+                    System.IO.File.Move(tempFullPath, destPath);
+
+                    movie.Img = fileName;
+                }
+                else
+                {
+                    ModelState.AddModelError(nameof(svMovie.Img), "Temporäres Bild nicht gefunden. Bitte erneut auswählen.");
+                    ViewBag.Genres = Genres;
+                    ViewBag.WatchedWith = WatchedWith;
+                    return PartialView("~/Views/Anime/_CreatePartial.cshtml", svMovie);
+                }
+            } else
             {
                 ModelState.AddModelError(nameof(svMovie.Img), "Bild ist ein Pflichtfeld");
 
                 ViewBag.Genres = Genres;
                 ViewBag.WatchedWith = WatchedWith;
+
                 return PartialView("~/Views/Movie/_CreatePartial.cshtml", svMovie);
             }
 
@@ -239,7 +292,9 @@ namespace MovieHall.Controllers
                 ReleaseDate = movieDb.ReleaseDate,
                 ReleaseYear = movieDb.ReleaseDate.Year,
                 Link = movieDb.Link,
-                Language = movieDb.Language,
+                Language = movieDb.Language?
+                    .Split(", ", StringSplitOptions.RemoveEmptyEntries)
+                    .ToList() ?? new List<string>(),
                 ParentId = movieDb.ParentId,
 
                 MovieGenres = movieDb.MovieGenres,
@@ -263,7 +318,7 @@ namespace MovieHall.Controllers
             // Update properties
             dbMovie.Name = svMovie.Name;
             dbMovie.Description = svMovie.Description;
-            dbMovie.Language = svMovie.Language;
+            dbMovie.Language = string.Join(", ", svMovie.Language.ToArray());
             dbMovie.Link = svMovie.Link;
             dbMovie.FSK = svMovie.FSK;
             dbMovie.Buy = svMovie.Buy;

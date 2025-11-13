@@ -6,7 +6,12 @@
 
 /*------------------ All ------------------*/
 .body-HD-size {
-    width: 1920px !important                                                                                                                                                                                                                                                                                             ;
+    width: 90%;                                                                                                                                                                                                                                                                                            ;
+}
+@media only screen and (max-width: 1920px) {
+    .body-HD-size {
+        min-width: 1920px !important
+    }
 }
 
 .form-control {
@@ -725,7 +730,8 @@ header {
 
 #genre,
 #setting,
-#WatchedWith {
+#WatchedWith,
+#CustomLink {
 
     table {
         width: 100%;
@@ -813,41 +819,36 @@ header {
         padding: 0 calc(var(--bs-gutter-x) * .5);
     }
 
-    .itemView-edit-content {
-        position: absolute;
-
-        .item-btn-edit {
-            border: none;
-            background: none;
-            background-color: $back-gray-lightlight;
-            border-radius: $base-border-radius;
-
-            @include transition($base-transition);
-
-            img {
-                padding: 2px;
-            }
-        }
-
-        .item-btn-edit:hover {
-            opacity: 0.7;
-        }
-    }
-
-    .item-btn-delete {
+    .item-btn-ex {
+        padding: 2px;
+        width: 26px;
+        height: 26px;
         border: none;
-        background: none;
         border-radius: $base-border-radius;
-
+        background-color: transparent;
         @include transition($base-transition);
 
         img {
-            padding: 2px;
+            width: 100%;
+            height: 100%;
+            background-color: transparent;
         }
     }
 
-    .item-btn-delete:hover {
-        opacity: 0.7;
+    .item-btn-ex:hover {
+        opacity: 0.6;
+    }
+
+    .item-btn-exp {
+        background-color: $back-gray-lightlight !important;
+    }
+
+    .link-btn {
+        background-color: $back-gray-light !important;
+    }
+
+    .itemView-edit-content {
+        position: absolute;
     }
 
     .itemFam {
@@ -856,6 +857,7 @@ header {
         padding: 0.5rem 0;
         color: $text-col-dark !important;
         text-shadow: none;
+        @include transition($base-transition);
     }
 
     .itemFam:hover {
@@ -881,6 +883,17 @@ header {
         }
     }
 
+    .link-btn {
+        border-radius: $base-border-radius;
+        display: block;
+        width: 30px;
+        height: 30px;
+        padding: 5px;
+    }
+
+    #copyTitle {
+        cursor: pointer;
+    }
 
     .anime-info {
         button {

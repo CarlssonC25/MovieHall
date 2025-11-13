@@ -28,8 +28,17 @@ namespace MovieHall.Controllers
             var AImg = await _context.Settings.FirstOrDefaultAsync(s => s.SettingName == "AnimeImg");
             var MImg = await _context.Settings.FirstOrDefaultAsync(s => s.SettingName == "MovieImg");
 
-            ViewData["AnimeImg"] = "/img/" + AImg.Comment;
-            ViewData["MovieImg"] = "/img/" + MImg.Comment;
+            if (AImg != null && MImg != null)
+            {
+                ViewData["AnimeImg"] = "/img/Settings_imgs/" + AImg.Comment;
+                ViewData["MovieImg"] = "/img/Settings_imgs/" + MImg.Comment;
+            }
+            else
+            {
+                ViewData["AnimeImg"] = "/img/test.jpg";
+                ViewData["MovieImg"] = "/img/test.jpg";
+            }
+
 
             return View();
         }

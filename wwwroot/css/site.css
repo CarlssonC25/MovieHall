@@ -33,8 +33,9 @@
   background: #777;
 }
 
-img {
+img, svg {
   border-radius: 5px;
+  vertical-align: baseline;
 }
 
 a {

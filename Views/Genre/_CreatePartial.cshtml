@@ -3,12 +3,12 @@
 <form id="createGenreForm">
     <div class="modal-body">
         <div class="mb-3">
-            <label asp-for="Name" class="form-label"></label>
+            <label asp-for="Name" class="form-label"><b>Name</b></label>
             <input asp-for="Name" class="form-control" />
         </div>
         <div class="mb-3">
-            <label asp-for="Belonging_to" class="form-label"></label>
-            <select asp-for="Belonging_to" class="form-control" asp-items='new SelectList(new[] { " A", "M", "AM" })'>
+            <label asp-for="Belonging_to" class="form-label"><b>Angzeigt bei</b></label>
+            <select asp-for="Belonging_to" class="form-control" asp-items='new SelectList(new[] { "A", "M", "AM" })'>
                 <option value="">-- Bitte wählen --</option>
             </select>
         </div>

@@ -95,21 +95,16 @@
             <input asp-for="Link" class="form-control" />
         </div>
 
-        <div class="mb-3">
-            <label asp-for="Language"><b>Sprache</b></label>
-            <select asp-for="Language" class="form-control">
-                @foreach (var option in OptionHelper.MovielangOptions)
-                {
-                    if (Model.Language == option.Key)
-                    {
-                        <option value="@option.Key" selected>@option.Value</option>
-                    }
-                    else
-                    {
-                        <option value="@option.Key">@option.Value</option>
-                    }
-                }
-            </select>
+        <div class="checkbox-popup mb-3 row">
+            <label class="ps-0"><b>Sprache</b></label>
+            @foreach (var lang in OptionHelper.MovielangOptions)
+            {
+                var isChecked = (Model.Language ?? new List<string>()).Contains(lang) ? "checked" : "";
+                <div class="form-check col-4">
+                    <input class="form-check-input" type="checkbox" name="Language" value="@lang" id="@lang" @isChecked />
+                    <label class="form-check-label" for="@lang">@lang</label>
+                </div>
+            }
             <span asp-validation-for="Language" class="text-danger"></span>
         </div>
 

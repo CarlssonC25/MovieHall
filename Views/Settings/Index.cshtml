@@ -1,261 +1,301 @@
 ﻿@model MovieHall.ViewModels.SettingsPageVM
 @{
     ViewData["Title"] = "Settings";
-    var animeImg = Model.Settings.FirstOrDefault(s => s.SettingName == "AnimeImg").Comment;
-    var movieImg = Model.Settings.FirstOrDefault(s => s.SettingName == "MovieImg").Comment;
+    var animeImg = ViewData["AnimeImg"];
+    var movieImg = ViewData["MovieImg"];
 }
 
-<section class="my-4 w-100 d-flex justify-content-center">
+<section class="mt-4 w-100 d-flex justify-content-center">
     <h1>Settings</h1>
 </section>
 
-@*------------------------------ Genre ------------------------------*@
-<section class="container mt-4">
-    <div class="row justify-content-center">
-        <div class="col-12 text-center">
-            <h2>
-                Genre
-            </h2>
-        </div>
-    </div>
+<div class="container-fluid">
+    <div class="row mx-4">
 
-    @*---- Tabel ----*@
-    <div id="genre" class="row justify-content-center">        
-        <div class="col-2"></div>
-        <div class="col-8">
-            <div class="tbl-header">
-                <table cellpadding="0" cellspacing="0" border="0">
-                    <thead>
-                        <tr>
-                            <th>Name</th>
-                            <th>Belonging To</th>
-                            <th>Aktionen</th>
-                        </tr>
-                    </thead>
-                </table>
-            </div>
-            <div class="tbl-content">
-                <table cellpadding="0" cellspacing="0" border="0">
-                    <tbody>
-                        @foreach (var genre in Model.Genres)
-                        {
-                            <tr>
-                                <td>@genre.Name</td>
-                                <td>@genre.Belonging_to</td>
-                                <td>
-                                    <button class="edit-link btn btn-primary" data-id="@genre.Id">
-                                        Edit
-                                    </button>
-                                    <button class="delete-link btn btn-primary" data-id="@genre.Id" data-name="@genre.Name">
-                                        Delete
-                                    </button>
-                                </td>
-                            </tr>
-                        }
-                    </tbody>
-                </table>
-            </div>
-        </div>
-        <div class="col-2 float-start">
-            <button class="btn btn-primary mb-3" id="openCreateModal"> Genre +</button>
-        </div>
-    </div>
+        @*------------------------------ left ------------------------------*@
+        <section class="col-12 col-xxl-6">
 
-</section>
-
-
-@*------------------------------ Settings ------------------------------*@
-<section class="container mt-4">
-    <div class="row justify-content-center">
-        <div class="col-12 text-center">
-            <h2>
-                Settings
-            </h2>
-        </div>
-    </div>
-
-    @*---- Tabel ----*@
-    <div id="setting" class="row justify-content-center">        
-        <div class="col-2"></div>
-        <div class="col-8">
-            <div class="tbl-header">
-                <table cellpadding="0" cellspacing="0" border="0">
-                    <thead>
-                        <tr>
-                            <th>Name</th>
-                            <th>Kommentar</th>
-                            <th>Aktionen</th>
-                        </tr>
-                    </thead>
-                </table>
-            </div>
-            <div class="tbl-content">
-                <table cellpadding="0" cellspacing="0" border="0">
-                    <tbody>
-                        @foreach (var setting in Model.Settings)
-                        {
-                            <tr>
-                                <td>@setting.SettingName</td>
-                                <td>@setting.Comment</td>
-                                <td>
-                                    <button class="edit-setting-link btn btn-primary" data-id="@setting.Id">
-                                        Edit
-                                    </button>
-                                    <button class="delete-setting-link btn btn-primary" data-id="@setting.Id" data-name="@setting.SettingName">
-                                        Delete
-                                    </button>
-                                </td>
-                            </tr>
-                        }
-                    </tbody>
-                </table>
-            </div>
-        </div>
-        <div class="col-2 float-start">
-            <button class="btn btn-primary mb-3" id="openCreateSettingModal">Setting +</button>
-        </div>
-    </div>
-
-</section>
-
-
-@*------------------------------ Home Imgs ------------------------------*@
-<section class="container mt-4">
-    <div class="row justify-content-center">
-
-        @*--- Image Previews ---*@
-        <div class="col-2"></div>
-        <div id="settingHome" class="d-flex col-8 my-3 text-center">
-            <div class="w-50 p-2">
-                <a class="w-100" onclick="document.getElementById('movieInput').click()" title="Uploade Move IMG">
-                    <img id="moviePreview" class="w-100" src="/img/@movieImg" alt="Movie Preview" />
-                </a>
-            </div>
-            <div class="w-50 p-2">
-                <a class="w-100" onclick="document.getElementById('animeInput').click()" title="Uploade Anime IMG">
-                    <img id="animePreview" class="w-100" src="/img/@animeImg" alt="Anime Preview" />
-                </a>
+            @*---- Genre ----*@
+            <div class="w-100 text-center my-4">
+                <h2>
+                    Genre
+                </h2>
+                @*---- Tabel ----*@
+                <div id="genre">
+                    <div class="w-100">
+                        <div class="tbl-header">
+                            <table cellpadding="0" cellspacing="0" border="0">
+                                <thead>
+                                    <tr>
+                                        <th>Name</th>
+                                        <th>Belonging To</th>
+                                        <th>Aktionen</th>
+                                    </tr>
+                                </thead>
+                            </table>
+                        </div>
+                        <div class="tbl-content">
+                            <table cellpadding="0" cellspacing="0" border="0">
+                                <tbody>
+                                    @foreach (var genre in Model.Genres)
+                                    {
+                                        <tr>
+                                            <td>@genre.Name</td>
+                                            <td>@genre.Belonging_to</td>
+                                            <td>
+                                                <button class="edit-link btn btn-primary" data-id="@genre.Id">
+                                                    Edit
+                                                </button>
+                                                <button class="delete-link btn btn-primary" data-id="@genre.Id" data-name="@genre.Name">
+                                                    Delete
+                                                </button>
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <div class="d-flex justify-content-end mt-2">
+                    <button class="btn btn-primary mb-3" id="openCreateModal"> Genre +</button>
+                </div>
             </div>
 
-            <input type="file" id="movieInput" accept=".jpg,.png" hidden onchange="previewImage(this, 'moviePreview', 'MovieImg')" />
-            <input type="file" id="animeInput" accept=".jpg,.png" hidden onchange="previewImage(this, 'animePreview', 'AnimeImg')" />
-        </div>
-        <div class="col-2"></div>
+            @*---- Home Imgs ----*@
+            <div class="w-100 text-center my-4">
+                <h2>
+                    Edit Start Imgs
+                </h2>
 
-        @*--- Save Buttons ---*@
-        <div class="col-2"></div>
-        <div class="col-4 text-center">
-            <button class="btn btn-primary" onclick="uploadImage('movieInput', 'MovieImg')">Movie speichern</button>
-        </div>
-        <div class="col-4 text-center">
-            <button class="btn btn-primary" onclick="uploadImage('animeInput', 'AnimeImg')">Anime speichern</button>
-        </div>
-        <div class="col-2"></div>
+                @*--- Image Previews ---*@
+                <div id="settingHome" class="w-100 d-flex text-center">
+                    <div class="w-50 p-2">
+                        <a class="w-100" onclick="document.getElementById('movieInput').click()" title="Uploade Move IMG">
+                            <img id="moviePreview" class="w-100" src="@movieImg" alt="Movie Preview" />
+                        </a>
+                    </div>
+                    <div class="w-50 p-2">
+                        <a class="w-100" onclick="document.getElementById('animeInput').click()" title="Uploade Anime IMG">
+                            <img id="animePreview" class="w-100" src="@animeImg" alt="Anime Preview" />
+                        </a>
+                    </div>
 
-    </div>
-</section>
+                    <input type="file" id="movieInput" accept=".jpg,.png" hidden onchange="previewImage(this, 'moviePreview', 'MovieImg')" />
+                    <input type="file" id="animeInput" accept=".jpg,.png" hidden onchange="previewImage(this, 'animePreview', 'AnimeImg')" />
+                </div>
 
-
-@*------------------------------ WatchedWith ------------------------------*@
-<section class="container mt-4">
-    <div class="row justify-content-center">
-        <div class="col-12 text-center">
-            <h2>
-                WatchedWith
-            </h2>
-        </div>
-    </div>
-
-    @*---- Tabel ----*@
-    <div id="WatchedWith" class="row justify-content-center">
-        <div class="col-2"></div>
-        <div class="col-8">
-            <div class="tbl-header">
-                <table cellpadding="0" cellspacing="0" border="0">
-                    <thead>
-                        <tr>
-                            <th>Name</th>
-                            <th>Aktionen</th>
-                        </tr>
-                    </thead>
-                </table>
+                @*--- Save Buttons ---*@
+                <div class="d-flex  ">
+                    <div class="w-50 text-center">
+                        <button class="btn btn-primary" onclick="uploadImage('movieInput', 'MovieImg')">Movie speichern</button>
+                    </div>
+                    <div class="w-50 text-center">
+                        <button class="btn btn-primary" onclick="uploadImage('animeInput', 'AnimeImg')">Anime speichern</button>
+                    </div>
+                </div>
             </div>
-            <div class="tbl-content">
-                <table cellpadding="0" cellspacing="0" border="0">
-                    <tbody>
-                        @foreach (var WatchedWith in Model.WatchedWiths)
-                        {
-                            <tr>
-                                <td>@WatchedWith.Name</td>
-                                <td>
-                                    <button class="edit-watchedWith-link btn btn-primary" data-id="@WatchedWith.Id">
-                                        Edit
-                                    </button>
-                                    <button class="delete-watchedWith-link btn btn-primary" data-id="@WatchedWith.Id" data-name="@WatchedWith.Name">
-                                        Delete
-                                    </button>
-                                </td>
-                            </tr>
-                        }
-                    </tbody>
-                </table>
+
+        </section>
+
+        @*------------------------------ right ------------------------------*@
+        <section class="col-12 col-xxl-6">
+
+            @*---- Settings ----*@
+            <div class="w-100 text-center my-4">
+                <h2>
+                    Settings
+                </h2>
+                @*---- Tabel ----*@
+                <div id="setting">
+                    <div class="w-100">
+                        <div class="tbl-header">
+                            <table cellpadding="0" cellspacing="0" border="0">
+                                <thead>
+                                    <tr>
+                                        <th>Name</th>
+                                        <th>Kommentar</th>
+                                        <th>Aktionen</th>
+                                    </tr>
+                                </thead>
+                            </table>
+                        </div>
+                        <div class="tbl-content">
+                            <table cellpadding="0" cellspacing="0" border="0">
+                                <tbody>
+                                    @foreach (var setting in Model.Settings)
+                                    {
+                                        <tr>
+                                            <td>@setting.SettingName</td>
+                                            <td>@setting.Comment</td>
+                                            <td>
+                                                <button class="edit-setting-link btn btn-primary" data-id="@setting.Id">
+                                                    Edit
+                                                </button>
+                                                <button class="delete-setting-link btn btn-primary" data-id="@setting.Id" data-name="@setting.SettingName">
+                                                    Delete
+                                                </button>
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <div class="d-flex justify-content-end mt-2">
+                    <button class="btn btn-primary mb-3" id="openCreateSettingModal">Setting +</button>
+                </div>
             </div>
-        </div>
-        <div class="col-2 float-start">
-            <button class="btn btn-primary mb-3" id="openCreateWatchedWithModal">WatchedWith +</button>
-        </div>
-    </div>
 
-</section>
+            @*---- WatchedWith ----*@
+            <div class="w-100 text-center my-4">
+                <h2>
+                    Gegucken mit
+                </h2>
 
+                @*---- Tabel ----*@
+                <div id="WatchedWith">
+                    <div class="w-100">
+                        <div class="tbl-header">
+                            <table cellpadding="0" cellspacing="0" border="0">
+                                <thead>
+                                    <tr>
+                                        <th>Name</th>
+                                        <th>Aktionen</th>
+                                    </tr>
+                                </thead>
+                            </table>
+                        </div>
+                        <div class="tbl-content">
+                            <table cellpadding="0" cellspacing="0" border="0">
+                                <tbody>
+                                    @foreach (var WatchedWith in Model.WatchedWiths)
+                                    {
+                                        <tr>
+                                            <td>@WatchedWith.Name</td>
+                                            <td>
+                                                <button class="edit-watchedWith-link btn btn-primary" data-id="@WatchedWith.Id">
+                                                    Edit
+                                                </button>
+                                                <button class="delete-watchedWith-link btn btn-primary" data-id="@WatchedWith.Id" data-name="@WatchedWith.Name">
+                                                    Delete
+                                                </button>
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <div class="d-flex justify-content-end mt-2">
+                    <button class="btn btn-primary mb-3" id="openCreateWatchedWithModal">WatchedWith +</button>
+                </div>
+            </div>
 
-@*------------------------------ Export/import ------------------------------*@
-<section class="container mt-4 mb-5">
-    <div class="row justify-content-center">
-        <div class="col-12 text-center">
-            <h2>
-                Datenbank
-            </h2>
-        </div>
-        <div class="col-2"></div>
-        <div class="col-4 text-center">
-            <a asp-controller="Db" asp-action="ExportAll" class="btn btn-primary">
-                Export DB + Igms
-            </a>
-        </div>
-        <div class="col-4 text-center">
-            <form asp-controller="Import" asp-action="ImportAll" enctype="multipart/form-data" method="post">
-                <div class="mb-3">
-                    <input type="file" name="zipFile" id="zipFile" accept=".zip" style="display:none" required />
-                    <button type="button" class="btn btn-primary" onclick="document.getElementById('zipFile').click()">
-                        Datei wählen
-                    </button>
+            @*---- CustomLink ----*@
+            <div class="w-100 text-center my-4">
+                <h2>
+                    Extra Link
+                </h2>
 
-                    <div class="mt-2">
-                        <span id="fileName" class="ms-2 text-muted">Keine Datei gewählt</span>
+                @*---- Tabel ----*@
+                <div id="CustomLink">
+                    <div class="w-100">
+                        <div class="tbl-header">
+                            <table cellpadding="0" cellspacing="0" border="0">
+                                <thead>
+                                    <tr>
+                                        <th>Name</th>
+                                        <th>Link</th>
+                                        <th>Aktionen</th>
+                                    </tr>
+                                </thead>
+                            </table>
+                        </div>
+                        <div class="tbl-content">
+                            <table cellpadding="0" cellspacing="0" border="0">
+                                <tbody>
+                                    @foreach (var CustomLink in Model.CustomLink)
+                                    {
+                                        <tr>
+                                            <td>@CustomLink.Name</td>
+                                            <td>@CustomLink.Link</td>
+                                            <td>
+                                                <button class="delete-customLink-link btn btn-primary" data-id="@CustomLink.Id" data-name="@CustomLink.Name">
+                                                    Delete
+                                                </button>
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <div class="d-flex justify-content-end mt-2">
+                    <button class="btn btn-primary mb-3" id="openCreateCustomLinkModal">CustomLink +</button>
+                </div>
+            </div>
+
+            @*---- By List and Export/import ----*@
+            <div class="w-100 d-flex">
+
+                @*By List*@
+                <div class="w-50 text-center my-4">
+                    <h2>
+                        Kauf Liste
+                    </h2>
+
+                    <div class="d-flex justify-content-center mb-3">
+                        <button id="exportAnimes" class="btn btn-primary mx-2">Anime Kauf liste</button>
+
+                        <button id="exportMovies" class="btn btn-primary mx-2">Film Kauf liste</button>
                     </div>
                 </div>
 
-                <button type="submit" class="btn btn-primary">Import starten</button>
-            </form>
-        </div>
-        <div class="col-2"></div>
+                @*Export/import*@
+                <div class="w-50 text-center my-4">
+                    <h2>
+                        Datenbank
+                    </h2>
+
+                    <div class="d-flex">
+                        <div class="w-50 text-center">
+                            <a asp-controller="Db" asp-action="ExportAll" class="btn btn-primary">
+                                Export DB + Igms
+                            </a>
+                        </div>
+                        <div class="w-50 text-center">
+                            <form asp-controller="Db" asp-action="ImportAll" enctype="multipart/form-data" method="post">
+                                <div class="mb-3">
+                                    <input type="file" name="zipFile" id="zipFile" accept=".zip" style="display:none" required />
+                                    <button type="button" class="btn btn-primary" onclick="document.getElementById('zipFile').click()">
+                                        Datei wählen
+                                    </button>
+
+                                    <div class="mt-2">
+                                        <span id="fileName" class="ms-2 text-muted">Keine Datei gewählt</span>
+                                    </div>
+                                </div>
+
+                                <button type="submit" class="btn btn-primary">Import starten</button>
+                            </form>
+                            <script>
+                                document.querySelector("form").addEventListener("submit", e => {
+                                    console.log("Form submit triggered");
+                                    console.log("FileInput value:", document.getElementById("zipFile").files[0]);
+                                });
+                            </script>
+                        </div>
+                    </div>
+                </div>
+            </div>  
+            
+        </section>
     </div>
-</section>
-
-
-
-<section class="container">
-    <div class="row justify-content-center">
-        <div class="col-12">
-            <h1>TODO</h1>
-            <div>
-                Set Custum Link open
-            </div>
-        </div>
-
-    </div>
-</section>
+</div>
 
 
 @*------------------------------ Genre (Create | Edit | Delete)------------------------------*@
@@ -394,6 +434,43 @@
                 </div>
                 <div class="modal-body">
                     <p>Möchtest du <strong id="deleteWatchedWithName"></strong> wirklich löschen?</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-danger">Löschen</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+
+
+@*------------------------------ CustomLink (Create | Delete)------------------------------*@
+@*--- Create ---*@
+<div class="modal fade" id="createCustomLinkModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Neues CustomLink</h5>
+                <button class="btn btn-primary" type="button" data-bs-dismiss="modal">X</button>
+            </div>
+            <div id="createCustomLinkModalContent"></div>
+        </div>
+    </div>
+</div>
+
+@*--- Delete ---*@
+<div class="modal fade" id="deleteCustomLinkModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form id="deleteCustomLinkForm">
+                <input type="hidden" id="deleteCustomLinkId" />
+                <div class="modal-header">
+                    <h5 class="modal-title">CustomLink löschen</h5>
+                    <button class="btn btn-primary" type="button" data-bs-dismiss="modal">X</button>
+                </div>
+                <div class="modal-body">
+                    <p>Möchtest du <strong id="deleteCustomLinkName"></strong> wirklich löschen?</p>
                 </div>
                 <div class="modal-footer">
                     <button type="submit" class="btn btn-danger">Löschen</button>

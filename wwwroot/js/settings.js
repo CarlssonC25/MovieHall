@@ -1,4 +1,5 @@
-﻿// Genre
+﻿
+// Genre
 $(document).ready(function () {
     $("#openCreateModal").click(function () {
         $.get("/Settings/CreatePartial", function (data) {
@@ -47,7 +48,6 @@ $(document).ready(function () {
         });
     });
 });
-
 
 // Settings
 $(document).ready(function () {    
@@ -113,7 +113,6 @@ $(document).ready(function () {
 
 });
 
-
 // WatchedWith
 $(document).ready(function () {    
     $("#openCreateWatchedWithModal").click(function () {
@@ -178,6 +177,95 @@ $(document).ready(function () {
 
 });
 
+// CustomLink
+$(document).ready(function () {    
+    $("#openCreateCustomLinkModal").click(function () {
+        $.get("/Settings/CreateCustomLinkPartial", function (data) {
+            $("#createCustomLinkModalContent").html(data);
+            var modal = new bootstrap.Modal(document.getElementById('createCustomLinkModal'));
+            modal.show();
+
+            $("#createCustomLinkForm").on("submit", function (e) {
+                e.preventDefault();
+
+                var formData = new FormData(this);
+
+                $.ajax({
+                    type: "POST",
+                    url: "/Settings/CreateCustomLinkPartial",
+                    data: formData,
+                    processData: false,
+                    contentType: false,
+                    success: function (res) {
+                        if (res.success) {
+                            modal.hide();
+                            location.reload();
+                        } else {
+                            $("#createCustomLinkModalContent").html(res);
+                        }
+                    },
+                    error: function (err) {
+                        console.error("Fehler beim Hochladen:", err);
+                        alert("Fehler beim Speichern des Links!");
+                    }
+                });
+            });
+        });
+    });
+
+    $(".delete-customLink-link").click(function () {
+        var id = $(this).data("id");
+        var name = $(this).data("name");
+        $("#deleteCustomLinkId").val(id);
+        $("#deleteCustomLinkName").text(name);
+        var modal = new bootstrap.Modal(document.getElementById('deleteCustomLinkModal'));
+        modal.show();
+    });
+
+    $("#deleteCustomLinkForm").on("submit", function (e) {
+        e.preventDefault();
+        var id = $("#deleteCustomLinkId").val();
+        $.post("/Settings/DeleteCustomLinkConfirmed/" + id, function () {
+            location.reload();
+        });
+    });
+
+});
+
+// To Buy List 
+$(document).ready(function () {
+
+    function downloadFile(url, filename) {
+        $.ajax({
+            url: url,
+            method: "GET",
+            xhrFields: {
+                responseType: "blob" // wichtig, damit die Datei binär übertragen wird
+            },
+            success: function (data) {
+                var blob = new Blob([data], { type: "text/plain" });
+                var link = document.createElement("a");
+                link.href = window.URL.createObjectURL(blob);
+                link.download = filename;
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+            },
+            error: function (xhr, status, error) {
+                console.error("Fehler beim Herunterladen:", error);
+                alert("Fehler beim Erstellen der Exportdatei!");
+            }
+        });
+    }
+
+    $("#exportAnimes").on("click", function () {
+        downloadFile("/Settings/ExportAnimesWithoutBuy", "Animes_ohne_Kauf.txt");
+    });
+
+    $("#exportMovies").on("click", function () {
+        downloadFile("/Settings/ExportMoviesWithoutBuy", "Movies_ohne_Kauf.txt");
+    });
+});
 
 
 // Funktionen außerhalb von $(document).ready)

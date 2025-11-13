@@ -1,4 +1,58 @@
-﻿$(document).ready(function () {
+﻿// Filter Hilfsfunktion
+function loadAnimes(page) {
+    let language = $(".language.aktiv-btn").data("filter") || "ALL";
+    let country = $(".country.aktiv-btn").data("filter") || "ALL";
+    let rank = $(".rank.aktiv-btn").data("filter") || "ALL";
+
+    $.ajax({
+        url: "/Anime/Index?page=" + page +
+            "&Cfilter=" + encodeURIComponent(country) +
+            "&Lfilter=" + encodeURIComponent(language) +
+            "&Rfilter=" + encodeURIComponent(rank),
+        type: "GET",
+        headers: { "X-Requested-With": "XMLHttpRequest" },
+        success: function (data) {
+            $("#animeContainer").html(data);
+            $("html, body").animate({ scrollTop: $("#animeContainer").offset().top }, 300);
+        },
+        error: function () {
+            alert("Fehler beim Laden der Anime-Liste.");
+        }
+    });
+}
+
+
+function bindCreateAnimeForm(modal) {
+    $("#createAnimeForm").on("submit", function (e) {
+        e.preventDefault();
+        var formData = new FormData(this);
+
+        $.ajax({
+            type: "POST",
+            url: "/Anime/CreateAnimePartial",
+            data: formData,
+            processData: false,
+            contentType: false,
+            success: function (res, status, xhr) {
+                const contentType = xhr.getResponseHeader("content-type");
+
+                if (contentType && contentType.indexOf("application/json") !== -1) {
+                    // Erfolg → schließen + reload
+                    if (res.success) {
+                        modal.hide();
+                        location.reload();
+                    }
+                } else {
+                    // Validation-Errors → PartialView neu rendern
+                    $("#animeModalContent").html(res);
+                    bindCreateAnimeForm(modal); // 🔁 WICHTIG: neu binden!
+                }
+            }
+        });
+    });
+}
+
+$(document).ready(function () {
     console.log("animes.js loaded");
 
     // Create Modal öffnen
@@ -8,32 +62,7 @@
             var modal = new bootstrap.Modal(document.getElementById('animeModal'));
             modal.show();
 
-            $("#createAnimeForm").on("submit", function (e) {
-                e.preventDefault();
-                var formData = new FormData(this);
-
-                $.ajax(
-                    {
-                    type: "POST",
-                    url: "/Anime/CreateAnimePartial",
-                    data: formData,
-                    processData: false,
-                    contentType: false,
-                    success: function (res, status, xhr) {
-                        const contentType = xhr.getResponseHeader("content-type");
-
-                        if (contentType && contentType.indexOf("application/json") !== -1) {
-                            if (res.success) {
-                                modal.hide();
-                                location.reload();
-                            }
-                        } else { // HTML → Validation Errors
-                            console.log("Validation errors, rendering PartialView");
-                            $("#animeModalContent").html(res);
-                        }
-                    }
-                });
-            });
+            bindCreateAnimeForm(modal);
         });
     });
 
@@ -195,24 +224,3 @@
 
 });
 
-function loadAnimes(page) {
-    let language = $(".language.aktiv-btn").data("filter") || "ALL";
-    let country = $(".country.aktiv-btn").data("filter") || "ALL";
-    let rank = $(".rank.aktiv-btn").data("filter") || "ALL";
-
-    $.ajax({
-        url: "/Anime/Index?page=" + page +
-             "&Cfilter=" + encodeURIComponent(country) +
-             "&Lfilter=" + encodeURIComponent(language) +
-             "&Rfilter=" + encodeURIComponent(rank),
-        type: "GET",
-        headers: { "X-Requested-With": "XMLHttpRequest" },
-        success: function (data) {
-            $("#animeContainer").html(data);
-            $("html, body").animate({ scrollTop: $("#animeContainer").offset().top }, 300);
-        },
-        error: function () {
-            alert("Fehler beim Laden der Anime-Liste.");
-        }
-    });
-}
