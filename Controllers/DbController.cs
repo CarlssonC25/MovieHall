@@ -158,7 +158,7 @@ namespace MovieHall.Controllers
                         sb.Append(c);
                 }
                 result.Add(sb.ToString());
-                return result.ToArray();
+                return result.Select(v => v.Replace("§COMMA§", ",")).ToArray();
             }
 
             // --- Settings ---

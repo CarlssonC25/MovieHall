@@ -49,6 +49,8 @@ namespace MovieHall.Controllers
                 .Where(m => m.ParentId == null).OrderByDescending(m => m.ReleaseDate)
                 .ToListAsync();
 
+                ViewBag.LoadedItems = search.Animes.Count();
+
                 //anime Infos
                 var animeInfos = new List<SearchViewInfos>();
 
@@ -94,6 +96,8 @@ namespace MovieHall.Controllers
                 .Include(m => m.MovieWatchedWiths).ThenInclude(mw => mw.WatchedWith)
                 .Where(m => m.ParentId == null).OrderByDescending(m => m.ReleaseDate)
                 .ToListAsync();
+
+                ViewBag.LoadedItems = search.Movies.Count();
 
                 //movie Infos
                 var movieInfos = new List<SearchViewInfos>();
@@ -185,6 +189,7 @@ namespace MovieHall.Controllers
                     .OrderByDescending(a => a.ReleaseDate)
                     .ToListAsync();
 
+                ViewBag.LoadedItems = search.Animes.Count();
 
                 //anime Infos
                 if (filter.FilterParents)
@@ -296,6 +301,7 @@ namespace MovieHall.Controllers
                     .OrderByDescending(a => a.ReleaseDate)
                     .ToListAsync();
 
+                ViewBag.LoadedItems = search.Movies.Count();
 
                 //movie Infos
                 if (filter.FilterParents)
