@@ -18,3 +18,92 @@ dotnet ef database update
 Server: localhost,1433
 Benutzer: sa
 Passwort: Str0ng!Passw0rd123
+
+
+
+
+
+
+----------------------Lokal hosten----------------------
+
+1. SQL Server 2022 Express auf PC installieren
+2. Win + R    "services.msc" gucken ob in der liste steht = SQL Server(SQLExpress)
+
+3. SQL Server Management Studio (SSMS) installieren 
+4. In SSMS gucken ob man sich auf "localhost\SQLEXPRESS" verbinden kann
+   und user plus db erstellen in SQL =
+
+	4.1	Alten Benutzer + Login löschen (falls vorhanden):
+		-- Benutzer in der Datenbank löschen (falls existiert)
+		USE master;
+		IF EXISTS (SELECT * FROM sys.database_principals WHERE name = 'MovieHallUser')
+			DROP USER MovieHallUser;
+		GO
+
+		-- Login löschen (falls existiert)
+		IF EXISTS (SELECT * FROM sys.server_principals WHERE name = 'MovieHallUser')
+			DROP LOGIN MovieHallUser;
+		GO
+
+	4.2 Alte Datenbank löschen (falls vorhanden)
+		USE master;
+		GO
+
+		IF EXISTS (SELECT name FROM sys.databases WHERE name = 'MovieHallDb')
+		BEGIN
+			ALTER DATABASE MovieHallDb SET SINGLE_USER WITH ROLLBACK IMMEDIATE;
+			DROP DATABASE MovieHallDb;
+		END
+		GO
+
+	4.3 Neue Datenbank erstellen
+		CREATE DATABASE MovieHallDb;
+		GO
+
+	4.4 Neuen SQL-Login erstellen
+		CREATE LOGIN MovieHallUser 
+		WITH PASSWORD = 'Str0ng!Passw0rd123',
+			 CHECK_POLICY = OFF,
+			 CHECK_EXPIRATION = OFF;
+		GO
+
+	4.5 Benutzer in der Datenbank erstellen	
+		USE MovieHallDb;
+		GO
+
+		CREATE USER MovieHallUser FOR LOGIN MovieHallUser;
+		GO
+
+	4.6 Benutzer zu db_owner hinzufügen (volle Rechte)
+		USE MovieHallDb;
+		GO
+
+		ALTER ROLE db_owner ADD MEMBER MovieHallUser;
+		GO
+
+	4.7 Standarddatenbank setzeny
+		ALTER LOGIN MovieHallUser WITH DEFAULT_DATABASE = MovieHallDb;
+		GO
+
+5. in appsettings.json schreiben =
+	"ConnectionStrings": {
+		"DefaultConnection": "Server=localhost\\SQLEXPRESS;Database=MovieHallDb;User Id=MovieHallUser;Password=Str0ng!Passw0rd123;TrustServerCertificate=True;"
+	},
+
+5. In Visualstudio 2022 Paket-Manager-Konsole "Update-Database" machen
+
+6. Projekt veröffentlichen in "C:\MovieHallService"
+
+7. PowerShell als Admin Offen
+8. In PowerShell = sc.exe create MovieHall binPath= "C:\MovieHallService\MovieHall.exe"
+9. In PowerShell = sc.exe start MovieHall
+				   sc.exe query MovieHall
+
+10. bei ändereungen vom projekt 
+	in Powerchell = sc.exe stop MovieHall
+					sc.exe delete MovieHallsc.exe create MovieHall binPath= "C:\MovieHallService\MovieHall.exe"
+
+	Projekt neu veröffentlichen
+
+	in Powerchell = sc.exe start MovieHall
+					sc.exe query MovieHall
