@@ -101,9 +101,11 @@ Passwort: Str0ng!Passw0rd123
 
 10. bei ändereungen vom projekt 
 	in Powerchell = sc.exe stop MovieHall
-					sc.exe delete MovieHallsc.exe create MovieHall binPath= "C:\MovieHallService\MovieHall.exe"
+					sc.exe delete MovieHall
+					
 
 	Projekt neu veröffentlichen
 
-	in Powerchell = sc.exe start MovieHall
+	in Powerchell = sc.exe create MovieHall binPath= "C:\MovieHallService\MovieHall.exe"
+					sc.exe start MovieHall
 					sc.exe query MovieHall
