@@ -20,7 +20,6 @@ namespace MovieHall.SaveModel
         public string? ImgPath { get; set; }
         public string? TempImgPath { get; set; }
 
-        [Required(ErrorMessage = "Link ist ein Pflichtfeld.")]
         public string? Link { get; set; }
         public DateTime? ReleaseDate { get; set; }
 
