@@ -14,9 +14,11 @@ namespace MovieHall.Controllers
     public class SettingsController : Controller
     {
         private readonly AppDbContext _context;
-        public SettingsController(AppDbContext context)
+        private readonly IWebHostEnvironment _env;
+        public SettingsController(AppDbContext context, IWebHostEnvironment env)
         {
             _context = context;
+            _env = env;
         }
 
 
@@ -209,7 +211,7 @@ namespace MovieHall.Controllers
         {
             if (file != null && (file.ContentType == "image/jpeg" || file.ContentType == "image/png"))
             {
-                string uploadsFolder = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/img/Settings_imgs");
+                string uploadsFolder = Path.Combine(_env.WebRootPath, "img/Settings_imgs");
                 Directory.CreateDirectory(uploadsFolder);
 
                 string fileName = $"{settingName}{Path.GetExtension(file.FileName)}";
@@ -256,7 +258,7 @@ namespace MovieHall.Controllers
             // img
             if (customLink.Img != null && (customLink.Img.ContentType == "image/jpeg" || customLink.Img.ContentType == "image/png"))
             {
-                string uploadsFolder = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/img/Settings_imgs");
+                string uploadsFolder = Path.Combine(_env.WebRootPath, "img/Settings_imgs");
                 Directory.CreateDirectory(uploadsFolder);
 
                 string fileName = "";
@@ -312,7 +314,7 @@ namespace MovieHall.Controllers
 
             var img = s.SettingName.Split("|")[2];
             // Bild löschen
-            string uploadsFolder = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/img/Settings_imgs");
+            string uploadsFolder = Path.Combine(_env.WebRootPath, "img/Settings_imgs");
             if (!string.IsNullOrEmpty(img))
             {
                 string oldImagePath = Path.Combine(uploadsFolder, img);

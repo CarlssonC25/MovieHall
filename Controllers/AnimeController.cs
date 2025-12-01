@@ -12,9 +12,12 @@ namespace MovieHall.Controllers
     {
 
         private readonly AppDbContext _context;
-        public AnimeController(AppDbContext context)
+        private readonly IWebHostEnvironment _env;
+
+        public AnimeController(AppDbContext context, IWebHostEnvironment env)
         {
             _context = context;
+            _env = env;
         }
 
         public async Task<IActionResult> Index(int page = 1, string? Cfilter = "ALL", string? Lfilter = "ALL", string? Rfilter = "ALL")
@@ -164,8 +167,12 @@ namespace MovieHall.Controllers
 
                 if (svAnime.Img != null)
                 {
-                    string tempPath = Path.Combine("wwwroot/temp", svAnime.Img.FileName);
-                    using (var stream = new FileStream(tempPath, FileMode.Create))
+                    // TEMP PFAD NUR BEI FEHLERN
+                    string tempFolder = Path.Combine(_env.WebRootPath, "temp");
+                    Directory.CreateDirectory(tempFolder);
+
+                    string tempFile = Path.Combine(tempFolder, svAnime.Img.FileName);
+                    using (var stream = new FileStream(tempFile, FileMode.Create))
                     {
                         await svAnime.Img.CopyToAsync(stream);
                     }
@@ -192,25 +199,24 @@ namespace MovieHall.Controllers
                 Parent = svAnime.Parent,
             };
 
-            // IMG 
+            // IMG
             if (svAnime.Img != null && (svAnime.Img.ContentType == "image/jpeg" || svAnime.Img.ContentType == "image/png"))
             {
-                string uploadsFolder = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/img/Anime_imgs");
+                string uploadsFolder = Path.Combine(_env.WebRootPath, "img/Anime_imgs");
                 Directory.CreateDirectory(uploadsFolder);
 
                 string fileName = "";
-                var fileNameUnique = false;
-                while (!fileNameUnique)
+                var unique = false;
+                while (!unique)
                 {
                     Random rnd = new Random();
                     string cleanName = Regex.Replace(svAnime.Name, @"[^a-zA-Z0-9]", "");
                     fileName = $"{cleanName}{rnd.Next(1, 100)}{Path.GetExtension(svAnime.Img.FileName)}";
 
-                    var animeImg = await _context.Animes.FirstOrDefaultAsync(s => s.Img == fileName);
-
-                    if (animeImg == null)
+                    var exists = await _context.Animes.FirstOrDefaultAsync(s => s.Img == fileName);
+                    if (exists == null)
                     {
-                        fileNameUnique = true;
+                        unique = true;
                     }
                 }
 
@@ -222,35 +228,34 @@ namespace MovieHall.Controllers
                 {
                     await svAnime.Img.CopyToAsync(stream);
                 }
-            } else if (svAnime.TempImgPath != null) 
+            } else if (!string.IsNullOrEmpty(svAnime.TempImgPath))
             {
-                var tempFullPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", svAnime.TempImgPath.TrimStart('/'));
+                // TEMP → FINAL
+                string tempFullPath = Path.Combine(_env.WebRootPath, svAnime.TempImgPath.TrimStart('/'));
+
                 if (System.IO.File.Exists(tempFullPath))
                 {
-                    string uploadsFolder = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/img/Anime_imgs");
+                    string uploadsFolder = Path.Combine(_env.WebRootPath, "img/Anime_imgs");
                     Directory.CreateDirectory(uploadsFolder);
 
-                    // === Gleiche Namenslogik wie oben ===
                     string fileName = "";
-                    var fileNameUnique = false;
-                    while (!fileNameUnique)
+                    var unique = false;
+                    while (!unique)
                     {
                         Random rnd = new Random();
                         string cleanName = Regex.Replace(svAnime.Name, @"[^a-zA-Z0-9]", "");
-                        string extension = Path.GetExtension(tempFullPath);
-                        fileName = $"{cleanName}{rnd.Next(1, 100)}{extension}";
+                        string ext = Path.GetExtension(tempFullPath);
+                        fileName = $"{cleanName}{rnd.Next(1, 100)}{ext}";
 
-                        var animeImg = await _context.Animes.FirstOrDefaultAsync(s => s.Img == fileName);
-                        if (animeImg == null)
+                        var exists = await _context.Animes.FirstOrDefaultAsync(s => s.Img == fileName);
+                        if (exists == null) 
                         {
-                            fileNameUnique = true;
-                        }
+                            unique = true;
+                        } 
                     }
 
-                    string destPath = Path.Combine(uploadsFolder, fileName);
-
-                    // Verschiebe aus Temp-Ordner in endgültigen Ordner
-                    System.IO.File.Move(tempFullPath, destPath);
+                    string dest = Path.Combine(uploadsFolder, fileName);
+                    System.IO.File.Move(tempFullPath, dest);
 
                     anime.Img = fileName;
                 }
@@ -308,7 +313,7 @@ namespace MovieHall.Controllers
                 Top = animeDb.Top,
                 Buy = animeDb.Buy,
                 Description = animeDb.Description,
-                ReleaseYear = animeDb.ReleaseDate.Year, 
+                ReleaseYear = animeDb.ReleaseDate.Year,
                 ReleaseMonth = animeDb.ReleaseDate.Month,
                 ImgPath = animeDb.Img,
                 Link = animeDb.Link,
@@ -373,7 +378,7 @@ namespace MovieHall.Controllers
 
             if (svAnime.Img != null && (svAnime.Img.ContentType == "image/jpeg" || svAnime.Img.ContentType == "image/png"))
             {
-                string uploadsFolder = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/img/Anime_imgs");
+                string uploadsFolder = Path.Combine(_env.WebRootPath, "img/Anime_imgs");
                 Directory.CreateDirectory(uploadsFolder);
 
                 // Altes Bild löschen
@@ -388,18 +393,17 @@ namespace MovieHall.Controllers
 
                 // Neues Bild adden
                 string fileName = "";
-                var fileNameUnique = false;
-                while (!fileNameUnique)
+                var unique = false;
+                while (!unique)
                 {
                     Random rnd = new Random();
                     string cleanName = Regex.Replace(svAnime.Name, @"[^a-zA-Z0-9]", "");
                     fileName = $"{cleanName}{rnd.Next(1, 100)}{Path.GetExtension(svAnime.Img.FileName)}";
 
-                    var animeImg = await _context.Animes.FirstOrDefaultAsync(s => s.Img == fileName);
-
-                    if (animeImg == null)
+                    var exists = await _context.Animes.FirstOrDefaultAsync(s => s.Img == fileName);
+                    if (exists == null)
                     {
-                        fileNameUnique = true;
+                        unique = true;
                     }
                 }
 
@@ -445,7 +449,7 @@ namespace MovieHall.Controllers
             if (anime == null) return NotFound();
 
             // Bild löschen
-            string uploadsFolder = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/img/Anime_imgs");
+            string uploadsFolder = Path.Combine(_env.WebRootPath, "img/Anime_imgs");
             if (!string.IsNullOrEmpty(anime.Img))
             {
                 string oldImagePath = Path.Combine(uploadsFolder, anime.Img);

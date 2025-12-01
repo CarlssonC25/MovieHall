@@ -13,9 +13,11 @@ namespace MovieHall.Controllers
     public class MovieController : Controller
     {
         private readonly AppDbContext _context;
-        public MovieController(AppDbContext context)
+        private readonly IWebHostEnvironment _env;
+        public MovieController(AppDbContext context, IWebHostEnvironment env)
         {
             _context = context;
+            _env = env;
         }
 
         public async Task<IActionResult> Index(int page = 1, string? filter = "All")
@@ -146,8 +148,12 @@ namespace MovieHall.Controllers
 
                 if (svMovie.Img != null)
                 {
-                    string tempPath = Path.Combine("wwwroot/temp", svMovie.Img.FileName);
-                    using (var stream = new FileStream(tempPath, FileMode.Create))
+                    // TEMP PFAD NUR BEI FEHLERN
+                    string tempFolder = Path.Combine(_env.WebRootPath, "temp");
+                    Directory.CreateDirectory(tempFolder);
+
+                    string tempFile = Path.Combine(tempFolder, svMovie.Img.FileName);
+                    using (var stream = new FileStream(tempFile, FileMode.Create))
                     {
                         await svMovie.Img.CopyToAsync(stream);
                     }
@@ -174,22 +180,21 @@ namespace MovieHall.Controllers
             // IMG 
             if (svMovie.Img != null && (svMovie.Img.ContentType == "image/jpeg" || svMovie.Img.ContentType == "image/png"))
             {
-                string uploadsFolder = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/img/Movie_imgs");
+                string uploadsFolder = Path.Combine(_env.WebRootPath, "img/Movie_imgs");
                 Directory.CreateDirectory(uploadsFolder);
 
                 string fileName = "";
-                var fileNameUnique = false;
-                while (fileNameUnique == false)
+                var unique = false;
+                while (!unique)
                 {
                     Random rnd = new Random();
                     string cleanName = Regex.Replace(svMovie.Name, @"[^a-zA-Z0-9]", "");
                     fileName = $"{cleanName}{rnd.Next(1, 100)}{Path.GetExtension(svMovie.Img.FileName)}";
 
-                    var movieImg = await _context.Movies.FirstOrDefaultAsync(s => s.Img == fileName);
-
-                    if (movieImg == null)
+                    var exists = await _context.Movies.FirstOrDefaultAsync(s => s.Img == fileName);
+                    if (exists == null)
                     {
-                        fileNameUnique = true;
+                        unique = true;
                     }
                 }
 
@@ -201,36 +206,34 @@ namespace MovieHall.Controllers
                 {
                     await svMovie.Img.CopyToAsync(stream);
                 }
-            }
-            else if (svMovie.TempImgPath != null)
+            } else if (!string.IsNullOrEmpty(svMovie.TempImgPath))
             {
-                var tempFullPath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", svMovie.TempImgPath.TrimStart('/'));
+                // TEMP → FINAL
+                string tempFullPath = Path.Combine(_env.WebRootPath, svMovie.TempImgPath.TrimStart('/'));
+
                 if (System.IO.File.Exists(tempFullPath))
                 {
-                    string uploadsFolder = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/img/Movie_imgs");
+                    string uploadsFolder = Path.Combine(_env.WebRootPath, "img/Movie_imgs");
                     Directory.CreateDirectory(uploadsFolder);
-
-                    // === Gleiche Namenslogik wie oben ===
+                                        
                     string fileName = "";
-                    var fileNameUnique = false;
-                    while (!fileNameUnique)
+                    var unique = false;
+                    while (!unique)
                     {
                         Random rnd = new Random();
                         string cleanName = Regex.Replace(svMovie.Name, @"[^a-zA-Z0-9]", "");
-                        string extension = Path.GetExtension(tempFullPath);
-                        fileName = $"{cleanName}{rnd.Next(1, 100)}{extension}";
+                        string ext = Path.GetExtension(tempFullPath);
+                        fileName = $"{cleanName}{rnd.Next(1, 100)}{ext}";
 
-                        var movieImg = await _context.Movies.FirstOrDefaultAsync(s => s.Img == fileName);
-                        if (movieImg == null)
+                        var exists = await _context.Movies.FirstOrDefaultAsync(s => s.Img == fileName);
+                        if (exists == null)
                         {
-                            fileNameUnique = true;
+                            unique = true;
                         }
                     }
 
-                    string destPath = Path.Combine(uploadsFolder, fileName);
-
-                    // Verschiebe aus Temp-Ordner in endgültigen Ordner
-                    System.IO.File.Move(tempFullPath, destPath);
+                    string dest = Path.Combine(uploadsFolder, fileName);
+                    System.IO.File.Move(tempFullPath, dest);
 
                     movie.Img = fileName;
                 }
@@ -328,7 +331,7 @@ namespace MovieHall.Controllers
 
             if (svMovie.Img != null && (svMovie.Img.ContentType == "image/jpeg" || svMovie.Img.ContentType == "image/png"))
             {
-                string uploadsFolder = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/img/Movie_imgs");
+                string uploadsFolder = Path.Combine(_env.WebRootPath, "img/Movie_imgs");
                 Directory.CreateDirectory(uploadsFolder);
 
                 // Altes Bild löschen
@@ -343,18 +346,17 @@ namespace MovieHall.Controllers
 
                 // Neues Bild adden
                 string fileName = "";
-                var fileNameUnique = false;
-                while (!fileNameUnique)
+                var unique = false;
+                while (!unique)
                 {
                     Random rnd = new Random();
                     string cleanName = Regex.Replace(svMovie.Name, @"[^a-zA-Z0-9]", "");
                     fileName = $"{cleanName}{rnd.Next(1, 100)}{Path.GetExtension(svMovie.Img.FileName)}";
 
-                    var movieImg = await _context.Movies.FirstOrDefaultAsync(s => s.Img == fileName);
-
-                    if (movieImg == null)
+                    var exists = await _context.Animes.FirstOrDefaultAsync(s => s.Img == fileName);
+                    if (exists == null)
                     {
-                        fileNameUnique = true;
+                        unique = true;
                     }
                 }
 
@@ -399,7 +401,7 @@ namespace MovieHall.Controllers
             if (movie == null) return NotFound();
 
             // Bild löschen
-            string uploadsFolder = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/img/Movie_imgs");
+            string uploadsFolder = Path.Combine(_env.WebRootPath, "img/Movie_imgs");
             if (!string.IsNullOrEmpty(movie.Img))
             {
                 string oldImagePath = Path.Combine(uploadsFolder, movie.Img);
